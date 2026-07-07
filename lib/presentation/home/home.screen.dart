@@ -9,6 +9,7 @@ import 'package:saurav_portfolio/widgets/buttons/primary_button.dart';
 import 'package:saurav_portfolio/widgets/buttons/secondary_button.dart';
 import 'package:saurav_portfolio/widgets/form_fields/app_text_field.dart';
 import 'package:saurav_portfolio/widgets/layout/portfolio_navbar.dart';
+import 'package:saurav_portfolio/widgets/layout/portfolio_nav_section.dart';
 import 'package:saurav_portfolio/widgets/layout/section_header.dart';
 import 'package:saurav_portfolio/widgets/loaders/loading_spinner.dart';
 import 'package:saurav_portfolio/widgets/portfolio/project_card.dart';
@@ -26,35 +27,61 @@ class HomeScreen extends GetView<HomeController> {
           return const LoadingSpinner();
         }
         final profile = controller.globalController.profile.value;
-        return CustomScrollView(
-          controller: controller.scrollController,
-          slivers: [
-            SliverToBoxAdapter(
-              child: PortfolioNavbar(
-                onLogoTap: controller.scrollToTop,
-                onAboutTap: () => controller.scrollToSection(controller.aboutSectionKey),
-                onProjectsTap: () => controller.scrollToSection(controller.projectsSectionKey),
-                onContactTap: () => controller.scrollToSection(controller.contactSectionKey),
+        return Stack(
+          children: [
+            CustomScrollView(
+              controller: controller.scrollController,
+              slivers: [
+                SliverToBoxAdapter(child: SizedBox(height: 96.h)),
+                SliverToBoxAdapter(child: _buildHeroSection(profile?.name ?? 'Saurav', profile?.title ?? '')),
+                SliverToBoxAdapter(
+                  key: controller.aboutSectionKey,
+                  child: _buildAboutSection(profile?.bio ?? '', profile?.location ?? ''),
+                ),
+                SliverToBoxAdapter(
+                  key: controller.skillsSectionKey,
+                  child: _buildSkillsSection(profile?.skills ?? []),
+                ),
+                SliverToBoxAdapter(
+                  key: controller.projectsSectionKey,
+                  child: _buildProjectsSection(),
+                ),
+                SliverToBoxAdapter(
+                  key: controller.contactSectionKey,
+                  child: _buildContactSection(profile?.email ?? 'hello@saurav.dev'),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 64)),
+              ],
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0),
+                  child: Obx(
+                    () => PortfolioNavbar(
+                      activeSection: controller.activeNavSection.value,
+                      onLogoTap: controller.scrollToTop,
+                      onAboutTap: () => controller.scrollToSection(
+                        controller.aboutSectionKey,
+                        PortfolioNavSection.about,
+                      ),
+                      onProjectsTap: () => controller.scrollToSection(
+                        controller.projectsSectionKey,
+                        PortfolioNavSection.projects,
+                      ),
+                      onContactTap: () => controller.scrollToSection(
+                        controller.contactSectionKey,
+                        PortfolioNavSection.contact,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-            SliverToBoxAdapter(child: _buildHeroSection(profile?.name ?? 'Saurav', profile?.title ?? '')),
-            SliverToBoxAdapter(
-              key: controller.aboutSectionKey,
-              child: _buildAboutSection(profile?.bio ?? '', profile?.location ?? ''),
-            ),
-            SliverToBoxAdapter(
-              key: controller.skillsSectionKey,
-              child: _buildSkillsSection(profile?.skills ?? []),
-            ),
-            SliverToBoxAdapter(
-              key: controller.projectsSectionKey,
-              child: _buildProjectsSection(),
-            ),
-            SliverToBoxAdapter(
-              key: controller.contactSectionKey,
-              child: _buildContactSection(profile?.email ?? 'hello@saurav.dev'),
-            ),
-            const SliverToBoxAdapter(child: SizedBox(height: 64)),
           ],
         );
       }),
@@ -88,12 +115,18 @@ class HomeScreen extends GetView<HomeController> {
                 children: [
                   PrimaryButton(
                     label: 'View Projects',
-                    onPressed: () => controller.scrollToSection(controller.projectsSectionKey),
+                    onPressed: () => controller.scrollToSection(
+                      controller.projectsSectionKey,
+                      PortfolioNavSection.projects,
+                    ),
                     icon: Icons.work_outline,
                   ),
                   SecondaryButton(
                     label: 'Contact Me',
-                    onPressed: () => controller.scrollToSection(controller.contactSectionKey),
+                    onPressed: () => controller.scrollToSection(
+                      controller.contactSectionKey,
+                      PortfolioNavSection.contact,
+                    ),
                     icon: Icons.mail_outline,
                   ),
                 ],

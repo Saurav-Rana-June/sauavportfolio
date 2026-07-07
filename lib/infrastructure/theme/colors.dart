@@ -12,4 +12,7 @@ class AppColors {
   static const border = Color(0xFF2A2A35);
   static const success = Color(0xFF22C55E);
   static const error = Color(0xFFEF4444);
+  static const glassFill = Color(0xB3121218);
+  static const glassBorder = Color(0x24FFFFFF);
+  static const glowPrimary = Color(0x408B5CF6);
 }
