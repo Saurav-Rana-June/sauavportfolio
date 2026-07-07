@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
+import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 
 class ProjectCard extends StatelessWidget {
   const ProjectCard({
@@ -36,7 +38,7 @@ class ProjectCard extends StatelessWidget {
                 color: AppColors.primary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.folder_outlined, color: AppColors.primary),
+              child: AppFaIcon(AppIcons.folder, color: AppColors.primary),
             ),
             Spacing.s16.gapH,
             Text(

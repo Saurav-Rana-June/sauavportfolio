@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
+import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
@@ -18,7 +20,7 @@ class SecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon ?? Icons.arrow_outward, size: 18),
+      icon: AppFaIcon(icon ?? AppIcons.arrowExternal, size: 18),
       label: Text(label, style: AppTextStyles.m16),
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.textPrimary,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
+import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
@@ -20,7 +22,7 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final button = ElevatedButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon ?? Icons.arrow_forward, size: 18),
+      icon: AppFaIcon(icon ?? AppIcons.arrowForward, size: 18),
       label: Text(label, style: AppTextStyles.m16),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,

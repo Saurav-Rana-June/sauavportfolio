@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
+import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 import 'package:saurav_portfolio/widgets/layout/portfolio_nav_section.dart';
 
 class PortfolioNavbar extends StatelessWidget {
@@ -23,10 +25,10 @@ class PortfolioNavbar extends StatelessWidget {
   final VoidCallback onProjectsTap;
   final VoidCallback onContactTap;
 
-  static const _navItems = [
-    _NavItem(PortfolioNavSection.about, 'About', Icons.person_outline_rounded),
-    _NavItem(PortfolioNavSection.projects, 'Projects', Icons.auto_awesome_motion_rounded),
-    _NavItem(PortfolioNavSection.contact, 'Contact', Icons.chat_bubble_outline_rounded),
+  static final _navItems = [
+    _NavItem(PortfolioNavSection.about, 'About', AppIcons.about),
+    _NavItem(PortfolioNavSection.projects, 'Projects', AppIcons.projects),
+    _NavItem(PortfolioNavSection.contact, 'Contact', AppIcons.contact),
   ];
 
   @override
@@ -138,7 +140,7 @@ class _BrandLockup extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(Icons.bolt_rounded, color: Colors.white, size: 18.r),
+                child: AppFaIcon(AppIcons.logo, color: Colors.white, size: 18.r),
               ),
               Spacing.s10.gapW,
               Column(
@@ -257,7 +259,7 @@ class _NavPillLinkState extends State<_NavPillLink> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
+                  AppFaIcon(
                     widget.icon,
                     size: 16.r,
                     color: highlight ? AppColors.primaryLight : AppColors.textSecondary,
@@ -327,7 +329,7 @@ class _ContactPillState extends State<_ContactPill> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.send_rounded, color: Colors.white, size: 15.r),
+                    AppFaIcon(AppIcons.send, color: Colors.white, size: 15.r),
                     Spacing.s8.gapW,
                     Text(
                       'Let\'s talk',
@@ -381,7 +383,7 @@ class _MobileNavMenu extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             child: Padding(
               padding: EdgeInsets.all(10.r),
-              child: Icon(Icons.menu_rounded, color: AppColors.textPrimary, size: 20.r),
+              child: AppFaIcon(AppIcons.menu, color: AppColors.textPrimary, size: 20.r),
             ),
           ),
         ),
@@ -434,7 +436,7 @@ class _MobileNavMenu extends StatelessWidget {
                         tileColor: isActive
                             ? AppColors.primary.withValues(alpha: 0.12)
                             : AppColors.surfaceDark.withValues(alpha: 0.5),
-                        leading: Icon(
+                        leading: AppFaIcon(
                           item.icon,
                           color: isActive ? AppColors.primaryLight : AppColors.textSecondary,
                         ),

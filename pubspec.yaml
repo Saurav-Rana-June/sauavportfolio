@@ -18,6 +18,7 @@ dependencies:
   logger: ^2.5.0
   url_launcher: ^6.3.1
   json_annotation: ^4.9.0
+  font_awesome_flutter: ^10.9.0
 
 dev_dependencies:
   flutter_test:
@@ -31,3 +32,16 @@ flutter:
   assets:
     - assets/images/
     - assets/data/
+  fonts:
+    - family: FontAwesomeRegular
+      fonts:
+        - asset: assets/fonts/fa-regular-400.ttf
+    - family: FontAwesomeSolid
+      fonts:
+        - asset: assets/fonts/fa-solid-900.ttf
+    - family: FontAwesomeLight
+      fonts:
+        - asset: assets/fonts/fa-light-300.ttf
+    - family: FontAwesomeBrands
+      fonts:
+        - asset: assets/fonts/fa-brands-400.ttf

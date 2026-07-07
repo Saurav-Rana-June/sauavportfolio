@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/widgets/buttons/primary_button.dart';
 import 'package:saurav_portfolio/widgets/buttons/secondary_button.dart';
 import 'package:saurav_portfolio/widgets/form_fields/app_text_field.dart';
+import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 import 'package:saurav_portfolio/widgets/layout/portfolio_navbar.dart';
 import 'package:saurav_portfolio/widgets/layout/portfolio_nav_section.dart';
 import 'package:saurav_portfolio/widgets/layout/section_header.dart';
@@ -119,7 +121,7 @@ class HomeScreen extends GetView<HomeController> {
                       controller.projectsSectionKey,
                       PortfolioNavSection.projects,
                     ),
-                    icon: Icons.work_outline,
+                    icon: AppIcons.work,
                   ),
                   SecondaryButton(
                     label: 'Contact Me',
@@ -127,7 +129,7 @@ class HomeScreen extends GetView<HomeController> {
                       controller.contactSectionKey,
                       PortfolioNavSection.contact,
                     ),
-                    icon: Icons.mail_outline,
+                    icon: AppIcons.mail,
                   ),
                 ],
               ),
@@ -153,7 +155,7 @@ class HomeScreen extends GetView<HomeController> {
               Spacing.s16.gapH,
               Row(
                 children: [
-                  const Icon(Icons.location_on_outlined, color: AppColors.accent, size: 18),
+                  AppFaIcon(AppIcons.location, color: AppColors.accent, size: 18),
                   Spacing.s8.gapW,
                   Text(location, style: AppTextStyles.r14),
                 ],
@@ -284,7 +286,7 @@ class HomeScreen extends GetView<HomeController> {
                       return PrimaryButton(
                         label: 'Send Message',
                         onPressed: controller.submitContactForm,
-                        icon: Icons.send,
+                        icon: AppIcons.send,
                         expand: true,
                       );
                     }),
