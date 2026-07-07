@@ -26,7 +26,14 @@ class SectionHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(subtitle.toUpperCase(), style: AppTextStyles.r12.copyWith(color: AppColors.accent)),
+              Text(
+                subtitle.toUpperCase(),
+                style: AppTextStyles.r12.copyWith(
+                  color: AppColors.accent,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               Spacing.s8.gapH,
               Text(title, style: AppTextStyles.sb24),
             ],
