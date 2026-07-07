@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:saurav_portfolio/infrastructure/navigation/routes.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 
 class PortfolioNavbar extends StatelessWidget {
   const PortfolioNavbar({
     super.key,
+    required this.onLogoTap,
     required this.onAboutTap,
     required this.onProjectsTap,
     required this.onContactTap,
   });
 
+  final VoidCallback onLogoTap;
   final VoidCallback onAboutTap;
   final VoidCallback onProjectsTap;
   final VoidCallback onContactTap;
@@ -30,7 +30,7 @@ class PortfolioNavbar extends StatelessWidget {
           child: Row(
             children: [
               InkWell(
-                onTap: () => Get.offAllNamed(Routes.home),
+                onTap: onLogoTap,
                 borderRadius: BorderRadius.circular(8),
                 child: Text('Saurav.', style: AppTextStyles.sb24.copyWith(color: AppColors.primary)),
               ),

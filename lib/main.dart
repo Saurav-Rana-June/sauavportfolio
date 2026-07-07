@@ -13,15 +13,11 @@ Future<void> main() async {
   await AppMethod.initStorage();
   Get.put(GlobalController());
 
-  final initialRoute = await Routes.initialRoute;
-
-  runApp(PortfolioApp(initialRoute: initialRoute));
+  runApp(const PortfolioApp());
 }
 
 class PortfolioApp extends StatelessWidget {
-  const PortfolioApp({super.key, required this.initialRoute});
-
-  final String initialRoute;
+  const PortfolioApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +29,8 @@ class PortfolioApp extends StatelessWidget {
           title: AppConfig.appName,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.darkTheme,
-          initialRoute: initialRoute,
+          initialRoute: Routes.initialRoute,
           getPages: Nav.routes,
-          defaultTransition: Transition.fadeIn,
-          transitionDuration: const Duration(milliseconds: 250),
         );
       },
     );

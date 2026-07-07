@@ -7,6 +7,7 @@ import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/widgets/buttons/primary_button.dart';
 import 'package:saurav_portfolio/widgets/buttons/secondary_button.dart';
+import 'package:saurav_portfolio/widgets/form_fields/app_text_field.dart';
 import 'package:saurav_portfolio/widgets/layout/portfolio_navbar.dart';
 import 'package:saurav_portfolio/widgets/layout/section_header.dart';
 import 'package:saurav_portfolio/widgets/loaders/loading_spinner.dart';
@@ -30,9 +31,10 @@ class HomeScreen extends GetView<HomeController> {
           slivers: [
             SliverToBoxAdapter(
               child: PortfolioNavbar(
+                onLogoTap: controller.scrollToTop,
                 onAboutTap: () => controller.scrollToSection(controller.aboutSectionKey),
                 onProjectsTap: () => controller.scrollToSection(controller.projectsSectionKey),
-                onContactTap: controller.navigateToContact,
+                onContactTap: () => controller.scrollToSection(controller.contactSectionKey),
               ),
             ),
             SliverToBoxAdapter(child: _buildHeroSection(profile?.name ?? 'Saurav', profile?.title ?? '')),
@@ -46,9 +48,12 @@ class HomeScreen extends GetView<HomeController> {
             ),
             SliverToBoxAdapter(
               key: controller.projectsSectionKey,
-              child: _buildFeaturedProjectsSection(),
+              child: _buildProjectsSection(),
             ),
-            SliverToBoxAdapter(child: _buildContactCta()),
+            SliverToBoxAdapter(
+              key: controller.contactSectionKey,
+              child: _buildContactSection(profile?.email ?? 'hello@saurav.dev'),
+            ),
             const SliverToBoxAdapter(child: SizedBox(height: 64)),
           ],
         );
@@ -83,12 +88,12 @@ class HomeScreen extends GetView<HomeController> {
                 children: [
                   PrimaryButton(
                     label: 'View Projects',
-                    onPressed: controller.navigateToProjects,
+                    onPressed: () => controller.scrollToSection(controller.projectsSectionKey),
                     icon: Icons.work_outline,
                   ),
                   SecondaryButton(
                     label: 'Contact Me',
-                    onPressed: controller.navigateToContact,
+                    onPressed: () => controller.scrollToSection(controller.contactSectionKey),
                     icon: Icons.mail_outline,
                   ),
                 ],
@@ -150,7 +155,7 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  Widget _buildFeaturedProjectsSection() {
+  Widget _buildProjectsSection() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 48.h),
       child: Center(
@@ -159,12 +164,7 @@ class HomeScreen extends GetView<HomeController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SectionHeader(
-                title: 'Featured Projects',
-                subtitle: 'Recent work',
-                actionLabel: 'View all',
-                onActionTap: controller.navigateToProjects,
-              ),
+              const SectionHeader(title: 'Projects', subtitle: 'Selected work'),
               Spacing.s24.gapH,
               LayoutBuilder(
                 builder: (context, constraints) {
@@ -178,12 +178,12 @@ class HomeScreen extends GetView<HomeController> {
                       mainAxisSpacing: 16,
                       childAspectRatio: 1.1,
                     ),
-                    itemCount: controller.featuredProjects.length,
+                    itemCount: controller.projects.length,
                     itemBuilder: (context, index) {
-                      final project = controller.featuredProjects[index];
+                      final project = controller.projects[index];
                       return ProjectCard(
                         project: project,
-                        onTap: () => controller.openProjectDetail(project),
+                        onTap: () => controller.openProject(project),
                       );
                     },
                   );
@@ -196,42 +196,74 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  Widget _buildContactCta() {
+  Widget _buildContactSection(String email) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 48.h),
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 960.w),
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(32.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary.withValues(alpha: 0.2),
-                  AppColors.accent.withValues(alpha: 0.1),
-                ],
+          constraints: BoxConstraints(maxWidth: 640.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SectionHeader(title: 'Get in Touch', subtitle: 'Contact'),
+              Spacing.s24.gapH,
+              Form(
+                key: controller.contactFormKey,
+                child: Column(
+                  children: [
+                    AppTextField(
+                      controller: controller.nameController,
+                      label: 'Name',
+                      hint: 'Your name',
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty ? 'Name is required' : null,
+                    ),
+                    Spacing.s16.gapH,
+                    AppTextField(
+                      controller: controller.emailController,
+                      label: 'Email',
+                      hint: 'you@example.com',
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Email is required';
+                        }
+                        if (!GetUtils.isEmail(value.trim())) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
+                    ),
+                    Spacing.s16.gapH,
+                    AppTextField(
+                      controller: controller.messageController,
+                      label: 'Message',
+                      hint: 'Tell me about your project...',
+                      maxLines: 5,
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty ? 'Message is required' : null,
+                    ),
+                    Spacing.s24.gapH,
+                    Obx(() {
+                      if (controller.isSubmitting.value) {
+                        return const LoadingSpinner();
+                      }
+                      return PrimaryButton(
+                        label: 'Send Message',
+                        onPressed: controller.submitContactForm,
+                        icon: Icons.send,
+                        expand: true,
+                      );
+                    }),
+                  ],
+                ),
               ),
-              borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: AppColors.border),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Let\'s work together', style: AppTextStyles.sb24),
-                Spacing.s12.gapH,
-                Text(
-                  'Have a project in mind? I\'d love to hear about it.',
-                  style: AppTextStyles.r16.copyWith(color: AppColors.textSecondary),
-                ),
-                Spacing.s24.gapH,
-                PrimaryButton(
-                  label: 'Get in Touch',
-                  onPressed: controller.navigateToContact,
-                  icon: Icons.send_outlined,
-                ),
-              ],
-            ),
+              Spacing.s24.gapH,
+              Text(
+                'Prefer email? Reach out at $email',
+                style: AppTextStyles.r14.copyWith(color: AppColors.textSecondary),
+              ),
+            ],
           ),
         ),
       ),

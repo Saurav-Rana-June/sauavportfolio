@@ -1,26 +1,44 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/controllers/global.controller.dart';
-import 'package:saurav_portfolio/presentation/landing/landing.screen.dart';
-import 'package:saurav_portfolio/presentation/landing/controllers/landing.controller.dart';
+import 'package:saurav_portfolio/data/models/portfolio/profile.model.dart';
+import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
+import 'package:saurav_portfolio/presentation/home/home.screen.dart';
 
 void main() {
   setUp(() {
     Get.testMode = true;
     Get.put(GlobalController());
-    Get.put(LandingController());
+    final controller = Get.put(HomeController());
+    controller.globalController.setProfile(
+      ProfileModel(
+        name: 'Saurav',
+        title: 'Flutter Developer',
+        bio: 'Test bio',
+        email: 'hello@saurav.dev',
+        location: 'India',
+        skills: const ['Flutter'],
+      ),
+    );
+    controller.isLoading.value = false;
   });
 
   tearDown(() {
     Get.reset();
   });
 
-  testWidgets('Landing screen renders portfolio intro', (tester) async {
+  testWidgets('Home screen renders portfolio sections', (tester) async {
     await tester.pumpWidget(
-      const GetMaterialApp(home: LandingScreen()),
+      ScreenUtilInit(
+        designSize: const Size(1440, 900),
+        builder: (_, __) => const GetMaterialApp(home: HomeScreen()),
+      ),
     );
+    await tester.pump();
 
-    expect(find.text('Saurav'), findsOneWidget);
-    expect(find.text('Enter Portfolio'), findsOneWidget);
+    expect(find.text('About Me'), findsOneWidget);
+    expect(find.text('Saurav'), findsWidgets);
   });
 }

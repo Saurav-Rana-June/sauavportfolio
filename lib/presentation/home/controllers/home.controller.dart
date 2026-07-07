@@ -6,7 +6,6 @@ import 'package:saurav_portfolio/data/enums/snackbar_enum.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 import 'package:saurav_portfolio/data/services/portfolio_service.dart';
 import 'package:saurav_portfolio/data/utils/app_utils.dart';
-import 'package:saurav_portfolio/infrastructure/navigation/routes.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class HomeController extends GetxController {
@@ -14,12 +13,19 @@ class HomeController extends GetxController {
   final globalController = Get.find<GlobalController>();
 
   RxBool isLoading = true.obs;
-  RxList<ProjectModel> featuredProjects = <ProjectModel>[].obs;
+  RxBool isSubmitting = false.obs;
+  RxList<ProjectModel> projects = <ProjectModel>[].obs;
 
   final ScrollController scrollController = ScrollController();
   final GlobalKey aboutSectionKey = GlobalKey();
   final GlobalKey skillsSectionKey = GlobalKey();
   final GlobalKey projectsSectionKey = GlobalKey();
+  final GlobalKey contactSectionKey = GlobalKey();
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
+  final GlobalKey<FormState> contactFormKey = GlobalKey<FormState>();
 
   @override
   void onInit() {
@@ -29,6 +35,10 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
+    nameController.dispose();
+    emailController.dispose();
+    messageController.dispose();
+
     final scroll = scrollController;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scroll.dispose();
@@ -40,9 +50,9 @@ class HomeController extends GetxController {
     isLoading.value = true;
     try {
       final profile = await PortfolioService.fetchProfile();
-      final projects = await PortfolioService.fetchProjects();
+      final allProjects = await PortfolioService.fetchProjects();
       globalController.setProfile(profile);
-      featuredProjects.assignAll(projects.take(3).toList());
+      projects.assignAll(allProjects);
     } catch (error) {
       log.e('loadHomeData failed: $error');
       AppUtils.snackbar('Failed!', error.toString(), SnackBarType.error);
@@ -51,16 +61,36 @@ class HomeController extends GetxController {
     }
   }
 
-  void navigateToProjects() {
-    Get.toNamed(Routes.projects);
+  Future<void> submitContactForm() async {
+    if (!(contactFormKey.currentState?.validate() ?? false)) return;
+    if (isSubmitting.value) return;
+
+    isSubmitting.value = true;
+    try {
+      final success = await PortfolioService.submitContactForm(
+        name: nameController.text.trim(),
+        email: emailController.text.trim(),
+        message: messageController.text.trim(),
+      );
+      if (success) {
+        AppUtils.snackbar('Success', 'Message sent successfully!', SnackBarType.success);
+        nameController.clear();
+        emailController.clear();
+        messageController.clear();
+      } else {
+        AppUtils.snackbar('Failed', 'Could not send message.', SnackBarType.error);
+      }
+    } catch (error) {
+      log.e('submitContactForm failed: $error');
+      AppUtils.snackbar('Failed!', error.toString(), SnackBarType.error);
+    } finally {
+      isSubmitting.value = false;
+    }
   }
 
-  void navigateToContact() {
-    Get.toNamed(Routes.contact);
-  }
-
-  void openProjectDetail(ProjectModel project) {
-    Get.toNamed(Routes.projectDetail, arguments: {'id': project.id});
+  Future<void> openProject(ProjectModel project) async {
+    final url = project.liveUrl ?? project.githubUrl;
+    await openExternalLink(url);
   }
 
   Future<void> openExternalLink(String? url) async {
@@ -71,6 +101,15 @@ class HomeController extends GetxController {
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url, mode: LaunchMode.externalApplication);
     }
+  }
+
+  void scrollToTop() {
+    if (!scrollController.hasClients) return;
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
   }
 
   void scrollToSection(GlobalKey key) {

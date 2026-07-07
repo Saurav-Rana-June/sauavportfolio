@@ -13,7 +13,7 @@ class BaseService {
     if (error.response?.statusCode == 401) {
       _log.w('Unauthorized response received. Clearing session.');
       SessionCleanup.clearSession();
-      Get.offAllNamed(Routes.landing);
+      Get.offAllNamed(Routes.home);
       AppUtils.snackbar('Session expired', 'Please try again.', SnackBarType.warning);
     }
   }
