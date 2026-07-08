@@ -111,6 +111,8 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildHeroSection(String name, String title) {
+    final showRow = !AppScale.isMobile;
+
     return FuturisticBackground(
       child: Container(
         width: double.infinity,
@@ -142,96 +144,36 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                     ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(
-                            color: AppColors.primary.withValues(alpha: 0.3),
-                          ),
-                        ),
-                        child: Text(
-                          'SYSTEM STATUS: ACTIVE // PORTFOLIO v1.0',
-                          style: AppTextStyles.r12.copyWith(
-                            color: AppColors.primaryLight,
-                            letterSpacing: 1.5,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Spacing.s16.gapH,
-                      Text(
-                        'Hi, I\'m',
-                        style: AppTextStyles.r16.copyWith(
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Spacing.s8.gapH,
-                      ShaderMask(
-                        shaderCallback: (bounds) => const LinearGradient(
-                          colors: [
-                            Colors.white,
-                            AppColors.accent,
-                            AppColors.primaryLight,
+                  child: showRow
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: _buildHeroLeftContent(name, title),
+                              ),
+                            ),
+                            Spacing.s24.gapW,
+                            const Expanded(
+                              flex: 2,
+                              child: Center(
+                                child: FuturisticIllustration(),
+                              ),
+                            ),
                           ],
-                        ).createShader(bounds),
-                        child: Text(
-                          name,
-                          style: AppTextStyles.b48.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                      Spacing.s12.gapH,
-                      Text(
-                        title,
-                        style: AppTextStyles.sb24.copyWith(
-                          color: AppColors.primaryLight,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Spacing.s24.gapH,
-                      Text(
-                        'Building elegant, scalable Flutter applications for web and mobile.',
-                        style: AppTextStyles.r16.copyWith(
-                          color: AppColors.textSecondary,
-                          height: 1.6,
-                        ),
-                      ),
-                      Spacing.s32.gapH,
-                      Wrap(
-                        spacing: 16,
-                        runSpacing: 12,
-                        children: [
-                          PrimaryButton(
-                            label: 'View Projects',
-                            onPressed: () => controller.scrollToSection(
-                              controller.projectsSectionKey,
-                              PortfolioNavSection.projects,
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Center(
+                              child: FuturisticIllustration(),
                             ),
-                            icon: AppIcons.work,
-                          ),
-                          SecondaryButton(
-                            label: 'Contact Me',
-                            onPressed: () => controller.scrollToSection(
-                              controller.contactSectionKey,
-                              PortfolioNavSection.contact,
-                            ),
-                            icon: AppIcons.mail,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                            Spacing.s24.gapH,
+                            ..._buildHeroLeftContent(name, title),
+                          ],
+                        ),
                 ),
               ),
             ),
@@ -239,6 +181,96 @@ class HomeScreen extends GetView<HomeController> {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildHeroLeftContent(String name, String title) {
+    return [
+      Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 4,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: AppColors.primary.withValues(alpha: 0.3),
+          ),
+        ),
+        child: Text(
+          'SYSTEM STATUS: ACTIVE // PORTFOLIO v1.0',
+          style: AppTextStyles.r12.copyWith(
+            color: AppColors.primaryLight,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      Spacing.s16.gapH,
+      Text(
+        'Hi, I\'m',
+        style: AppTextStyles.r16.copyWith(
+          color: AppColors.accent,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      Spacing.s8.gapH,
+      ShaderMask(
+        shaderCallback: (bounds) => const LinearGradient(
+          colors: [
+            Colors.white,
+            AppColors.accent,
+            AppColors.primaryLight,
+          ],
+        ).createShader(bounds),
+        child: Text(
+          name,
+          style: AppTextStyles.b48.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+      Spacing.s12.gapH,
+      Text(
+        title,
+        style: AppTextStyles.sb24.copyWith(
+          color: AppColors.primaryLight,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      Spacing.s24.gapH,
+      Text(
+        'Building elegant, scalable Flutter applications for web and mobile.',
+        style: AppTextStyles.r16.copyWith(
+          color: AppColors.textSecondary,
+          height: 1.6,
+        ),
+      ),
+      Spacing.s32.gapH,
+      Wrap(
+        spacing: 16,
+        runSpacing: 12,
+        children: [
+          PrimaryButton(
+            label: 'View Projects',
+            onPressed: () => controller.scrollToSection(
+              controller.projectsSectionKey,
+              PortfolioNavSection.projects,
+            ),
+            icon: AppIcons.work,
+          ),
+          SecondaryButton(
+            label: 'Contact Me',
+            onPressed: () => controller.scrollToSection(
+              controller.contactSectionKey,
+              PortfolioNavSection.contact,
+            ),
+            icon: AppIcons.mail,
+          ),
+        ],
+      ),
+    ];
   }
 
   Widget _buildAboutSection(String bio, String location) {
@@ -607,5 +639,238 @@ class _FuturisticBgPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _FuturisticBgPainter oldDelegate) {
     return oldDelegate.animationValue != animationValue;
+  }
+}
+
+class FuturisticIllustration extends StatefulWidget {
+  const FuturisticIllustration({super.key});
+
+  @override
+  State<FuturisticIllustration> createState() => _FuturisticIllustrationState();
+}
+
+class _FuturisticIllustrationState extends State<FuturisticIllustration> with TickerProviderStateMixin {
+  late final AnimationController _rotationController;
+  late final AnimationController _pulseController;
+
+  @override
+  void initState() {
+    super.initState();
+    _rotationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 12),
+    )..repeat();
+
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _rotationController.dispose();
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final double boxSize = AppScale.isTablet ? 200 : 250;
+
+    return SizedBox(
+      width: boxSize,
+      height: boxSize,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // HUD Background and orbiting nodes
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _rotationController,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: _IllustrationHudPainter(
+                    rotationValue: _rotationController.value,
+                  ),
+                );
+              },
+            ),
+          ),
+          // Central Pulsing core
+          AnimatedBuilder(
+            animation: _pulseController,
+            builder: (context, child) {
+              final scale = 1.0 + (_pulseController.value * 0.08);
+              final glow = _pulseController.value;
+
+              return Transform.scale(
+                scale: scale,
+                child: Container(
+                  width: boxSize * 0.32,
+                  height: boxSize * 0.32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [AppColors.primary, AppColors.accent],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.3 + (glow * 0.3)),
+                        blurRadius: 15 + (glow * 15),
+                        spreadRadius: 2,
+                      ),
+                      BoxShadow(
+                        color: AppColors.accent.withValues(alpha: 0.2 + (glow * 0.2)),
+                        blurRadius: 25,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Container(
+                      width: boxSize * 0.24,
+                      height: boxSize * 0.24,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.scaffoldDark,
+                      ),
+                      child: Center(
+                        child: ShaderMask(
+                          shaderCallback: (bounds) => const LinearGradient(
+                            colors: [Colors.white, AppColors.accent],
+                          ).createShader(bounds),
+                          child: AppFaIcon(
+                            AppIcons.code,
+                            size: boxSize * 0.1,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _IllustrationHudPainter extends CustomPainter {
+  _IllustrationHudPainter({required this.rotationValue});
+
+  final double rotationValue;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+
+    // 1. Draw outer corner HUD brackets
+    final bracketPaint = Paint()
+      ..color = AppColors.accent.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5;
+
+    final double pad = 12.0;
+    final double len = 16.0;
+
+    // Top-Left bracket
+    canvas.drawPath(
+      Path()
+        ..moveTo(pad, pad + len)
+        ..lineTo(pad, pad)
+        ..lineTo(pad + len, pad),
+      bracketPaint,
+    );
+    // Top-Right bracket
+    canvas.drawPath(
+      Path()
+        ..moveTo(size.width - pad, pad + len)
+        ..lineTo(size.width - pad, pad)
+        ..lineTo(size.width - pad - len, pad),
+      bracketPaint,
+    );
+    // Bottom-Left bracket
+    canvas.drawPath(
+      Path()
+        ..moveTo(pad, size.height - pad - len)
+        ..lineTo(pad, size.height - pad)
+        ..lineTo(pad + len, size.height - pad),
+      bracketPaint,
+    );
+    // Bottom-Right bracket
+    canvas.drawPath(
+      Path()
+        ..moveTo(size.width - pad, size.height - pad - len)
+        ..lineTo(size.width - pad, size.height - pad)
+        ..lineTo(size.width - pad - len, size.height - pad),
+      bracketPaint,
+    );
+
+    // 2. Draw crosshair guidelines
+    final guidePaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.05)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+    canvas.drawLine(Offset(size.width / 2, 20), Offset(size.width / 2, size.height - 20), guidePaint);
+    canvas.drawLine(Offset(20, size.height / 2), Offset(size.width - 20, size.height / 2), guidePaint);
+
+    // 3. Draw orbit rings
+    // Ring 1 (Outer)
+    final ringPaint1 = Paint()
+      ..color = AppColors.primary.withValues(alpha: 0.15)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+    canvas.drawCircle(center, size.width * 0.38, ringPaint1);
+
+    // Ring 2 (Inner)
+    final ringPaint2 = Paint()
+      ..color = AppColors.accent.withValues(alpha: 0.2)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+    canvas.drawCircle(center, size.width * 0.28, ringPaint2);
+
+    // 4. Draw orbiting data nodes (small colored circles)
+    final double angle1 = rotationValue * 2 * math.pi;
+    final double r1 = size.width * 0.38;
+    final double node1X = center.dx + r1 * math.cos(angle1);
+    final double node1Y = center.dy + r1 * math.sin(angle1);
+
+    final nodePaint1 = Paint()
+      ..color = AppColors.primary
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(node1X, node1Y), 5.0, nodePaint1);
+
+    // Add glow to node 1
+    final nodeGlow1 = Paint()
+      ..color = AppColors.primary.withValues(alpha: 0.4)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(node1X, node1Y), 10.0, nodeGlow1);
+
+    // Node 2 (Orbiting opposite direction, on Ring 2)
+    final double angle2 = -rotationValue * 2 * math.pi + math.pi / 2;
+    final double r2 = size.width * 0.28;
+    final double node2X = center.dx + r2 * math.cos(angle2);
+    final double node2Y = center.dy + r2 * math.sin(angle2);
+
+    final nodePaint2 = Paint()
+      ..color = AppColors.accent
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(node2X, node2Y), 4.0, nodePaint2);
+
+    final nodeGlow2 = Paint()
+      ..color = AppColors.accent.withValues(alpha: 0.4)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(node2X, node2Y), 8.0, nodeGlow2);
+  }
+
+  @override
+  bool shouldRepaint(covariant _IllustrationHudPainter oldDelegate) {
+    return oldDelegate.rotationValue != rotationValue;
   }
 }
