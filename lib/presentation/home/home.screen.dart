@@ -674,17 +674,88 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
         alignment: Alignment.center,
         children: [
           // HUD Background and orbiting nodes
-          Positioned.fill(
-            child: AnimatedBuilder(
-              animation: _rotationController,
-              builder: (context, child) {
-                return CustomPaint(
-                  painter: _IllustrationHudPainter(
-                    rotationValue: _rotationController.value,
+          AnimatedBuilder(
+            animation: _rotationController,
+            builder: (context, child) {
+              final double centerCoord = boxSize / 2;
+              final double r1 = boxSize * 0.38;
+              final double r2 = boxSize * 0.28;
+              final double nodeSize = 32.0;
+
+              final double angle1 = _rotationController.value * 2 * math.pi;
+              final double node1X = centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
+              final double node1Y = centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
+
+              final double angle2 = -_rotationController.value * 2 * math.pi + (math.pi / 2);
+              final double node2X = centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
+              final double node2Y = centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
+
+              return Stack(
+                children: [
+                  Positioned.fill(
+                    child: CustomPaint(
+                      painter: _IllustrationHudPainter(
+                        rotationValue: _rotationController.value,
+                      ),
+                    ),
                   ),
-                );
-              },
-            ),
+                  // Orbiting Flutter node
+                  Positioned(
+                    left: node1X,
+                    top: node1Y,
+                    child: Container(
+                      width: nodeSize,
+                      height: nodeSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.5),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: FlutterLogo(size: 16.0),
+                      ),
+                    ),
+                  ),
+                  // Orbiting Dart node
+                  Positioned(
+                    left: node2X,
+                    top: node2Y,
+                    child: Container(
+                      width: nodeSize,
+                      height: nodeSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
+                        border: Border.all(
+                          color: AppColors.accent.withValues(alpha: 0.5),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.accent.withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: DartVectorLogo(size: 14.0),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
           // Central Pulsing core
           AnimatedBuilder(
@@ -832,42 +903,73 @@ class _IllustrationHudPainter extends CustomPainter {
       ..strokeWidth = 1.2;
     canvas.drawCircle(center, size.width * 0.28, ringPaint2);
 
-    // 4. Draw orbiting data nodes (small colored circles)
-    final double angle1 = rotationValue * 2 * math.pi;
-    final double r1 = size.width * 0.38;
-    final double node1X = center.dx + r1 * math.cos(angle1);
-    final double node1Y = center.dy + r1 * math.sin(angle1);
-
-    final nodePaint1 = Paint()
-      ..color = AppColors.primary
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(node1X, node1Y), 5.0, nodePaint1);
-
-    // Add glow to node 1
-    final nodeGlow1 = Paint()
-      ..color = AppColors.primary.withValues(alpha: 0.4)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(node1X, node1Y), 10.0, nodeGlow1);
-
-    // Node 2 (Orbiting opposite direction, on Ring 2)
-    final double angle2 = -rotationValue * 2 * math.pi + math.pi / 2;
-    final double r2 = size.width * 0.28;
-    final double node2X = center.dx + r2 * math.cos(angle2);
-    final double node2Y = center.dy + r2 * math.sin(angle2);
-
-    final nodePaint2 = Paint()
-      ..color = AppColors.accent
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(node2X, node2Y), 4.0, nodePaint2);
-
-    final nodeGlow2 = Paint()
-      ..color = AppColors.accent.withValues(alpha: 0.4)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(node2X, node2Y), 8.0, nodeGlow2);
+    // 4. Orbiting nodes are painted as widgets overlaying the HUD in Stack
   }
 
   @override
   bool shouldRepaint(covariant _IllustrationHudPainter oldDelegate) {
     return oldDelegate.rotationValue != rotationValue;
   }
+}
+
+class DartVectorLogo extends StatelessWidget {
+  const DartVectorLogo({super.key, this.size = 24.0});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(
+        painter: _DartLogoPainter(),
+      ),
+    );
+  }
+}
+
+class _DartLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Draw the three facets of the Dart Logo
+    // 1. Top-Left facet (Light Cyan)
+    final path1 = Path()
+      ..moveTo(w * 0.5, h * 0.1)
+      ..lineTo(w * 0.15, h * 0.5)
+      ..lineTo(w * 0.5, h * 0.55)
+      ..close();
+    final paint1 = Paint()
+      ..color = const Color(0xFF00C4FF)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(path1, paint1);
+
+    // 2. Bottom-Left facet (Medium Blue)
+    final path2 = Path()
+      ..moveTo(w * 0.15, h * 0.5)
+      ..lineTo(w * 0.5, h * 0.9)
+      ..lineTo(w * 0.5, h * 0.55)
+      ..close();
+    final paint2 = Paint()
+      ..color = const Color(0xFF007ACC)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(path2, paint2);
+
+    // 3. Right facet (Dark Blue)
+    final path3 = Path()
+      ..moveTo(w * 0.5, h * 0.1)
+      ..lineTo(w * 0.85, h * 0.5)
+      ..lineTo(w * 0.5, h * 0.9)
+      ..close();
+    final paint3 = Paint()
+      ..color = const Color(0xFF01579B)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(path3, paint3);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
