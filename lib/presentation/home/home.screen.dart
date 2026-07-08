@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
@@ -158,18 +159,14 @@ class HomeScreen extends GetView<HomeController> {
                             Spacing.s24.gapW,
                             const Expanded(
                               flex: 2,
-                              child: Center(
-                                child: FuturisticIllustration(),
-                              ),
+                              child: Center(child: FuturisticIllustration()),
                             ),
                           ],
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Center(
-                              child: FuturisticIllustration(),
-                            ),
+                            const Center(child: FuturisticIllustration()),
                             Spacing.s24.gapH,
                             ..._buildHeroLeftContent(name, title),
                           ],
@@ -186,16 +183,11 @@ class HomeScreen extends GetView<HomeController> {
   List<Widget> _buildHeroLeftContent(String name, String title) {
     return [
       Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10,
-          vertical: 4,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(
           color: AppColors.primary.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(6),
-          border: Border.all(
-            color: AppColors.primary.withValues(alpha: 0.3),
-          ),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
         ),
         child: Text(
           'SYSTEM STATUS: ACTIVE // PORTFOLIO v1.0',
@@ -217,11 +209,7 @@ class HomeScreen extends GetView<HomeController> {
       Spacing.s8.gapH,
       ShaderMask(
         shaderCallback: (bounds) => const LinearGradient(
-          colors: [
-            Colors.white,
-            AppColors.accent,
-            AppColors.primaryLight,
-          ],
+          colors: [Colors.white, AppColors.accent, AppColors.primaryLight],
         ).createShader(bounds),
         child: Text(
           name,
@@ -649,7 +637,8 @@ class FuturisticIllustration extends StatefulWidget {
   State<FuturisticIllustration> createState() => _FuturisticIllustrationState();
 }
 
-class _FuturisticIllustrationState extends State<FuturisticIllustration> with TickerProviderStateMixin {
+class _FuturisticIllustrationState extends State<FuturisticIllustration>
+    with TickerProviderStateMixin {
   late final AnimationController _rotationController;
   late final AnimationController _pulseController;
 
@@ -718,12 +707,16 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration> with Ti
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withValues(alpha: 0.3 + (glow * 0.3)),
+                        color: AppColors.primary.withValues(
+                          alpha: 0.3 + (glow * 0.3),
+                        ),
                         blurRadius: 15 + (glow * 15),
                         spreadRadius: 2,
                       ),
                       BoxShadow(
-                        color: AppColors.accent.withValues(alpha: 0.2 + (glow * 0.2)),
+                        color: AppColors.accent.withValues(
+                          alpha: 0.2 + (glow * 0.2),
+                        ),
                         blurRadius: 25,
                         spreadRadius: 1,
                       ),
@@ -738,15 +731,11 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration> with Ti
                         color: AppColors.scaffoldDark,
                       ),
                       child: Center(
-                        child: ShaderMask(
-                          shaderCallback: (bounds) => const LinearGradient(
-                            colors: [Colors.white, AppColors.accent],
-                          ).createShader(bounds),
-                          child: AppFaIcon(
-                            AppIcons.code,
-                            size: boxSize * 0.1,
-                            color: Colors.white,
-                          ),
+                        child: SvgPicture.asset(
+                          'assets/images/logo.svg',
+                          width: boxSize * 0.14,
+                          height: boxSize * 0.14,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
@@ -817,8 +806,16 @@ class _IllustrationHudPainter extends CustomPainter {
       ..color = Colors.white.withValues(alpha: 0.05)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawLine(Offset(size.width / 2, 20), Offset(size.width / 2, size.height - 20), guidePaint);
-    canvas.drawLine(Offset(20, size.height / 2), Offset(size.width - 20, size.height / 2), guidePaint);
+    canvas.drawLine(
+      Offset(size.width / 2, 20),
+      Offset(size.width / 2, size.height - 20),
+      guidePaint,
+    );
+    canvas.drawLine(
+      Offset(20, size.height / 2),
+      Offset(size.width - 20, size.height / 2),
+      guidePaint,
+    );
 
     // 3. Draw orbit rings
     // Ring 1 (Outer)
