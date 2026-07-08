@@ -82,13 +82,13 @@ abstract final class AppScale {
 
   static double contentMaxWidth() {
     if (isMobile) return _width;
-    if (isTablet) return 860;
-    return 960;
+    if (isTablet) return 920;
+    return 1200;
   }
 
   static double contactMaxWidth() {
     if (isMobile) return _width;
-    return 640;
+    return 800;
   }
 
   static double navTopSpacer() {
