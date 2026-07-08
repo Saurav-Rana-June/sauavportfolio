@@ -682,13 +682,23 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
               final double r2 = boxSize * 0.28;
               final double nodeSize = 32.0;
 
+              // Outer Orbit (Flutter & Figma, offset by pi)
               final double angle1 = _rotationController.value * 2 * math.pi;
               final double node1X = centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
               final double node1Y = centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
 
+              final double angle3 = angle1 + math.pi;
+              final double node3X = centerCoord + r1 * math.cos(angle3) - (nodeSize / 2);
+              final double node3Y = centerCoord + r1 * math.sin(angle3) - (nodeSize / 2);
+
+              // Inner Orbit (Dart & FastAPI, offset by pi)
               final double angle2 = -_rotationController.value * 2 * math.pi + (math.pi / 2);
               final double node2X = centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
               final double node2Y = centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
+
+              final double angle4 = angle2 + math.pi;
+              final double node4X = centerCoord + r2 * math.cos(angle4) - (nodeSize / 2);
+              final double node4Y = centerCoord + r2 * math.sin(angle4) - (nodeSize / 2);
 
               return Stack(
                 children: [
@@ -699,7 +709,7 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                       ),
                     ),
                   ),
-                  // Orbiting Flutter node
+                  // Orbiting Flutter node (Outer)
                   Positioned(
                     left: node1X,
                     top: node1Y,
@@ -721,12 +731,35 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: FlutterLogo(size: 16.0),
-                      ),
+                      child: const Center(child: FlutterLogo(size: 16.0)),
                     ),
                   ),
-                  // Orbiting Dart node
+                  // Orbiting Figma node (Outer - opposite to Flutter)
+                  Positioned(
+                    left: node3X,
+                    top: node3Y,
+                    child: Container(
+                      width: nodeSize,
+                      height: nodeSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
+                        border: Border.all(
+                          color: const Color(0xFFF24E1E).withValues(alpha: 0.5),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFA259FF).withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                      child: const Center(child: FigmaVectorLogo(size: 15.0)),
+                    ),
+                  ),
+                  // Orbiting Dart node (Inner)
                   Positioned(
                     left: node2X,
                     top: node2Y,
@@ -748,9 +781,32 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: DartVectorLogo(size: 14.0),
+                      child: const Center(child: DartVectorLogo(size: 14.0)),
+                    ),
+                  ),
+                  // Orbiting FastAPI node (Inner - opposite to Dart)
+                  Positioned(
+                    left: node4X,
+                    top: node4Y,
+                    child: Container(
+                      width: nodeSize,
+                      height: nodeSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
+                        border: Border.all(
+                          color: const Color(0xFF009485).withValues(alpha: 0.5),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFF05D3B4).withValues(alpha: 0.4),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                          ),
+                        ],
                       ),
+                      child: const Center(child: FastApiVectorLogo(size: 14.0)),
                     ),
                   ),
                 ],
@@ -922,9 +978,7 @@ class DartVectorLogo extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: CustomPaint(
-        painter: _DartLogoPainter(),
-      ),
+      child: CustomPaint(painter: _DartLogoPainter()),
     );
   }
 }
@@ -968,6 +1022,132 @@ class _DartLogoPainter extends CustomPainter {
       ..color = const Color(0xFF01579B)
       ..style = PaintingStyle.fill;
     canvas.drawPath(path3, paint3);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class FigmaVectorLogo extends StatelessWidget {
+  const FigmaVectorLogo({super.key, this.size = 24.0});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(painter: _FigmaLogoPainter()),
+    );
+  }
+}
+
+class _FigmaLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final r = w * 0.14;
+
+    // Top-Left (Orange-Red: 0xFFF24E1E)
+    final paint1 = Paint()
+      ..color = const Color(0xFFF24E1E)
+      ..style = PaintingStyle.fill;
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTRB(w * 0.22, h * 0.16, w * 0.5, h * 0.44),
+        topLeft: Radius.circular(r),
+        bottomLeft: Radius.circular(r),
+      ),
+      paint1,
+    );
+
+    // Top-Right (Orange-Yellow: 0xFFFF7262)
+    final paint2 = Paint()
+      ..color = const Color(0xFFFF7262)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(w * 0.64, h * 0.3), r, paint2);
+
+    // Mid-Left (Purple: 0xFFA259FF)
+    final paint3 = Paint()
+      ..color = const Color(0xFFA259FF)
+      ..style = PaintingStyle.fill;
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTRB(w * 0.22, h * 0.44, w * 0.5, h * 0.72),
+        topLeft: Radius.circular(r),
+        bottomLeft: Radius.circular(r),
+      ),
+      paint3,
+    );
+
+    // Mid-Right (Blue: 0xFF1ABC9C)
+    final paint4 = Paint()
+      ..color = const Color(0xFF1ABC9C)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(w * 0.64, h * 0.58), r, paint4);
+
+    // Bottom-Left (Green: 0xFF0ACF83)
+    final paint5 = Paint()
+      ..color = const Color(0xFF0ACF83)
+      ..style = PaintingStyle.fill;
+    canvas.drawRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTRB(w * 0.22, h * 0.72, w * 0.5, h * 1.0),
+        topLeft: Radius.circular(r),
+        bottomLeft: Radius.circular(r),
+        bottomRight: Radius.circular(r),
+      ),
+      paint5,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class FastApiVectorLogo extends StatelessWidget {
+  const FastApiVectorLogo({super.key, this.size = 24.0});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CustomPaint(painter: _FastApiLogoPainter()),
+    );
+  }
+}
+
+class _FastApiLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Draw Teal background circle
+    final bgPaint = Paint()
+      ..color = const Color(0xFF009485)
+      ..style = PaintingStyle.fill;
+    canvas.drawCircle(Offset(w * 0.5, h * 0.5), w * 0.45, bgPaint);
+
+    // Draw bright cyan/green lightning bolt
+    final path = Path()
+      ..moveTo(w * 0.58, h * 0.22)
+      ..lineTo(w * 0.32, h * 0.55)
+      ..lineTo(w * 0.52, h * 0.55)
+      ..lineTo(w * 0.42, h * 0.82)
+      ..lineTo(w * 0.68, h * 0.45)
+      ..lineTo(w * 0.48, h * 0.45)
+      ..close();
+
+    final boltPaint = Paint()
+      ..color = const Color(0xFF05D3B4)
+      ..style = PaintingStyle.fill;
+    canvas.drawPath(path, boltPaint);
   }
 
   @override
