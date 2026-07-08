@@ -1,0 +1,33 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Left chevron "<" -->
+  <path d="M 430 260
+           L 210 512
+           L 430 764
+           L 340 764
+           L 120 512
+           L 340 260
+           Z"
+        fill="url(#gradPrimary)"/>
+
+  <!-- Right chevron ">" -->
+  <path d="M 594 260
+           L 814 512
+           L 594 764
+           L 684 764
+           L 904 512
+           L 684 260
+           Z"
+        fill="url(#gradPrimary)"/>
+
+  <!-- Accent node / cursor slash through the center, representing the "code point" -->
+  <rect x="478" y="180" width="68" height="664" rx="34"
+        fill="#06B6D4"
+        transform="rotate(18 512 512)"/>
+</svg>

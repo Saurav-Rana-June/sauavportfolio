@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
@@ -27,18 +28,24 @@ class ProjectCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.border),
         ),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(AppScale.w(20)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: AppScale.icon(48),
+              height: AppScale.icon(48),
               decoration: BoxDecoration(
                 color: AppColors.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppScale.r(12)),
               ),
-              child: AppFaIcon(AppIcons.folder, color: AppColors.primary),
+              child: Center(
+                child: AppFaIcon(
+                  AppIcons.folder,
+                  color: AppColors.primary,
+                  size: AppScale.icon(20),
+                ),
+              ),
             ),
             Spacing.s16.gapH,
             Text(

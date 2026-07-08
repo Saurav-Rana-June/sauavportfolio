@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
@@ -34,11 +34,21 @@ class HomeScreen extends GetView<HomeController> {
             CustomScrollView(
               controller: controller.scrollController,
               slivers: [
-                SliverToBoxAdapter(child: SizedBox(height: 96.h)),
-                SliverToBoxAdapter(child: _buildHeroSection(profile?.name ?? 'Saurav', profile?.title ?? '')),
+                SliverToBoxAdapter(
+                  child: SizedBox(height: AppScale.navTopSpacer()),
+                ),
+                SliverToBoxAdapter(
+                  child: _buildHeroSection(
+                    profile?.name ?? 'Saurav',
+                    profile?.title ?? '',
+                  ),
+                ),
                 SliverToBoxAdapter(
                   key: controller.aboutSectionKey,
-                  child: _buildAboutSection(profile?.bio ?? '', profile?.location ?? ''),
+                  child: _buildAboutSection(
+                    profile?.bio ?? '',
+                    profile?.location ?? '',
+                  ),
                 ),
                 SliverToBoxAdapter(
                   key: controller.skillsSectionKey,
@@ -50,9 +60,11 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 SliverToBoxAdapter(
                   key: controller.contactSectionKey,
-                  child: _buildContactSection(profile?.email ?? 'hello@saurav.dev'),
+                  child: _buildContactSection(
+                    profile?.email ?? 'hello@saurav.dev',
+                  ),
                 ),
-                const SliverToBoxAdapter(child: SizedBox(height: 64)),
+                SliverToBoxAdapter(child: SizedBox(height: AppScale.h(64))),
               ],
             ),
             Positioned(
@@ -62,7 +74,12 @@ class HomeScreen extends GetView<HomeController> {
               child: SafeArea(
                 bottom: false,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0),
+                  padding: EdgeInsets.fromLTRB(
+                    AppScale.pagePaddingHorizontal(),
+                    AppScale.h(10),
+                    AppScale.pagePaddingHorizontal(),
+                    0,
+                  ),
                   child: Obx(
                     () => PortfolioNavbar(
                       activeSection: controller.activeNavSection.value,
@@ -93,22 +110,36 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildHeroSection(String name, String title) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 80.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.heroPaddingVertical(),
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 960.w),
+          constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Hi, I\'m', style: AppTextStyles.r16.copyWith(color: AppColors.accent)),
+              Text(
+                'Hi, I\'m',
+                style: AppTextStyles.r16.copyWith(color: AppColors.accent),
+              ),
               Spacing.s8.gapH,
               Text(name, style: AppTextStyles.b48),
               Spacing.s12.gapH,
-              Text(title, style: AppTextStyles.sb24.copyWith(color: AppColors.primaryLight)),
+              Text(
+                title,
+                style: AppTextStyles.sb24.copyWith(
+                  color: AppColors.primaryLight,
+                ),
+              ),
               Spacing.s24.gapH,
               Text(
                 'Building elegant, scalable Flutter applications for web and mobile.',
-                style: AppTextStyles.r16.copyWith(color: AppColors.textSecondary, height: 1.6),
+                style: AppTextStyles.r16.copyWith(
+                  color: AppColors.textSecondary,
+                  height: 1.6,
+                ),
               ),
               Spacing.s32.gapH,
               Wrap(
@@ -142,20 +173,33 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildAboutSection(String bio, String location) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 48.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.sectionPaddingVertical(),
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 960.w),
+          constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SectionHeader(title: 'About Me', subtitle: 'Who I am'),
               Spacing.s24.gapH,
-              Text(bio, style: AppTextStyles.r16.copyWith(height: 1.7, color: AppColors.textSecondary)),
+              Text(
+                bio,
+                style: AppTextStyles.r16.copyWith(
+                  height: 1.7,
+                  color: AppColors.textSecondary,
+                ),
+              ),
               Spacing.s16.gapH,
               Row(
                 children: [
-                  AppFaIcon(AppIcons.location, color: AppColors.accent, size: 18),
+                  AppFaIcon(
+                    AppIcons.location,
+                    color: AppColors.accent,
+                    size: AppScale.icon(18),
+                  ),
                   Spacing.s8.gapW,
                   Text(location, style: AppTextStyles.r14),
                 ],
@@ -169,19 +213,27 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildSkillsSection(List<String> skills) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 48.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.sectionPaddingVertical(),
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 960.w),
+          constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SectionHeader(title: 'Skills', subtitle: 'Technologies I work with'),
+              const SectionHeader(
+                title: 'Skills',
+                subtitle: 'Technologies I work with',
+              ),
               Spacing.s24.gapH,
               Wrap(
                 spacing: 12,
                 runSpacing: 12,
-                children: skills.map((skill) => SkillChip(label: skill)).toList(),
+                children: skills
+                    .map((skill) => SkillChip(label: skill))
+                    .toList(),
               ),
             ],
           ),
@@ -191,36 +243,40 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildProjectsSection() {
+    final crossAxisCount = AppScale.isDesktop
+        ? 3
+        : AppScale.isTablet
+        ? 2
+        : 1;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 48.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.sectionPaddingVertical(),
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 960.w),
+          constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SectionHeader(title: 'Projects', subtitle: 'Selected work'),
               Spacing.s24.gapH,
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final crossAxisCount = constraints.maxWidth > 900 ? 3 : constraints.maxWidth > 600 ? 2 : 1;
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      childAspectRatio: 1.1,
-                    ),
-                    itemCount: controller.projects.length,
-                    itemBuilder: (context, index) {
-                      final project = controller.projects[index];
-                      return ProjectCard(
-                        project: project,
-                        onTap: () => controller.openProject(project),
-                      );
-                    },
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  childAspectRatio: AppScale.isMobile ? 1.05 : 1.1,
+                ),
+                itemCount: controller.projects.length,
+                itemBuilder: (context, index) {
+                  final project = controller.projects[index];
+                  return ProjectCard(
+                    project: project,
+                    onTap: () => controller.openProject(project),
                   );
                 },
               ),
@@ -233,10 +289,13 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildContactSection(String email) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 48.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.sectionPaddingVertical(),
+      ),
       child: Center(
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 640.w),
+          constraints: BoxConstraints(maxWidth: AppScale.contactMaxWidth()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -251,7 +310,9 @@ class HomeScreen extends GetView<HomeController> {
                       label: 'Name',
                       hint: 'Your name',
                       validator: (value) =>
-                          value == null || value.trim().isEmpty ? 'Name is required' : null,
+                          value == null || value.trim().isEmpty
+                          ? 'Name is required'
+                          : null,
                     ),
                     Spacing.s16.gapH,
                     AppTextField(
@@ -276,7 +337,9 @@ class HomeScreen extends GetView<HomeController> {
                       hint: 'Tell me about your project...',
                       maxLines: 5,
                       validator: (value) =>
-                          value == null || value.trim().isEmpty ? 'Message is required' : null,
+                          value == null || value.trim().isEmpty
+                          ? 'Message is required'
+                          : null,
                     ),
                     Spacing.s24.gapH,
                     Obx(() {
@@ -296,7 +359,9 @@ class HomeScreen extends GetView<HomeController> {
               Spacing.s24.gapH,
               Text(
                 'Prefer email? Reach out at $email',
-                style: AppTextStyles.r14.copyWith(color: AppColors.textSecondary),
+                style: AppTextStyles.r14.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),

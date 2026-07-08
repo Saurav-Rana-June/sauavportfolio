@@ -1,7 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
@@ -33,17 +34,20 @@ class PortfolioNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCompact = MediaQuery.sizeOf(context).width < 960;
+    final isCompact = !AppScale.isDesktop;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(AppScale.r(20)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: isCompact ? 14.w : 18.w, vertical: 10.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: isCompact ? AppScale.w(14) : AppScale.w(18),
+            vertical: AppScale.h(12),
+          ),
           decoration: BoxDecoration(
             color: AppColors.glassFill,
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(AppScale.r(20)),
             border: Border.all(color: AppColors.glassBorder),
             boxShadow: const [
               BoxShadow(
@@ -55,7 +59,7 @@ class PortfolioNavbar extends StatelessWidget {
           ),
           child: Row(
             children: [
-              _BrandLockup(onTap: onLogoTap, showSubtitle: !isCompact),
+              _BrandLockup(showSubtitle: !isCompact),
               const Spacer(),
               if (!isCompact) ...[
                 _DesktopNavRail(
@@ -105,65 +109,45 @@ class _NavItem {
 }
 
 class _BrandLockup extends StatelessWidget {
-  const _BrandLockup({required this.onTap, this.showSubtitle = true});
+  const _BrandLockup({this.showSubtitle = true});
 
-  final VoidCallback onTap;
   final bool showSubtitle;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14.r),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 4.h),
-          child: Row(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: AppScale.w(6), vertical: AppScale.h(4)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: AppScale.icon(38),
+            height: AppScale.icon(38),
+            child: SvgPicture.asset(
+              'assets/images/logo.svg',
+              fit: BoxFit.contain,
+            ),
+          ),
+          Spacing.s10.gapW,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 34.r,
-                height: 34.r,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primary, AppColors.accent],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              Text(
+                'Saurav',
+                style: AppTextStyles.sb18,
+              ),
+              if (showSubtitle)
+                Text(
+                  'Flutter Engineer',
+                  style: AppTextStyles.r12.copyWith(
+                    color: AppColors.textSecondary,
+                    letterSpacing: 0.2,
                   ),
-                  borderRadius: BorderRadius.circular(11.r),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColors.glowPrimary,
-                      blurRadius: 14,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
                 ),
-                child: AppFaIcon(AppIcons.logo, color: Colors.white, size: 18.r),
-              ),
-              Spacing.s10.gapW,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Saurav',
-                    style: AppTextStyles.sb18.copyWith(fontSize: 17.sp),
-                  ),
-                  if (showSubtitle)
-                    Text(
-                      'Flutter Engineer',
-                      style: AppTextStyles.r12.copyWith(
-                        color: AppColors.textSecondary,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                ],
-              ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -183,7 +167,7 @@ class _DesktopNavRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4.r),
+      padding: EdgeInsets.all(AppScale.r(4)),
       decoration: BoxDecoration(
         color: AppColors.surfaceDark.withValues(alpha: 0.72),
         borderRadius: BorderRadius.circular(999),
@@ -234,7 +218,7 @@ class _NavPillLinkState extends State<_NavPillLink> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOutCubic,
-        margin: EdgeInsets.symmetric(horizontal: 2.w),
+        margin: EdgeInsets.symmetric(horizontal: AppScale.w(2)),
         decoration: BoxDecoration(
           gradient: widget.isActive
               ? const LinearGradient(
@@ -255,13 +239,13 @@ class _NavPillLinkState extends State<_NavPillLink> {
             onTap: widget.onTap,
             borderRadius: BorderRadius.circular(999),
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
+              padding: EdgeInsets.symmetric(horizontal: AppScale.w(14), vertical: AppScale.h(10)),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   AppFaIcon(
                     widget.icon,
-                    size: 16.r,
+                    size: AppScale.icon(16),
                     color: highlight ? AppColors.primaryLight : AppColors.textSecondary,
                   ),
                   Spacing.s8.gapW,
@@ -292,60 +276,246 @@ class _ContactPill extends StatefulWidget {
   State<_ContactPill> createState() => _ContactPillState();
 }
 
-class _ContactPillState extends State<_ContactPill> {
-  bool _isHovered = false;
+class _ContactPillState extends State<_ContactPill> with TickerProviderStateMixin {
+  late final AnimationController _hoverController;
+  late final AnimationController _iconController;
+  late final Animation<double> _scaleAnimation;
+  late final Animation<double> _glowAnimation;
+  late final Animation<double> _sweepAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _hoverController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+    _iconController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 550),
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.04).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeOutCubic),
+    );
+
+    _glowAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeInOutCubic),
+    );
+
+    _sweepAnimation = Tween<double>(begin: -1.0, end: 2.0).animate(
+      CurvedAnimation(parent: _hoverController, curve: Curves.easeInOutCubic),
+    );
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    _iconController.dispose();
+    super.dispose();
+  }
+
+  void _handleHover(bool isHovered) {
+    if (isHovered) {
+      _hoverController.forward();
+      _iconController.forward(from: 0.0);
+    } else {
+      _hoverController.reverse();
+    }
+  }
+
+  double get _iconOpacity {
+    final t = _iconController.value;
+    if (t < 0.4) {
+      return 1.0 - (t / 0.4);
+    } else if (t < 0.5) {
+      return 0.0;
+    } else {
+      return (t - 0.5) / 0.5;
+    }
+  }
+
+  Offset get _iconOffset {
+    final t = _iconController.value;
+    if (t < 0.4) {
+      final progress = t / 0.4;
+      return Offset(progress * 15.0, progress * -15.0);
+    } else if (t < 0.5) {
+      return const Offset(-15.0, 15.0);
+    } else {
+      final progress = (t - 0.5) / 0.5;
+      return Offset((1.0 - progress) * -15.0, (1.0 - progress) * 15.0);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: AnimatedScale(
-        scale: _isHovered ? 1.03 : 1,
-        duration: const Duration(milliseconds: 180),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: widget.isActive || _isHovered
-                  ? [AppColors.primary, AppColors.accent]
-                  : [AppColors.primary.withValues(alpha: 0.85), AppColors.accent.withValues(alpha: 0.85)],
-            ),
-            borderRadius: BorderRadius.circular(999),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: _isHovered ? 0.45 : 0.28),
-                blurRadius: _isHovered ? 20 : 12,
-                offset: const Offset(0, 6),
+      onEnter: (_) => _handleHover(true),
+      onExit: (_) => _handleHover(false),
+      child: AnimatedBuilder(
+        animation: Listenable.merge([_hoverController, _iconController]),
+        builder: (context, child) {
+          final hoverVal = widget.isActive ? 1.0 : _glowAnimation.value;
+          final scaleVal = widget.isActive ? 1.04 : _scaleAnimation.value;
+
+          return Transform.scale(
+            scale: scaleVal,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(999),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.2 + (hoverVal * 0.25)),
+                    blurRadius: 10 + (hoverVal * 15),
+                    offset: const Offset(0, 4),
+                  ),
+                  if (hoverVal > 0)
+                    BoxShadow(
+                      color: AppColors.accent.withValues(alpha: hoverVal * 0.25),
+                      blurRadius: 20,
+                      offset: const Offset(0, 4),
+                    ),
+                ],
               ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: widget.onTap,
-              borderRadius: BorderRadius.circular(999),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppFaIcon(AppIcons.send, color: Colors.white, size: 15.r),
-                    Spacing.s8.gapW,
-                    Text(
-                      'Let\'s talk',
-                      style: AppTextStyles.r14.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(999),
+                child: CustomPaint(
+                  painter: _ButtonGlowPainter(
+                    sweepProgress: _sweepAnimation.value,
+                    hoverProgress: hoverVal,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: widget.onTap,
+                      borderRadius: BorderRadius.circular(999),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppScale.w(18),
+                          vertical: AppScale.h(13),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Transform.translate(
+                              offset: _iconOffset,
+                              child: Opacity(
+                                opacity: _iconOpacity,
+                                child: AppFaIcon(
+                                  AppIcons.send,
+                                  color: Colors.white,
+                                  size: AppScale.icon(16),
+                                ),
+                              ),
+                            ),
+                            Spacing.s8.gapW,
+                            Text(
+                              'Let\'s talk',
+                              style: AppTextStyles.r14.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
+  }
+}
+
+class _ButtonGlowPainter extends CustomPainter {
+  _ButtonGlowPainter({
+    required this.sweepProgress,
+    required this.hoverProgress,
+  });
+
+  final double sweepProgress;
+  final double hoverProgress;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(size.height / 2));
+
+    final paintBg = Paint();
+
+    // Base background: translucent dark gray
+    paintBg.color = AppColors.glassFill.withValues(alpha: AppColors.glassFill.a * (1.0 - hoverProgress));
+    canvas.drawRRect(rrect, paintBg);
+
+    // Hover background: colored gradient
+    if (hoverProgress > 0) {
+      final paintHoverBg = Paint()
+        ..shader = const LinearGradient(
+          colors: [AppColors.primary, AppColors.accent],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ).createShader(rect)
+        ..color = Colors.white.withValues(alpha: hoverProgress);
+      canvas.drawRRect(rrect, paintHoverBg);
+    }
+
+    // Shimmer sweep highlight
+    if (hoverProgress > 0) {
+      final sweepPaint = Paint()
+        ..shader = LinearGradient(
+          colors: [
+            Colors.white.withValues(alpha: 0.0),
+            Colors.white.withValues(alpha: 0.25 * hoverProgress),
+            Colors.white.withValues(alpha: 0.0),
+          ],
+          stops: const [0.0, 0.5, 1.0],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ).createShader(
+          Rect.fromLTWH(
+            rect.left + (rect.width * sweepProgress) - (rect.width / 2),
+            rect.top,
+            rect.width,
+            rect.height,
+          ),
+        );
+
+      canvas.save();
+      canvas.clipRRect(rrect);
+      canvas.drawRect(rect, sweepPaint);
+      canvas.restore();
+    }
+
+    // Elegant gradient border
+    final borderPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..shader = LinearGradient(
+        colors: [
+          AppColors.primary.withValues(alpha: 0.35 + (hoverProgress * 0.65)),
+          AppColors.accent.withValues(alpha: 0.35 + (hoverProgress * 0.65)),
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ).createShader(rect);
+
+    final borderRRect = RRect.fromRectAndRadius(
+      rect.deflate(0.75),
+      Radius.circular(size.height / 2),
+    );
+    canvas.drawRRect(borderRRect, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _ButtonGlowPainter oldDelegate) {
+    return oldDelegate.sweepProgress != sweepProgress ||
+        oldDelegate.hoverProgress != hoverProgress;
   }
 }
 
@@ -375,15 +545,15 @@ class _MobileNavMenu extends StatelessWidget {
         Material(
           color: AppColors.surfaceDark.withValues(alpha: 0.85),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(AppScale.r(14)),
             side: const BorderSide(color: AppColors.glassBorder),
           ),
           child: InkWell(
             onTap: () => _openMenu(context),
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(AppScale.r(14)),
             child: Padding(
-              padding: EdgeInsets.all(10.r),
-              child: AppFaIcon(AppIcons.menu, color: AppColors.textPrimary, size: 20.r),
+              padding: EdgeInsets.all(AppScale.r(12)),
+              child: AppFaIcon(AppIcons.menu, color: AppColors.textPrimary, size: AppScale.icon(22)),
             ),
           ),
         ),
@@ -397,11 +567,16 @@ class _MobileNavMenu extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) {
         return ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppScale.r(24))),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
-              padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 28.h),
+              padding: EdgeInsets.fromLTRB(
+                AppScale.w(20),
+                AppScale.h(12),
+                AppScale.w(20),
+                AppScale.h(28),
+              ),
               decoration: BoxDecoration(
                 color: AppColors.glassFill,
                 border: Border(top: BorderSide(color: AppColors.glassBorder)),
@@ -410,9 +585,9 @@ class _MobileNavMenu extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 42.w,
-                    height: 4.h,
-                    margin: EdgeInsets.only(bottom: 18.h),
+                    width: AppScale.w(42),
+                    height: AppScale.h(4),
+                    margin: EdgeInsets.only(bottom: AppScale.h(18)),
                     decoration: BoxDecoration(
                       color: AppColors.border,
                       borderRadius: BorderRadius.circular(999),
@@ -421,14 +596,14 @@ class _MobileNavMenu extends StatelessWidget {
                   ...items.map((item) {
                     final isActive = activeSection == item.section;
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 8.h),
+                      padding: EdgeInsets.only(bottom: AppScale.h(8)),
                       child: ListTile(
                         onTap: () {
                           Navigator.pop(context);
                           onTap(item.section);
                         },
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14.r),
+                          borderRadius: BorderRadius.circular(AppScale.r(14)),
                           side: BorderSide(
                             color: isActive ? AppColors.primary.withValues(alpha: 0.4) : AppColors.border,
                           ),
@@ -438,6 +613,7 @@ class _MobileNavMenu extends StatelessWidget {
                             : AppColors.surfaceDark.withValues(alpha: 0.5),
                         leading: AppFaIcon(
                           item.icon,
+                          size: AppScale.icon(18),
                           color: isActive ? AppColors.primaryLight : AppColors.textSecondary,
                         ),
                         title: Text(

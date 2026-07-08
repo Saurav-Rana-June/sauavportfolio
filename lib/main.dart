@@ -24,6 +24,7 @@ class PortfolioApp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: const Size(1440, 900),
       minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
         return GetMaterialApp(
           title: AppConfig.appName,

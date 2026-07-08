@@ -5,7 +5,6 @@ abstract final class AppIcons {
   static IconData get about => light(FontAwesomeIcons.user);
   static IconData get projects => light(FontAwesomeIcons.layerGroup);
   static IconData get contact => light(FontAwesomeIcons.commentDots);
-  static IconData get logo => solid(FontAwesomeIcons.bolt);
   static IconData get send => solid(FontAwesomeIcons.paperPlane);
   static IconData get menu => light(FontAwesomeIcons.bars);
   static IconData get work => solid(FontAwesomeIcons.briefcase);

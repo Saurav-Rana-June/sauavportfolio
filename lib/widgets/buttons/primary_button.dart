@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
@@ -22,7 +23,7 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final button = ElevatedButton.icon(
       onPressed: onPressed,
-      icon: AppFaIcon(icon ?? AppIcons.arrowForward, size: 18),
+      icon: AppFaIcon(icon ?? AppIcons.arrowForward, size: AppScale.icon(18)),
       label: Text(label, style: AppTextStyles.m16),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,

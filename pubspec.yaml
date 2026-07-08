@@ -19,6 +19,7 @@ dependencies:
   url_launcher: ^6.3.1
   json_annotation: ^4.9.0
   font_awesome_flutter: ^10.9.0
+  flutter_svg: ^2.2.0
 
 dev_dependencies:
   flutter_test:

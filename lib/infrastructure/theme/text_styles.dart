@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 
 class AppTextStyles {
@@ -58,49 +59,49 @@ class AppTextStyles {
   }
 
   static TextStyle get r12 => _bodyStyle(
-        fontSize: 12,
+        fontSize: AppScale.font(12),
         fontWeight: FontWeight.w400,
         color: AppColors.textSecondary,
       );
 
   static TextStyle get r14 => _bodyStyle(
-        fontSize: 14,
+        fontSize: AppScale.font(14),
         fontWeight: FontWeight.w400,
         color: AppColors.textSecondary,
       );
 
   static TextStyle get r16 => _bodyStyle(
-        fontSize: 16,
+        fontSize: AppScale.font(16),
         fontWeight: FontWeight.w400,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get m16 => _bodyStyle(
-        fontSize: 16,
+        fontSize: AppScale.font(16),
         fontWeight: FontWeight.w500,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get sb18 => _headingStyle(
-        fontSize: 18,
+        fontSize: AppScale.title(),
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get sb24 => _headingStyle(
-        fontSize: 24,
+        fontSize: AppScale.headline(),
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get b32 => _headingStyle(
-        fontSize: 32,
+        fontSize: AppScale.displayMedium(),
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
       );
 
   static TextStyle get b48 => _headingStyle(
-        fontSize: 48,
+        fontSize: AppScale.displayLarge(),
         fontWeight: FontWeight.w700,
         color: AppColors.textPrimary,
       );
