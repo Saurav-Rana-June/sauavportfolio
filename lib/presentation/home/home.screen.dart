@@ -684,21 +684,30 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
 
               // Outer Orbit (Flutter & Figma, offset by pi)
               final double angle1 = _rotationController.value * 2 * math.pi;
-              final double node1X = centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
-              final double node1Y = centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
+              final double node1X =
+                  centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
+              final double node1Y =
+                  centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
 
               final double angle3 = angle1 + math.pi;
-              final double node3X = centerCoord + r1 * math.cos(angle3) - (nodeSize / 2);
-              final double node3Y = centerCoord + r1 * math.sin(angle3) - (nodeSize / 2);
+              final double node3X =
+                  centerCoord + r1 * math.cos(angle3) - (nodeSize / 2);
+              final double node3Y =
+                  centerCoord + r1 * math.sin(angle3) - (nodeSize / 2);
 
               // Inner Orbit (Dart & FastAPI, offset by pi)
-              final double angle2 = -_rotationController.value * 2 * math.pi + (math.pi / 2);
-              final double node2X = centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
-              final double node2Y = centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
+              final double angle2 =
+                  -_rotationController.value * 2 * math.pi + (math.pi / 2);
+              final double node2X =
+                  centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
+              final double node2Y =
+                  centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
 
               final double angle4 = angle2 + math.pi;
-              final double node4X = centerCoord + r2 * math.cos(angle4) - (nodeSize / 2);
-              final double node4Y = centerCoord + r2 * math.sin(angle4) - (nodeSize / 2);
+              final double node4X =
+                  centerCoord + r2 * math.cos(angle4) - (nodeSize / 2);
+              final double node4Y =
+                  centerCoord + r2 * math.sin(angle4) - (nodeSize / 2);
 
               return Stack(
                 children: [
@@ -750,7 +759,9 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFA259FF).withValues(alpha: 0.4),
+                            color: const Color(
+                              0xFFA259FF,
+                            ).withValues(alpha: 0.4),
                             blurRadius: 10,
                             spreadRadius: 1,
                           ),
@@ -800,7 +811,9 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF05D3B4).withValues(alpha: 0.4),
+                            color: const Color(
+                              0xFF05D3B4,
+                            ).withValues(alpha: 0.4),
                             blurRadius: 10,
                             spreadRadius: 1,
                           ),
