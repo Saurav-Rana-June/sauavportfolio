@@ -487,9 +487,7 @@ class _FuturisticBackgroundState extends State<FuturisticBackground>
             ),
           ),
         ),
-        RepaintBoundary(
-          child: widget.child,
-        ),
+        RepaintBoundary(child: widget.child),
       ],
     );
   }
