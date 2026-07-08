@@ -845,7 +845,7 @@ class _MobileNavMenu extends StatelessWidget {
                     ),
                     child: Text(
                       'NAVIGATION',
-                      style: AppTextStyles.r12.copyWith(
+                      style: AppTextStyles.mono12.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textSecondary.withValues(alpha: 0.8),
                         letterSpacing: 1.5,

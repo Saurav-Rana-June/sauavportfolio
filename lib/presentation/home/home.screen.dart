@@ -191,7 +191,7 @@ class HomeScreen extends GetView<HomeController> {
         ),
         child: Text(
           'SYSTEM STATUS: ACTIVE // PORTFOLIO v1.0',
-          style: AppTextStyles.r12.copyWith(
+          style: AppTextStyles.mono12.copyWith(
             color: AppColors.primaryLight,
             letterSpacing: 1.5,
             fontWeight: FontWeight.w600,

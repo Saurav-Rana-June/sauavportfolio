@@ -11,7 +11,7 @@ class AppTextStyles {
     double? height,
     double? letterSpacing,
   }) {
-    return GoogleFonts.inter(
+    return GoogleFonts.sora(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
@@ -27,7 +27,7 @@ class AppTextStyles {
     double? height,
     double? letterSpacing,
   }) {
-    return GoogleFonts.plusJakartaSans(
+    return GoogleFonts.spaceGrotesk(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
@@ -59,6 +59,12 @@ class AppTextStyles {
   }
 
   static TextStyle get r12 => _bodyStyle(
+        fontSize: AppScale.font(12),
+        fontWeight: FontWeight.w400,
+        color: AppColors.textSecondary,
+      );
+
+  static TextStyle get mono12 => GoogleFonts.spaceMono(
         fontSize: AppScale.font(12),
         fontWeight: FontWeight.w400,
         color: AppColors.textSecondary,
