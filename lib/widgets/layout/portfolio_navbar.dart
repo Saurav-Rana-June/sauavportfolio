@@ -259,7 +259,7 @@ class _BrandLockupState extends State<_BrandLockup>
                     colors: [AppColors.textPrimary, AppColors.primaryLight],
                   ).createShader(bounds),
                   child: Text(
-                    'Saurav',
+                    'Saurav Rana',
                     style: AppTextStyles.sb18.copyWith(color: Colors.white),
                   ),
                 ),

@@ -7,7 +7,7 @@ class PortfolioService {
   static Future<ProfileModel> fetchProfile() async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     return ProfileModel(
-      name: 'Saurav',
+      name: 'Saurav Rana',
       title: 'Senior Flutter Developer',
       bio:
           'I build performant, scalable cross-platform applications with Flutter. '

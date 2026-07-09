@@ -14,7 +14,7 @@ void main() {
     final controller = Get.put(HomeController());
     controller.globalController.setProfile(
       ProfileModel(
-        name: 'Saurav',
+        name: 'Saurav Rana',
         title: 'Flutter Developer',
         bio: 'Test bio',
         email: 'hello@saurav.dev',
@@ -30,6 +30,13 @@ void main() {
   });
 
   testWidgets('Home screen renders portfolio sections', (tester) async {
+    tester.view.physicalSize = const Size(1440, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
     await tester.pumpWidget(
       ScreenUtilInit(
         designSize: const Size(1440, 900),
@@ -39,6 +46,6 @@ void main() {
     await tester.pump();
 
     expect(find.text('About Me'), findsOneWidget);
-    expect(find.text('Saurav'), findsWidgets);
+    expect(find.text('Saurav Rana'), findsWidgets);
   });
 }

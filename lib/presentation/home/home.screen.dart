@@ -43,7 +43,7 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 SliverToBoxAdapter(
                   child: _buildHeroSection(
-                    profile?.name ?? 'Saurav',
+                    profile?.name ?? 'Saurav Rana',
                     profile?.title ?? '',
                   ),
                 ),
@@ -229,7 +229,7 @@ class HomeScreen extends GetView<HomeController> {
       ),
       Spacing.s24.gapH,
       Text(
-        'Building elegant, scalable Flutter applications for web and mobile.',
+        'Passionate Flutter Engineer with 2+ years of experience building high-performance cross-platform apps. Skilled in Flutter, Figma-to-Flutter development, and UI/UX principles, with a focus on clean, scalable, and pixel-perfect applications. Currently learning FastAPI to strengthen my backend development skills.',
         style: AppTextStyles.r16.copyWith(
           color: AppColors.textSecondary,
           height: 1.6,
