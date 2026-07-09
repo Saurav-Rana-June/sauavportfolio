@@ -184,19 +184,27 @@ class HomeScreen extends GetView<HomeController> {
   List<Widget> _buildHeroLeftContent(String name, String title) {
     return [
       Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.15),
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+          color: AppColors.success.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.success.withValues(alpha: 0.18)),
         ),
-        child: Text(
-          'SYSTEM STATUS: ACTIVE // PORTFOLIO v1.0',
-          style: AppTextStyles.mono12.copyWith(
-            color: AppColors.primaryLight,
-            letterSpacing: 1.5,
-            fontWeight: FontWeight.w600,
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const PulsingStatusDot(color: AppColors.success),
+            6.0.gapW,
+            Text(
+              'AVAILABLE FOR OPPORTUNITIES',
+              style: AppTextStyles.mono12.copyWith(
+                color: AppColors.success,
+                fontSize: AppScale.font(10),
+                letterSpacing: 1.2,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
       Spacing.s16.gapH,
@@ -215,6 +223,11 @@ class HomeScreen extends GetView<HomeController> {
         child: Text(
           name,
           style: AppTextStyles.b48.copyWith(
+            fontSize: AppScale.isMobile
+                ? 42
+                : AppScale.isTablet
+                ? 54
+                : 60,
             color: Colors.white,
             fontWeight: FontWeight.w800,
           ),
@@ -671,7 +684,11 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
 
   @override
   Widget build(BuildContext context) {
-    final double boxSize = AppScale.isTablet ? 200 : 250;
+    final double boxSize = AppScale.isMobile
+        ? 260
+        : AppScale.isTablet
+        ? 280
+        : 360;
 
     return SizedBox(
       width: boxSize,
@@ -1171,4 +1188,59 @@ class _FastApiLogoPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class PulsingStatusDot extends StatefulWidget {
+  const PulsingStatusDot({super.key, required this.color});
+  final Color color;
+
+  @override
+  State<PulsingStatusDot> createState() => _PulsingStatusDotState();
+}
+
+class _PulsingStatusDotState extends State<PulsingStatusDot>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Opacity(
+          opacity: 0.5 + (_controller.value * 0.5),
+          child: Container(
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(
+              color: widget.color,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: widget.color.withValues(alpha: 0.4),
+                  blurRadius: 3 + (_controller.value * 3),
+                  spreadRadius: 0.5 + (_controller.value * 0.5),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
