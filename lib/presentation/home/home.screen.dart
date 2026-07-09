@@ -10,6 +10,7 @@ import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
+import 'package:saurav_portfolio/widgets/animations/animated_typing_text.dart';
 import 'package:saurav_portfolio/widgets/buttons/primary_button.dart';
 import 'package:saurav_portfolio/widgets/buttons/secondary_button.dart';
 import 'package:saurav_portfolio/widgets/form_fields/app_text_field.dart';
@@ -220,8 +221,13 @@ class HomeScreen extends GetView<HomeController> {
         ),
       ),
       Spacing.s12.gapH,
-      Text(
-        title,
+      AnimatedTypingText(
+        texts: [
+          title.isNotEmpty ? title : 'Senior Flutter Developer',
+          'UI/UX & Figma-to-Flutter Specialist',
+          'FastAPI Learner',
+          'Cross-Platform Apps Developer',
+        ],
         style: AppTextStyles.sb24.copyWith(
           color: AppColors.primaryLight,
           fontWeight: FontWeight.w600,
