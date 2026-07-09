@@ -14,6 +14,9 @@ abstract final class AppIcons {
   static IconData get arrowForward => solid(FontAwesomeIcons.arrowRight);
   static IconData get arrowExternal => solid(FontAwesomeIcons.arrowUpRightFromSquare);
   static IconData get code => solid(FontAwesomeIcons.code);
+  static IconData get resume => solid(FontAwesomeIcons.fileLines);
+  static IconData get github => brandIcon(FontAwesomeIcons.github);
+  static IconData get linkedin => brandIcon(FontAwesomeIcons.linkedin);
 
   static IconData solid(IconData icon) => IconData(
         icon.codePoint,

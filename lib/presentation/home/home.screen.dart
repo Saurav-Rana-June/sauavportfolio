@@ -21,6 +21,7 @@ import 'package:saurav_portfolio/widgets/layout/section_header.dart';
 import 'package:saurav_portfolio/widgets/loaders/loading_spinner.dart';
 import 'package:saurav_portfolio/widgets/portfolio/project_card.dart';
 import 'package:saurav_portfolio/widgets/portfolio/skill_chip.dart';
+import 'package:saurav_portfolio/data/models/portfolio/profile.model.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
@@ -46,6 +47,7 @@ class HomeScreen extends GetView<HomeController> {
                   child: _buildHeroSection(
                     profile?.name ?? 'Saurav Rana',
                     profile?.title ?? '',
+                    profile,
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -112,7 +114,7 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
-  Widget _buildHeroSection(String name, String title) {
+  Widget _buildHeroSection(String name, String title, ProfileModel? profile) {
     final showRow = !AppScale.isMobile;
 
     return FuturisticBackground(
@@ -147,21 +149,34 @@ class HomeScreen extends GetView<HomeController> {
                     ],
                   ),
                   child: showRow
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              flex: 3,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: _buildHeroLeftContent(name, title),
-                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: _buildHeroLeftContent(
+                                      name,
+                                      title,
+                                    ),
+                                  ),
+                                ),
+                                Spacing.s24.gapW,
+                                const Expanded(
+                                  flex: 2,
+                                  child: Center(
+                                    child: FuturisticIllustration(),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Spacing.s24.gapW,
-                            const Expanded(
-                              flex: 2,
-                              child: Center(child: FuturisticIllustration()),
-                            ),
+                            Spacing.s32.gapH,
+                            _buildSocialMediaSection(profile),
                           ],
                         )
                       : Column(
@@ -170,6 +185,8 @@ class HomeScreen extends GetView<HomeController> {
                             const Center(child: FuturisticIllustration()),
                             Spacing.s24.gapH,
                             ..._buildHeroLeftContent(name, title),
+                            Spacing.s32.gapH,
+                            _buildSocialMediaSection(profile),
                           ],
                         ),
                 ),
@@ -178,6 +195,52 @@ class HomeScreen extends GetView<HomeController> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSocialMediaSection(ProfileModel? profile) {
+    if (profile == null) return const SizedBox.shrink();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'FIND ME ON //',
+          style: AppTextStyles.mono12.copyWith(
+            color: AppColors.textSecondary.withValues(alpha: 0.6),
+            letterSpacing: 2.0,
+            fontWeight: FontWeight.w700,
+            fontSize: AppScale.font(10),
+          ),
+        ),
+        Spacing.s16.gapW,
+        if (profile.githubUrl != null &&
+            profile.githubUrl!.isNotEmpty &&
+            profile.githubUrl != '#') ...[
+          _SocialIconButton(
+            icon: AppIcons.github,
+            label: 'GITHUB',
+            onPressed: () => controller.openExternalLink(profile.githubUrl),
+          ),
+          Spacing.s8.gapW,
+        ],
+        if (profile.linkedInUrl != null &&
+            profile.linkedInUrl!.isNotEmpty &&
+            profile.linkedInUrl != '#') ...[
+          _SocialIconButton(
+            icon: AppIcons.linkedin,
+            label: 'LINKEDIN',
+            onPressed: () => controller.openExternalLink(profile.linkedInUrl),
+          ),
+          Spacing.s8.gapW,
+        ],
+        _SocialIconButton(
+          icon: AppIcons.mail,
+          label: 'EMAIL',
+          onPressed: () =>
+              controller.openExternalLink('mailto:${profile.email}'),
+        ),
+      ],
     );
   }
 
@@ -274,6 +337,15 @@ class HomeScreen extends GetView<HomeController> {
               PortfolioNavSection.contact,
             ),
             icon: AppIcons.mail,
+          ),
+          SecondaryButton(
+            label: 'Review CV',
+            onPressed: () {
+              final resumeUrl =
+                  controller.globalController.profile.value?.resumeUrl;
+              controller.openExternalLink(resumeUrl);
+            },
+            icon: AppIcons.resume,
           ),
         ],
       ),
@@ -1242,5 +1314,217 @@ class _PulsingStatusDotState extends State<PulsingStatusDot>
         );
       },
     );
+  }
+}
+
+class _SocialIconButton extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  const _SocialIconButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  State<_SocialIconButton> createState() => _SocialIconButtonState();
+}
+
+class _SocialIconButtonState extends State<_SocialIconButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _hoverController;
+  late final Animation<double> _hoverAnimation;
+  bool _isHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _hoverController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _hoverAnimation = CurvedAnimation(
+      parent: _hoverController,
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  @override
+  void dispose() {
+    _hoverController.dispose();
+    super.dispose();
+  }
+
+  void _handleHover(bool isHovered) {
+    setState(() => _isHovered = isHovered);
+    if (isHovered) {
+      _hoverController.forward();
+    } else {
+      _hoverController.reverse();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => _handleHover(true),
+      onExit: (_) => _handleHover(false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedBuilder(
+          animation: _hoverAnimation,
+          builder: (context, child) {
+            final hoverVal = _hoverAnimation.value;
+            return Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  if (hoverVal > 0)
+                    BoxShadow(
+                      color: AppColors.primaryLight.withValues(
+                        alpha: hoverVal * 0.15,
+                      ),
+                      blurRadius: 8,
+                      spreadRadius: 0,
+                      offset: Offset.zero,
+                    ),
+                ],
+              ),
+              child: CustomPaint(
+                painter: _SocialIconButtonPainter(
+                  hoverProgress: hoverVal,
+                  activeColor: AppColors.primaryLight,
+                  inactiveColor: AppColors.glassBorder,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppFaIcon(
+                        widget.icon,
+                        color: Color.lerp(
+                          AppColors.textSecondary,
+                          AppColors.primaryLight,
+                          hoverVal,
+                        ),
+                        size: AppScale.icon(14),
+                      ),
+                      AnimatedSize(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.easeOutCubic,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (_isHovered) ...[
+                              const SizedBox(width: 8),
+                              Text(
+                                widget.label,
+                                style: AppTextStyles.mono12.copyWith(
+                                  color: Color.lerp(
+                                    AppColors.textSecondary,
+                                    AppColors.textPrimary,
+                                    hoverVal,
+                                  ),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: AppScale.font(10),
+                                  letterSpacing: 1.0,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SocialIconButtonPainter extends CustomPainter {
+  final double hoverProgress;
+  final Color activeColor;
+  final Color inactiveColor;
+
+  _SocialIconButtonPainter({
+    required this.hoverProgress,
+    required this.activeColor,
+    required this.inactiveColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(8));
+
+    // Fill background only on hover
+    final bgPaint = Paint()
+      ..color = Color.lerp(
+        Colors.transparent,
+        activeColor.withValues(alpha: 0.08),
+        hoverProgress,
+      )!;
+    canvas.drawRRect(rrect, bgPaint);
+
+    // Draw main border only on hover
+    final borderPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0
+      ..color = Color.lerp(
+        Colors.transparent,
+        activeColor.withValues(alpha: 0.25),
+        hoverProgress,
+      )!;
+    canvas.drawRRect(rrect, borderPaint);
+
+    // If hovered, draw glowing futuristic corner brackets!
+    if (hoverProgress > 0) {
+      final bracketPaint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2
+        ..color = activeColor.withValues(alpha: hoverProgress * 0.7)
+        ..strokeCap = StrokeCap.round;
+
+      const offset = 2.0;
+      const bracketSize = 4.0;
+      final path = Path();
+
+      // Top-Left corner bracket
+      path.moveTo(-offset, bracketSize - offset);
+      path.lineTo(-offset, -offset);
+      path.lineTo(bracketSize - offset, -offset);
+
+      // Top-Right corner bracket
+      path.moveTo(size.width + offset - bracketSize, -offset);
+      path.lineTo(size.width + offset, -offset);
+      path.lineTo(size.width + offset, bracketSize - offset);
+
+      // Bottom-Left corner bracket
+      path.moveTo(-offset, size.height + offset - bracketSize);
+      path.lineTo(-offset, size.height + offset);
+      path.lineTo(bracketSize - offset, size.height + offset);
+
+      // Bottom-Right corner bracket
+      path.moveTo(size.width + offset - bracketSize, size.height + offset);
+      path.lineTo(size.width + offset, size.height + offset);
+      path.lineTo(size.width + offset, size.height + offset - bracketSize);
+
+      canvas.drawPath(path, bracketPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _SocialIconButtonPainter oldDelegate) {
+    return oldDelegate.hoverProgress != hoverProgress;
   }
 }
