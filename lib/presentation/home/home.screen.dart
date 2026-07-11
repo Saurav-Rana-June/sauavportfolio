@@ -127,28 +127,25 @@ class HomeScreen extends GetView<HomeController> {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
             child: showRow
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: _buildHeroLeftContent(name, title),
-                            ),
-                          ),
-                          Spacing.s24.gapW,
-                          const Expanded(
-                            flex: 2,
-                            child: Center(child: FuturisticIllustration()),
-                          ),
-                        ],
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ..._buildHeroLeftContent(name, title),
+                            Spacing.s32.gapH,
+                            _buildSocialMediaSection(profile),
+                          ],
+                        ),
                       ),
-                      Spacing.s32.gapH,
-                      _buildSocialMediaSection(profile),
+                      Spacing.s24.gapW,
+                      const Expanded(
+                        flex: 3,
+                        child: Center(child: FuturisticIllustration()),
+                      ),
                     ],
                   )
                 : Column(
@@ -726,10 +723,10 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
   @override
   Widget build(BuildContext context) {
     final double boxSize = AppScale.isMobile
-        ? 260
-        : AppScale.isTablet
         ? 280
-        : 360;
+        : AppScale.isTablet
+        ? 320
+        : 420;
 
     return SizedBox(
       width: boxSize,
@@ -1386,26 +1383,29 @@ class _SocialIconButtonState extends State<_SocialIconButton>
                       AnimatedSize(
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeOutCubic,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (_isHovered) ...[
-                              const SizedBox(width: 8),
-                              Text(
-                                widget.label,
-                                style: AppTextStyles.mono12.copyWith(
-                                  color: Color.lerp(
-                                    AppColors.textSecondary,
-                                    AppColors.textPrimary,
-                                    hoverVal,
+                        child: SizedBox(
+                          height: AppScale.icon(14),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_isHovered) ...[
+                                const SizedBox(width: 8),
+                                Text(
+                                  widget.label,
+                                  style: AppTextStyles.mono12.copyWith(
+                                    color: Color.lerp(
+                                      AppColors.textSecondary,
+                                      AppColors.textPrimary,
+                                      hoverVal,
+                                    ),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: AppScale.font(10),
+                                    letterSpacing: 1.0,
                                   ),
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: AppScale.font(10),
-                                  letterSpacing: 1.0,
                                 ),
-                              ),
+                              ],
                             ],
-                          ],
+                          ),
                         ),
                       ),
                     ],
