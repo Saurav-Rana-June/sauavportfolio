@@ -20,8 +20,9 @@ class ProjectCard extends StatefulWidget {
 }
 
 class _ProjectCardState extends State<ProjectCard>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _hoverController;
+  late final AnimationController _borderController;
   late final Animation<double> _hoverAnimation;
   bool _isHovered = false;
 
@@ -36,11 +37,16 @@ class _ProjectCardState extends State<ProjectCard>
       parent: _hoverController,
       curve: Curves.easeOutCubic,
     );
+    _borderController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
   }
 
   @override
   void dispose() {
     _hoverController.dispose();
+    _borderController.dispose();
     super.dispose();
   }
 
@@ -48,8 +54,11 @@ class _ProjectCardState extends State<ProjectCard>
     setState(() => _isHovered = isHovered);
     if (isHovered) {
       _hoverController.forward();
+      _borderController.repeat();
     } else {
       _hoverController.reverse();
+      _borderController.stop();
+      _borderController.reset();
     }
   }
 
@@ -63,7 +72,7 @@ class _ProjectCardState extends State<ProjectCard>
       onEnter: (_) => _handleHover(true),
       onExit: (_) => _handleHover(false),
       child: AnimatedBuilder(
-        animation: _hoverAnimation,
+        animation: Listenable.merge([_hoverAnimation, _borderController]),
         builder: (context, child) {
           final hoverVal = _hoverAnimation.value;
           final double cardScale = 1.0 + (hoverVal * 0.02);
@@ -107,8 +116,14 @@ class _ProjectCardState extends State<ProjectCard>
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: InkWell(
-                  onTap: widget.onTap,
+                child: CustomPaint(
+                  painter: _BorderFlowPainter(
+                    hoverProgress: hoverVal,
+                    flowProgress: _borderController.value,
+                    color: themeColor,
+                  ),
+                  child: InkWell(
+                    onTap: widget.onTap,
                   borderRadius: BorderRadius.circular(16),
                   hoverColor: Colors.transparent,
                   splashColor: themeColor.withValues(alpha: 0.05),
@@ -266,6 +281,7 @@ class _ProjectCardState extends State<ProjectCard>
                     ),
                   ),
                 ),
+                ),
               ),
             ),
           );
@@ -325,5 +341,69 @@ class _ActionIconButtonState extends State<_ActionIconButton> {
         ),
       ),
     );
+  }
+}
+
+class _BorderFlowPainter extends CustomPainter {
+  final double hoverProgress;
+  final double flowProgress;
+  final Color color;
+
+  _BorderFlowPainter({
+    required this.hoverProgress,
+    required this.flowProgress,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (hoverProgress == 0) return;
+
+    final path = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+        const Radius.circular(16),
+      ));
+
+    final pathMetrics = path.computeMetrics();
+    if (pathMetrics.isEmpty) return;
+
+    final pathMetric = pathMetrics.first;
+    final double totalLength = pathMetric.length;
+
+    // Laser segment length is 20% of perimeter
+    final double segmentLength = totalLength * 0.20;
+    final double start = totalLength * flowProgress;
+    final double end = start + segmentLength;
+
+    Path subPath;
+    if (end <= totalLength) {
+      subPath = pathMetric.extractPath(start, end);
+    } else {
+      subPath = pathMetric.extractPath(start, totalLength);
+      subPath.addPath(pathMetric.extractPath(0, end - totalLength), Offset.zero);
+    }
+
+    // Outer glow stroke
+    final glowPaint = Paint()
+      ..color = color.withValues(alpha: hoverProgress * 0.25)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.0;
+
+    // Core laser stroke
+    final corePaint = Paint()
+      ..color = color.withValues(alpha: hoverProgress * 0.85)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8;
+
+    canvas.drawPath(subPath, glowPaint);
+    canvas.drawPath(subPath, corePaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BorderFlowPainter oldDelegate) {
+    return oldDelegate.hoverProgress != hoverProgress ||
+        oldDelegate.flowProgress != flowProgress ||
+        oldDelegate.color != color;
   }
 }
