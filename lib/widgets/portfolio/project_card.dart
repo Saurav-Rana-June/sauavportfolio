@@ -391,17 +391,30 @@ class _BorderFlowPainter extends CustomPainter {
       );
     }
 
-    // Outer glow stroke
+    final Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    final shader = LinearGradient(
+      colors: [
+        AppColors.accent,
+        AppColors.primary,
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ).createShader(rect);
+
+    // Outer glow stroke with Gaussian Blur Filter
     final glowPaint = Paint()
-      ..color = color.withValues(alpha: hoverProgress * 0.25)
+      ..shader = shader
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0;
+      ..strokeWidth = 10.0
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 6.0 * hoverProgress)
+      ..color = Colors.white.withValues(alpha: hoverProgress * 0.35);
 
     // Core laser stroke
     final corePaint = Paint()
-      ..color = color.withValues(alpha: hoverProgress * 0.85)
+      ..shader = shader
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.8;
+      ..strokeWidth = 2.0
+      ..color = Colors.white.withValues(alpha: hoverProgress * 0.90);
 
     canvas.drawPath(subPath, glowPaint);
     canvas.drawPath(subPath, corePaint);
