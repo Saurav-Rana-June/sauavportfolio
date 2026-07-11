@@ -772,7 +772,9 @@ class HomeScreen extends GetView<HomeController> {
                     4.0.gapH,
                     Text(
                       profile?.location ?? 'Rishikesh, Uttarakhand, India',
-                      style: AppTextStyles.r14.copyWith(color: AppColors.textSecondary),
+                      style: AppTextStyles.r14.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -841,7 +843,8 @@ class HomeScreen extends GetView<HomeController> {
                   onTap: () => controller.openExternalLink(profile.githubUrl),
                   accentColor: themeColor,
                 ),
-              if (profile?.linkedInUrl != null && profile!.linkedInUrl!.isNotEmpty) ...[
+              if (profile?.linkedInUrl != null &&
+                  profile!.linkedInUrl!.isNotEmpty) ...[
                 if (profile.githubUrl != null) Spacing.s12.gapW,
                 _SocialIconRoundButton(
                   icon: AppIcons.linkedin,
@@ -873,8 +876,7 @@ class HomeScreen extends GetView<HomeController> {
               controller: controller.nameController,
               label: 'Name',
               hint: 'Your name',
-              validator: (value) =>
-                  value == null || value.trim().isEmpty
+              validator: (value) => value == null || value.trim().isEmpty
                   ? 'Name is required'
                   : null,
             ),
@@ -900,8 +902,7 @@ class HomeScreen extends GetView<HomeController> {
               label: 'Message',
               hint: 'Tell me about your project...',
               maxLines: 5,
-              validator: (value) =>
-                  value == null || value.trim().isEmpty
+              validator: (value) => value == null || value.trim().isEmpty
                   ? 'Message is required'
                   : null,
             ),
