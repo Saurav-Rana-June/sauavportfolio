@@ -57,19 +57,22 @@ class _AnimatedTypingTextState extends State<AnimatedTypingText> {
 
   void _startTyping() {
     if (widget.texts.isEmpty) return;
-    
+
     final fullText = widget.texts[_currentTextIndex];
-    
+
     _typingTimer = Timer.periodic(
       _isDeleting ? widget.deletingSpeed : widget.typingSpeed,
       (timer) {
         if (!mounted) return;
-        
+
         setState(() {
           if (_isDeleting) {
             _showCursor = true;
             if (_currentDisplayedText.isNotEmpty) {
-              _currentDisplayedText = _currentDisplayedText.substring(0, _currentDisplayedText.length - 1);
+              _currentDisplayedText = _currentDisplayedText.substring(
+                0,
+                _currentDisplayedText.length - 1,
+              );
             } else {
               _typingTimer?.cancel();
               _isDeleting = false;
@@ -81,7 +84,10 @@ class _AnimatedTypingTextState extends State<AnimatedTypingText> {
           } else {
             _showCursor = true;
             if (_currentDisplayedText.length < fullText.length) {
-              _currentDisplayedText = fullText.substring(0, _currentDisplayedText.length + 1);
+              _currentDisplayedText = fullText.substring(
+                0,
+                _currentDisplayedText.length + 1,
+              );
             } else {
               _typingTimer?.cancel();
               _isDeleting = true;
@@ -101,10 +107,7 @@ class _AnimatedTypingTextState extends State<AnimatedTypingText> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          _currentDisplayedText,
-          style: widget.style,
-        ),
+        Text(_currentDisplayedText, style: widget.style),
         AnimatedOpacity(
           opacity: _showCursor ? 1.0 : 0.0,
           duration: const Duration(milliseconds: 100),

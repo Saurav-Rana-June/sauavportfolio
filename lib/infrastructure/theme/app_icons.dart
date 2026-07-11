@@ -17,6 +17,8 @@ abstract final class AppIcons {
   static IconData get resume => solid(FontAwesomeIcons.fileLines);
   static IconData get github => brandIcon(FontAwesomeIcons.github);
   static IconData get linkedin => brandIcon(FontAwesomeIcons.linkedin);
+  static IconData get mobile => light(FontAwesomeIcons.mobile);
+  static IconData get bolt => solid(FontAwesomeIcons.bolt);
 
   static IconData solid(IconData icon) => IconData(
         icon.codePoint,

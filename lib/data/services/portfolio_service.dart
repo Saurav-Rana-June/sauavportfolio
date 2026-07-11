@@ -10,10 +10,14 @@ class PortfolioService {
       name: 'Saurav Rana',
       title: 'Senior Flutter Developer',
       bio:
-          'I build performant, scalable cross-platform applications with Flutter. '
-          'Passionate about clean architecture, thoughtful UX, and shipping products that matter.',
-      email: 'hello@saurav.dev',
-      location: 'India',
+          'I am a passionate Senior Flutter Developer with 2+ years of experience specializing in building '
+          'high-performance, pixel-perfect, and cross-platform applications. My core expertise lies in '
+          'implementing Clean Architecture, robust state management, and elegant UI/UX design patterns. '
+          'I love bridging the gap between design and code, crafting seamless user interfaces that delight. '
+          'Currently, I am expanding my skill set with backend technologies like FastAPI to build robust, '
+          'end-to-end applications that are both scalable and efficient.',
+      email: 'sauravsevenjune@gmail.com',
+      location: 'Rishikesh, Uttarakhand, India',
       skills: const [
         'Flutter',
         'Dart',
