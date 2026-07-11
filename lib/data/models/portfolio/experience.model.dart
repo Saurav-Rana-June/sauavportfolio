@@ -6,6 +6,7 @@ class ExperienceModel {
   final String location;
   final String description;
   final bool isRemote;
+  final List<String> skills;
 
   ExperienceModel({
     required this.id,
@@ -15,6 +16,7 @@ class ExperienceModel {
     required this.location,
     required this.description,
     this.isRemote = false,
+    this.skills = const [],
   });
 
   factory ExperienceModel.fromJson(Map<String, dynamic> json) => ExperienceModel(
@@ -25,6 +27,10 @@ class ExperienceModel {
         location: json['location'] as String,
         description: json['description'] as String,
         isRemote: json['isRemote'] as bool? ?? false,
+        skills: (json['skills'] as List<dynamic>?)
+                ?.map((e) => e as String)
+                .toList() ??
+            const [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -35,5 +41,6 @@ class ExperienceModel {
         'location': location,
         'description': description,
         'isRemote': isRemote,
+        'skills': skills,
       };
 }

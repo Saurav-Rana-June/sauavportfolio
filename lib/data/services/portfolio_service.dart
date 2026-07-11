@@ -119,6 +119,7 @@ class PortfolioService {
           'Developing and maintaining high-quality mobile applications with Flutter. '
           'Working in a remote, collaborative environment to deliver scalable software features.',
       isRemote: true,
+      skills: const ['iOS', 'Flutter', 'Dart', 'GetX', 'Git'],
     ),
     ExperienceModel(
       id: '2',
@@ -130,6 +131,7 @@ class PortfolioService {
           'Worked as a Junior Flutter Developer on Travel & Hospitality products. '
           'Responsible for implementing responsive user interfaces, modular components, and API integrations.',
       isRemote: false,
+      skills: const ['Flutter', 'REST APIs', 'Firebase', 'State Management', 'Git', 'Agile'],
     ),
     ExperienceModel(
       id: '3',
@@ -141,6 +143,7 @@ class PortfolioService {
           'Completed a 3-month Flutter internship, originally planned for 6 months. '
           'Focused on training in state management, cross-device compatibility, and code modularization.',
       isRemote: false,
+      skills: const ['Flutter', 'Dart', 'Clean Architecture', 'API Integration', 'UI/UX'],
     ),
     ExperienceModel(
       id: '4',
@@ -152,6 +155,7 @@ class PortfolioService {
           'Gained hands-on experience developing Flutter applications using Dart. '
           'Mastered basic widgets, routing, and collaborated with senior developers.',
       isRemote: false,
+      skills: const ['Flutter', 'Teamwork', 'Dart', 'Git', 'OOP'],
     ),
   ];
 }
