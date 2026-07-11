@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
+import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
@@ -55,6 +56,10 @@ class HomeScreen extends GetView<HomeController> {
                     profile?.bio ?? '',
                     profile?.location ?? '',
                   ),
+                ),
+                SliverToBoxAdapter(
+                  key: controller.experienceSectionKey,
+                  child: _buildExperienceSection(controller.experiences),
                 ),
                 SliverToBoxAdapter(
                   key: controller.skillsSectionKey,
@@ -476,6 +481,121 @@ class HomeScreen extends GetView<HomeController> {
           highlightColor: AppColors.success,
         ),
       ],
+    );
+  }
+
+  Widget _buildExperienceSection(List<ExperienceModel> experiences) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.sectionPaddingVertical(),
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'EXPERIENCE',
+                style: AppTextStyles.mono12.copyWith(
+                  color: AppColors.accent,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w700,
+                  fontSize: AppScale.font(10),
+                ),
+              ),
+              Spacing.s8.gapH,
+              Text(
+                'Career Journey',
+                style: AppTextStyles.b32.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Spacing.s8.gapH,
+              Text(
+                'My professional path in mobile development',
+                style: AppTextStyles.r14.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: AppScale.font(14),
+                ),
+              ),
+              48.0.gapH,
+              _buildTimeline(experiences),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimeline(List<ExperienceModel> experiences) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: experiences.length,
+      itemBuilder: (context, index) {
+        final exp = experiences[index];
+        final isLast = index == experiences.length - 1;
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildTimelineIndicator(isLast),
+              Spacing.s24.gapW,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: _ExperienceCard(experience: exp),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTimelineIndicator(bool isLast) {
+    return SizedBox(
+      width: 24,
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          if (!isLast)
+            Positioned(
+              top: 8,
+              bottom: 0,
+              child: Container(
+                width: 2.5,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(1.25),
+                ),
+              ),
+            ),
+          Positioned(
+            top: 4,
+            child: Container(
+              width: 14,
+              height: 14,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.scaffoldDark,
+                border: Border.all(color: AppColors.accent, width: 3.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.3),
+                    blurRadius: 6,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1787,6 +1907,150 @@ class _AboutFocusCardState extends State<_AboutFocusCard> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ExperienceCard extends StatefulWidget {
+  final ExperienceModel experience;
+
+  const _ExperienceCard({required this.experience});
+
+  @override
+  State<_ExperienceCard> createState() => _ExperienceCardState();
+}
+
+class _ExperienceCardState extends State<_ExperienceCard> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final exp = widget.experience;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: _isHovered
+              ? AppColors.surfaceDark.withValues(alpha: 0.6)
+              : AppColors.surfaceDark.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: _isHovered
+                ? AppColors.primary.withValues(alpha: 0.4)
+                : AppColors.border.withValues(alpha: 0.5),
+            width: 1.5,
+          ),
+          boxShadow: [
+            if (_isHovered)
+              BoxShadow(
+                color: AppColors.primary.withValues(alpha: 0.05),
+                blurRadius: 16,
+                offset: const Offset(0, 4),
+              ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                AppFaIcon(
+                  AppIcons.calendar,
+                  color: AppColors.accent,
+                  size: AppScale.icon(12),
+                ),
+                Spacing.s8.gapW,
+                Text(
+                  exp.period.toUpperCase(),
+                  style: AppTextStyles.mono12.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w700,
+                    fontSize: AppScale.font(10),
+                    letterSpacing: 1.0,
+                  ),
+                ),
+              ],
+            ),
+            Spacing.s12.gapH,
+            Text(
+              exp.role,
+              style: AppTextStyles.sb18.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w800,
+                fontSize: AppScale.font(18),
+              ),
+            ),
+            Spacing.s8.gapH,
+            Row(
+              children: [
+                Text(
+                  exp.company,
+                  style: AppTextStyles.m16.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                    fontSize: AppScale.font(14),
+                  ),
+                ),
+                Spacing.s12.gapW,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: exp.isRemote
+                        ? AppColors.primary.withValues(alpha: 0.1)
+                        : AppColors.border.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: exp.isRemote
+                          ? AppColors.primary.withValues(alpha: 0.2)
+                          : AppColors.border.withValues(alpha: 0.5),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      AppFaIcon(
+                        exp.isRemote ? AppIcons.remote : AppIcons.location,
+                        color: exp.isRemote
+                            ? AppColors.primaryLight
+                            : AppColors.textSecondary,
+                        size: AppScale.icon(10),
+                      ),
+                      6.0.gapW,
+                      Text(
+                        exp.location.toUpperCase(),
+                        style: AppTextStyles.mono12.copyWith(
+                          color: exp.isRemote
+                              ? AppColors.primaryLight
+                              : AppColors.textSecondary,
+                          fontSize: AppScale.font(8),
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Spacing.s16.gapH,
+            Text(
+              exp.description,
+              style: AppTextStyles.r14.copyWith(
+                color: AppColors.textSecondary.withValues(alpha: 0.9),
+                height: 1.6,
+                fontSize: AppScale.font(13.5),
               ),
             ),
           ],

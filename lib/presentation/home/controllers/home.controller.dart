@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:saurav_portfolio/controllers/global.controller.dart';
 import 'package:saurav_portfolio/data/enums/snackbar_enum.dart';
+import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 import 'package:saurav_portfolio/data/services/portfolio_service.dart';
 import 'package:saurav_portfolio/data/utils/app_utils.dart';
@@ -18,10 +19,12 @@ class HomeController extends GetxController {
   RxBool isLoading = true.obs;
   RxBool isSubmitting = false.obs;
   RxList<ProjectModel> projects = <ProjectModel>[].obs;
+  RxList<ExperienceModel> experiences = <ExperienceModel>[].obs;
   Rx<PortfolioNavSection> activeNavSection = PortfolioNavSection.home.obs;
 
   final ScrollController scrollController = ScrollController();
   final GlobalKey aboutSectionKey = GlobalKey();
+  final GlobalKey experienceSectionKey = GlobalKey();
   final GlobalKey skillsSectionKey = GlobalKey();
   final GlobalKey projectsSectionKey = GlobalKey();
   final GlobalKey contactSectionKey = GlobalKey();
@@ -57,8 +60,10 @@ class HomeController extends GetxController {
     try {
       final profile = await PortfolioService.fetchProfile();
       final allProjects = await PortfolioService.fetchProjects();
+      final allExperiences = await PortfolioService.fetchExperiences();
       globalController.setProfile(profile);
       projects.assignAll(allProjects);
+      experiences.assignAll(allExperiences);
     } catch (error) {
       log.e('loadHomeData failed: $error');
       AppUtils.snackbar('Failed!', error.toString(), SnackBarType.error);

@@ -19,6 +19,8 @@ abstract final class AppIcons {
   static IconData get linkedin => brandIcon(FontAwesomeIcons.linkedin);
   static IconData get mobile => light(FontAwesomeIcons.mobile);
   static IconData get bolt => solid(FontAwesomeIcons.bolt);
+  static IconData get calendar => solid(FontAwesomeIcons.calendarCheck);
+  static IconData get remote => solid(FontAwesomeIcons.houseLaptop);
 
   static IconData solid(IconData icon) => IconData(
         icon.codePoint,

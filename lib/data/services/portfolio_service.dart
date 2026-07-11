@@ -1,3 +1,4 @@
+import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/profile.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 
@@ -99,6 +100,58 @@ class PortfolioService {
       tags: ['Social', 'Media', 'AI'],
       liveUrl: '#',
       githubUrl: '#',
+    ),
+  ];
+
+  static Future<List<ExperienceModel>> fetchExperiences() async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    return _seedExperiences;
+  }
+
+  static final List<ExperienceModel> _seedExperiences = [
+    ExperienceModel(
+      id: '1',
+      role: 'Flutter Developer',
+      company: 'EkoDemy',
+      period: 'Apr 2025 — Present',
+      location: 'Remote',
+      description:
+          'Developing and maintaining high-quality mobile applications with Flutter. '
+          'Working in a remote, collaborative environment to deliver scalable software features.',
+      isRemote: true,
+    ),
+    ExperienceModel(
+      id: '2',
+      role: 'Junior Flutter Developer',
+      company: 'Qwetzal Technologies',
+      period: 'Nov 2024 — Mar 2025',
+      location: 'Raipur, Uttarakhand, India',
+      description:
+          'Worked as a Junior Flutter Developer on Travel & Hospitality products. '
+          'Responsible for implementing responsive user interfaces, modular components, and API integrations.',
+      isRemote: false,
+    ),
+    ExperienceModel(
+      id: '3',
+      role: 'Flutter Intern',
+      company: 'Qwetzal Technologies',
+      period: 'Aug 2024 — Nov 2024',
+      location: 'Dehradun, Uttarakhand, India',
+      description:
+          'Completed a 3-month Flutter internship, originally planned for 6 months. '
+          'Focused on training in state management, cross-device compatibility, and code modularization.',
+      isRemote: false,
+    ),
+    ExperienceModel(
+      id: '4',
+      role: 'Flutter Trainee',
+      company: 'Qwetzal Technologies',
+      period: 'Jun 2024 — Aug 2024',
+      location: 'Raipur, Uttarakhand, India',
+      description:
+          'Gained hands-on experience developing Flutter applications using Dart. '
+          'Mastered basic widgets, routing, and collaborated with senior developers.',
+      isRemote: false,
     ),
   ];
 }
