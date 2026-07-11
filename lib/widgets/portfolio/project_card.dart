@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
@@ -362,63 +361,7 @@ class _ProjectCardPainter extends CustomPainter {
     canvas.drawLine(Offset(size.width - offset - lineLength, size.height - offset), Offset(size.width - offset, size.height - offset), paint);
     canvas.drawLine(Offset(size.width - offset, size.height - offset - lineLength), Offset(size.width - offset, size.height - offset), paint);
 
-    // Holographic dashed border
-    final dashPaint = Paint()
-      ..color = color.withValues(alpha: hoverProgress * 0.20)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.0;
 
-    const double dashWidth = 4.0;
-    const double dashSpace = 4.0;
-
-    final double startX = offset + lineLength;
-    final double endX = size.width - offset - lineLength;
-    final double startY = offset + lineLength;
-    final double endY = size.height - offset - lineLength;
-
-    // Top
-    double currentX = startX;
-    while (currentX < endX) {
-      canvas.drawLine(
-        Offset(currentX, offset),
-        Offset(math.min(currentX + dashWidth, endX), offset),
-        dashPaint,
-      );
-      currentX += dashWidth + dashSpace;
-    }
-
-    // Bottom
-    currentX = startX;
-    while (currentX < endX) {
-      canvas.drawLine(
-        Offset(currentX, size.height - offset),
-        Offset(math.min(currentX + dashWidth, endX), size.height - offset),
-        dashPaint,
-      );
-      currentX += dashWidth + dashSpace;
-    }
-
-    // Left
-    double currentY = startY;
-    while (currentY < endY) {
-      canvas.drawLine(
-        Offset(offset, currentY),
-        Offset(offset, math.min(currentY + dashWidth, endY)),
-        dashPaint,
-      );
-      currentY += dashWidth + dashSpace;
-    }
-
-    // Right
-    currentY = startY;
-    while (currentY < endY) {
-      canvas.drawLine(
-        Offset(size.width - offset, currentY),
-        Offset(size.width - offset, math.min(currentY + dashWidth, endY)),
-        dashPaint,
-      );
-      currentY += dashWidth + dashSpace;
-    }
   }
 
   @override
