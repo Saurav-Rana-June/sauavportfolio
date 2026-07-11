@@ -13,11 +13,7 @@ class ProjectCard extends StatefulWidget {
   final ProjectModel project;
   final VoidCallback onTap;
 
-  const ProjectCard({
-    super.key,
-    required this.project,
-    required this.onTap,
-  });
+  const ProjectCard({super.key, required this.project, required this.onTap});
 
   @override
   State<ProjectCard> createState() => _ProjectCardState();
@@ -111,12 +107,7 @@ class _ProjectCardState extends State<ProjectCard>
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: CustomPaint(
-                  painter: _ProjectCardPainter(
-                    hoverProgress: hoverVal,
-                    color: themeColor,
-                  ),
-                  child: InkWell(
+                child: InkWell(
                     onTap: widget.onTap,
                     borderRadius: BorderRadius.circular(16),
                     hoverColor: Colors.transparent,
@@ -137,7 +128,9 @@ class _ProjectCardState extends State<ProjectCard>
                                 decoration: BoxDecoration(
                                   color: _isHovered
                                       ? themeColor.withValues(alpha: 0.15)
-                                      : AppColors.primary.withValues(alpha: 0.08),
+                                      : AppColors.primary.withValues(
+                                          alpha: 0.08,
+                                        ),
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(
                                     color: _isHovered
@@ -150,19 +143,25 @@ class _ProjectCardState extends State<ProjectCard>
                                   children: [
                                     if (hoverVal > 0)
                                       Container(
-                                        width: AppScale.icon(28) + (hoverVal * 8),
-                                        height: AppScale.icon(28) + (hoverVal * 8),
+                                        width:
+                                            AppScale.icon(28) + (hoverVal * 8),
+                                        height:
+                                            AppScale.icon(28) + (hoverVal * 8),
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           border: Border.all(
-                                            color: themeColor.withValues(alpha: (1.0 - hoverVal) * 0.3),
+                                            color: themeColor.withValues(
+                                              alpha: (1.0 - hoverVal) * 0.3,
+                                            ),
                                             width: 1.0,
                                           ),
                                         ),
                                       ),
                                     AppFaIcon(
                                       AppIcons.folder,
-                                      color: _isHovered ? themeColor : AppColors.textSecondary,
+                                      color: _isHovered
+                                          ? themeColor
+                                          : AppColors.textSecondary,
                                       size: AppScale.icon(18),
                                     ),
                                   ],
@@ -171,17 +170,21 @@ class _ProjectCardState extends State<ProjectCard>
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (project.githubUrl != null && project.githubUrl != '#')
+                                  if (project.githubUrl != null &&
+                                      project.githubUrl != '#')
                                     _ActionIconButton(
                                       icon: AppIcons.github,
-                                      onTap: () => homeController.openExternalLink(project.githubUrl),
+                                      onTap: () => homeController
+                                          .openExternalLink(project.githubUrl),
                                       accentColor: themeColor,
                                     ),
-                                  if (project.liveUrl != null && project.liveUrl != '#') ...[
+                                  if (project.liveUrl != null &&
+                                      project.liveUrl != '#') ...[
                                     Spacing.s8.gapW,
                                     _ActionIconButton(
                                       icon: AppIcons.arrowExternal,
-                                      onTap: () => homeController.openExternalLink(project.liveUrl),
+                                      onTap: () => homeController
+                                          .openExternalLink(project.liveUrl),
                                       accentColor: themeColor,
                                     ),
                                   ],
@@ -195,7 +198,9 @@ class _ProjectCardState extends State<ProjectCard>
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.sb18.copyWith(
-                              color: _isHovered ? themeColor : AppColors.textPrimary,
+                              color: _isHovered
+                                  ? themeColor
+                                  : AppColors.textPrimary,
                               fontWeight: FontWeight.w700,
                               fontSize: AppScale.font(16),
                             ),
@@ -207,7 +212,9 @@ class _ProjectCardState extends State<ProjectCard>
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.r14.copyWith(
-                                color: AppColors.textSecondary.withValues(alpha: 0.9),
+                                color: AppColors.textSecondary.withValues(
+                                  alpha: 0.9,
+                                ),
                                 height: 1.5,
                                 fontSize: AppScale.font(13),
                               ),
@@ -220,7 +227,10 @@ class _ProjectCardState extends State<ProjectCard>
                               runSpacing: 6,
                               children: project.tags.take(3).map((tag) {
                                 return Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: themeColor.withValues(alpha: 0.03),
                                     borderRadius: BorderRadius.circular(4),
@@ -261,7 +271,6 @@ class _ProjectCardState extends State<ProjectCard>
                   ),
                 ),
               ),
-            ),
           );
         },
       ),
@@ -322,50 +331,4 @@ class _ActionIconButtonState extends State<_ActionIconButton> {
   }
 }
 
-class _ProjectCardPainter extends CustomPainter {
-  final double hoverProgress;
-  final Color color;
 
-  _ProjectCardPainter({
-    required this.hoverProgress,
-    required this.color,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (hoverProgress == 0) return;
-
-    final paint = Paint()
-      ..color = color.withValues(alpha: hoverProgress * 0.8)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round;
-
-    const double offset = 1.0;
-    const double lineLength = 12.0;
-
-    // Corner Brackets
-    // Top-Left
-    canvas.drawLine(const Offset(offset, offset + lineLength), const Offset(offset, offset), paint);
-    canvas.drawLine(const Offset(offset, offset), const Offset(offset + lineLength, offset), paint);
-
-    // Top-Right
-    canvas.drawLine(Offset(size.width - offset - lineLength, offset), Offset(size.width - offset, offset), paint);
-    canvas.drawLine(Offset(size.width - offset, offset), Offset(size.width - offset, offset + lineLength), paint);
-
-    // Bottom-Left
-    canvas.drawLine(Offset(offset, size.height - offset - lineLength), Offset(offset, size.height - offset), paint);
-    canvas.drawLine(Offset(offset, size.height - offset), Offset(offset + lineLength, size.height - offset), paint);
-
-    // Bottom-Right
-    canvas.drawLine(Offset(size.width - offset - lineLength, size.height - offset), Offset(size.width - offset, size.height - offset), paint);
-    canvas.drawLine(Offset(size.width - offset, size.height - offset - lineLength), Offset(size.width - offset, size.height - offset), paint);
-
-
-  }
-
-  @override
-  bool shouldRepaint(covariant _ProjectCardPainter oldDelegate) {
-    return oldDelegate.hoverProgress != hoverProgress || oldDelegate.color != color;
-  }
-}
