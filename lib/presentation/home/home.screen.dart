@@ -582,8 +582,8 @@ class HomeScreen extends GetView<HomeController> {
         level: 0.80,
         subtitle: 'Advanced',
       ),
-      const _SkillItem(name: 'UI/UX', level: 0.85, subtitle: 'Advanced'),
-      const _SkillItem(name: 'Figma', level: 0.85, subtitle: 'Advanced'),
+      const _SkillItem(name: 'UI/UX', level: 0.70, subtitle: 'Intermediate'),
+      const _SkillItem(name: 'Figma', level: 0.70, subtitle: 'Intermediate'),
       const _SkillItem(name: 'FastAPI', level: 0.50, subtitle: 'Learning'),
       const _SkillItem(name: 'Render', level: 0.70, subtitle: 'Intermediate'),
     ];
