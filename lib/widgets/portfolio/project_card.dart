@@ -108,169 +108,166 @@ class _ProjectCardState extends State<ProjectCard>
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: InkWell(
-                    onTap: widget.onTap,
-                    borderRadius: BorderRadius.circular(16),
-                    hoverColor: Colors.transparent,
-                    splashColor: themeColor.withValues(alpha: 0.05),
-                    highlightColor: Colors.transparent,
-                    child: Padding(
-                      padding: EdgeInsets.all(AppScale.w(24)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AnimatedContainer(
-                                duration: const Duration(milliseconds: 250),
-                                width: AppScale.icon(42),
-                                height: AppScale.icon(42),
-                                decoration: BoxDecoration(
+                  onTap: widget.onTap,
+                  borderRadius: BorderRadius.circular(16),
+                  hoverColor: Colors.transparent,
+                  splashColor: themeColor.withValues(alpha: 0.05),
+                  highlightColor: Colors.transparent,
+                  child: Padding(
+                    padding: EdgeInsets.all(AppScale.w(24)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              width: AppScale.icon(42),
+                              height: AppScale.icon(42),
+                              decoration: BoxDecoration(
+                                color: _isHovered
+                                    ? themeColor.withValues(alpha: 0.15)
+                                    : AppColors.primary.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
                                   color: _isHovered
-                                      ? themeColor.withValues(alpha: 0.15)
-                                      : AppColors.primary.withValues(
-                                          alpha: 0.08,
-                                        ),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: _isHovered
-                                        ? themeColor.withValues(alpha: 0.3)
-                                        : Colors.transparent,
-                                  ),
-                                ),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    if (hoverVal > 0)
-                                      Container(
-                                        width:
-                                            AppScale.icon(28) + (hoverVal * 8),
-                                        height:
-                                            AppScale.icon(28) + (hoverVal * 8),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: themeColor.withValues(
-                                              alpha: (1.0 - hoverVal) * 0.3,
-                                            ),
-                                            width: 1.0,
-                                          ),
-                                        ),
-                                      ),
-                                    AppFaIcon(
-                                      AppIcons.folder,
-                                      color: _isHovered
-                                          ? themeColor
-                                          : AppColors.textSecondary,
-                                      size: AppScale.icon(18),
-                                    ),
-                                  ],
+                                      ? themeColor.withValues(alpha: 0.3)
+                                      : Colors.transparent,
                                 ),
                               ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
+                              child: Stack(
+                                alignment: Alignment.center,
                                 children: [
-                                  if (project.githubUrl != null &&
-                                      project.githubUrl != '#')
-                                    _ActionIconButton(
-                                      icon: AppIcons.github,
-                                      onTap: () => homeController
-                                          .openExternalLink(project.githubUrl),
-                                      accentColor: themeColor,
+                                  if (hoverVal > 0)
+                                    Container(
+                                      width: AppScale.icon(28) + (hoverVal * 8),
+                                      height:
+                                          AppScale.icon(28) + (hoverVal * 8),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: themeColor.withValues(
+                                            alpha: (1.0 - hoverVal) * 0.3,
+                                          ),
+                                          width: 1.0,
+                                        ),
+                                      ),
                                     ),
-                                  if (project.liveUrl != null &&
-                                      project.liveUrl != '#') ...[
-                                    Spacing.s8.gapW,
-                                    _ActionIconButton(
-                                      icon: AppIcons.arrowExternal,
-                                      onTap: () => homeController
-                                          .openExternalLink(project.liveUrl),
-                                      accentColor: themeColor,
-                                    ),
-                                  ],
+                                  AppFaIcon(
+                                    AppIcons.folder,
+                                    color: _isHovered
+                                        ? themeColor
+                                        : AppColors.textSecondary,
+                                    size: AppScale.icon(18),
+                                  ),
                                 ],
                               ),
-                            ],
+                            ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (project.githubUrl != null &&
+                                    project.githubUrl != '#')
+                                  _ActionIconButton(
+                                    icon: AppIcons.github,
+                                    onTap: () => homeController
+                                        .openExternalLink(project.githubUrl),
+                                    accentColor: themeColor,
+                                  ),
+                                if (project.liveUrl != null &&
+                                    project.liveUrl != '#') ...[
+                                  Spacing.s8.gapW,
+                                  _ActionIconButton(
+                                    icon: AppIcons.arrowExternal,
+                                    onTap: () => homeController
+                                        .openExternalLink(project.liveUrl),
+                                    accentColor: themeColor,
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ],
+                        ),
+                        20.0.gapH,
+                        Text(
+                          project.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.sb18.copyWith(
+                            color: _isHovered
+                                ? themeColor
+                                : AppColors.textPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: AppScale.font(16),
                           ),
-                          20.0.gapH,
+                        ),
+                        Spacing.s8.gapH,
+                        Expanded(
+                          child: Text(
+                            project.description,
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.r14.copyWith(
+                              color: AppColors.textSecondary.withValues(
+                                alpha: 0.9,
+                              ),
+                              height: 1.5,
+                              fontSize: AppScale.font(13),
+                            ),
+                          ),
+                        ),
+                        Spacing.s16.gapH,
+                        if (project.tags.isNotEmpty)
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 6,
+                            children: project.tags.take(3).map((tag) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: themeColor.withValues(alpha: 0.03),
+                                  borderRadius: BorderRadius.circular(4),
+                                  border: Border.all(
+                                    color: themeColor.withValues(alpha: 0.15),
+                                    width: 1.0,
+                                  ),
+                                ),
+                                child: Text(
+                                  tag,
+                                  style: AppTextStyles.mono12.copyWith(
+                                    color: Color.lerp(
+                                      AppColors.textSecondary,
+                                      themeColor,
+                                      0.7,
+                                    ),
+                                    fontSize: AppScale.font(9),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          )
+                        else
                           Text(
-                            project.title,
+                            project.techStack,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.sb18.copyWith(
-                              color: _isHovered
-                                  ? themeColor
-                                  : AppColors.textPrimary,
-                              fontWeight: FontWeight.w700,
-                              fontSize: AppScale.font(16),
+                            style: AppTextStyles.mono12.copyWith(
+                              color: themeColor.withValues(alpha: 0.8),
+                              fontSize: AppScale.font(10),
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Spacing.s8.gapH,
-                          Expanded(
-                            child: Text(
-                              project.description,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.r14.copyWith(
-                                color: AppColors.textSecondary.withValues(
-                                  alpha: 0.9,
-                                ),
-                                height: 1.5,
-                                fontSize: AppScale.font(13),
-                              ),
-                            ),
-                          ),
-                          Spacing.s16.gapH,
-                          if (project.tags.isNotEmpty)
-                            Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
-                              children: project.tags.take(3).map((tag) {
-                                return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 3,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: themeColor.withValues(alpha: 0.03),
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(
-                                      color: themeColor.withValues(alpha: 0.15),
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    tag,
-                                    style: AppTextStyles.mono12.copyWith(
-                                      color: Color.lerp(
-                                        AppColors.textSecondary,
-                                        themeColor,
-                                        0.7,
-                                      ),
-                                      fontSize: AppScale.font(9),
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            )
-                          else
-                            Text(
-                              project.techStack,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.mono12.copyWith(
-                                color: themeColor.withValues(alpha: 0.8),
-                                fontSize: AppScale.font(10),
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                        ],
-                      ),
+                      ],
                     ),
                   ),
                 ),
               ),
+            ),
           );
         },
       ),
@@ -330,5 +327,3 @@ class _ActionIconButtonState extends State<_ActionIconButton> {
     );
   }
 }
-
-
