@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -127,71 +126,41 @@ class HomeScreen extends GetView<HomeController> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: AppScale.w(28),
-                    vertical: AppScale.h(32),
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.glassFill.withValues(alpha: 0.35),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.glassBorder),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.glowPrimary.withValues(alpha: 0.05),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
+            child: showRow
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: _buildHeroLeftContent(name, title),
+                            ),
+                          ),
+                          Spacing.s24.gapW,
+                          const Expanded(
+                            flex: 2,
+                            child: Center(child: FuturisticIllustration()),
+                          ),
+                        ],
                       ),
+                      Spacing.s32.gapH,
+                      _buildSocialMediaSection(profile),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Center(child: FuturisticIllustration()),
+                      Spacing.s24.gapH,
+                      ..._buildHeroLeftContent(name, title),
+                      Spacing.s32.gapH,
+                      _buildSocialMediaSection(profile),
                     ],
                   ),
-                  child: showRow
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: _buildHeroLeftContent(
-                                      name,
-                                      title,
-                                    ),
-                                  ),
-                                ),
-                                Spacing.s24.gapW,
-                                const Expanded(
-                                  flex: 2,
-                                  child: Center(
-                                    child: FuturisticIllustration(),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Spacing.s32.gapH,
-                            _buildSocialMediaSection(profile),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Center(child: FuturisticIllustration()),
-                            Spacing.s24.gapH,
-                            ..._buildHeroLeftContent(name, title),
-                            Spacing.s32.gapH,
-                            _buildSocialMediaSection(profile),
-                          ],
-                        ),
-                ),
-              ),
-            ),
           ),
         ),
       ),
