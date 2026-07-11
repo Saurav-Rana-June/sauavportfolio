@@ -144,7 +144,10 @@ class HomeScreen extends GetView<HomeController> {
                       Spacing.s24.gapW,
                       const Expanded(
                         flex: 3,
-                        child: Center(child: FuturisticIllustration()),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: FuturisticIllustration(),
+                        ),
                       ),
                     ],
                   )
