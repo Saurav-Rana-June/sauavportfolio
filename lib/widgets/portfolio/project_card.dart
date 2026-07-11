@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
@@ -34,7 +35,7 @@ class _ProjectCardState extends State<ProjectCard>
     super.initState();
     _hoverController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 250),
     );
     _hoverAnimation = CurvedAnimation(
       parent: _hoverController,
@@ -75,11 +76,22 @@ class _ProjectCardState extends State<ProjectCard>
           return Transform.scale(
             scale: cardScale,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 250),
               decoration: BoxDecoration(
-                color: _isHovered
-                    ? AppColors.surfaceDark.withValues(alpha: 0.6)
-                    : AppColors.surfaceDark.withValues(alpha: 0.3),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.surfaceDark.withValues(alpha: 0.3),
+                    Color.lerp(
+                      AppColors.surfaceDark.withValues(alpha: 0.3),
+                      themeColor.withValues(alpha: 0.05),
+                      hoverVal,
+                    )!,
+                    AppColors.surfaceDark.withValues(alpha: 0.3),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0.0, hoverVal, 1.0],
+                ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: Color.lerp(
@@ -120,7 +132,7 @@ class _ProjectCardState extends State<ProjectCard>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
+                                duration: const Duration(milliseconds: 250),
                                 width: AppScale.icon(42),
                                 height: AppScale.icon(42),
                                 decoration: BoxDecoration(
@@ -134,12 +146,27 @@ class _ProjectCardState extends State<ProjectCard>
                                         : Colors.transparent,
                                   ),
                                 ),
-                                child: Center(
-                                  child: AppFaIcon(
-                                    AppIcons.folder,
-                                    color: _isHovered ? themeColor : AppColors.textSecondary,
-                                    size: AppScale.icon(18),
-                                  ),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    if (hoverVal > 0)
+                                      Container(
+                                        width: AppScale.icon(28) + (hoverVal * 8),
+                                        height: AppScale.icon(28) + (hoverVal * 8),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: themeColor.withValues(alpha: (1.0 - hoverVal) * 0.3),
+                                            width: 1.0,
+                                          ),
+                                        ),
+                                      ),
+                                    AppFaIcon(
+                                      AppIcons.folder,
+                                      color: _isHovered ? themeColor : AppColors.textSecondary,
+                                      size: AppScale.icon(18),
+                                    ),
+                                  ],
                                 ),
                               ),
                               Row(
@@ -318,53 +345,80 @@ class _ProjectCardPainter extends CustomPainter {
     const double offset = 1.0;
     const double lineLength = 12.0;
 
+    // Corner Brackets
     // Top-Left
-    canvas.drawLine(
-      const Offset(offset, offset + lineLength),
-      const Offset(offset, offset),
-      paint,
-    );
-    canvas.drawLine(
-      const Offset(offset, offset),
-      const Offset(offset + lineLength, offset),
-      paint,
-    );
+    canvas.drawLine(const Offset(offset, offset + lineLength), const Offset(offset, offset), paint);
+    canvas.drawLine(const Offset(offset, offset), const Offset(offset + lineLength, offset), paint);
 
     // Top-Right
-    canvas.drawLine(
-      Offset(size.width - offset - lineLength, offset),
-      Offset(size.width - offset, offset),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(size.width - offset, offset),
-      Offset(size.width - offset, offset + lineLength),
-      paint,
-    );
+    canvas.drawLine(Offset(size.width - offset - lineLength, offset), Offset(size.width - offset, offset), paint);
+    canvas.drawLine(Offset(size.width - offset, offset), Offset(size.width - offset, offset + lineLength), paint);
 
     // Bottom-Left
-    canvas.drawLine(
-      Offset(offset, size.height - offset - lineLength),
-      Offset(offset, size.height - offset),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(offset, size.height - offset),
-      Offset(offset + lineLength, size.height - offset),
-      paint,
-    );
+    canvas.drawLine(Offset(offset, size.height - offset - lineLength), Offset(offset, size.height - offset), paint);
+    canvas.drawLine(Offset(offset, size.height - offset), Offset(offset + lineLength, size.height - offset), paint);
 
     // Bottom-Right
-    canvas.drawLine(
-      Offset(size.width - offset - lineLength, size.height - offset),
-      Offset(size.width - offset, size.height - offset),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(size.width - offset, size.height - offset - lineLength),
-      Offset(size.width - offset, size.height - offset),
-      paint,
-    );
+    canvas.drawLine(Offset(size.width - offset - lineLength, size.height - offset), Offset(size.width - offset, size.height - offset), paint);
+    canvas.drawLine(Offset(size.width - offset, size.height - offset - lineLength), Offset(size.width - offset, size.height - offset), paint);
+
+    // Holographic dashed border
+    final dashPaint = Paint()
+      ..color = color.withValues(alpha: hoverProgress * 0.20)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.0;
+
+    const double dashWidth = 4.0;
+    const double dashSpace = 4.0;
+
+    final double startX = offset + lineLength;
+    final double endX = size.width - offset - lineLength;
+    final double startY = offset + lineLength;
+    final double endY = size.height - offset - lineLength;
+
+    // Top
+    double currentX = startX;
+    while (currentX < endX) {
+      canvas.drawLine(
+        Offset(currentX, offset),
+        Offset(math.min(currentX + dashWidth, endX), offset),
+        dashPaint,
+      );
+      currentX += dashWidth + dashSpace;
+    }
+
+    // Bottom
+    currentX = startX;
+    while (currentX < endX) {
+      canvas.drawLine(
+        Offset(currentX, size.height - offset),
+        Offset(math.min(currentX + dashWidth, endX), size.height - offset),
+        dashPaint,
+      );
+      currentX += dashWidth + dashSpace;
+    }
+
+    // Left
+    double currentY = startY;
+    while (currentY < endY) {
+      canvas.drawLine(
+        Offset(offset, currentY),
+        Offset(offset, math.min(currentY + dashWidth, endY)),
+        dashPaint,
+      );
+      currentY += dashWidth + dashSpace;
+    }
+
+    // Right
+    currentY = startY;
+    while (currentY < endY) {
+      canvas.drawLine(
+        Offset(size.width - offset, currentY),
+        Offset(size.width - offset, math.min(currentY + dashWidth, endY)),
+        dashPaint,
+      );
+      currentY += dashWidth + dashSpace;
+    }
   }
 
   @override

@@ -2490,23 +2490,24 @@ class _AnimatedProjectCard extends StatelessWidget {
   final Widget child;
   final int index;
 
-  const _AnimatedProjectCard({
-    required this.child,
-    required this.index,
-  });
+  const _AnimatedProjectCard({required this.child, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 400 + (index * 120)),
-      curve: Curves.easeOutCubic,
+      duration: Duration(milliseconds: 600 + (index * 150)),
+      curve: Curves.easeOutBack,
       builder: (context, value, child) {
+        final double scale = 0.95 + (value * 0.05);
         return Opacity(
-          opacity: value,
-          child: Transform.translate(
-            offset: Offset(0, 35 * (1.0 - value)),
-            child: child,
+          opacity: value.clamp(0.0, 1.0),
+          child: Transform.scale(
+            scale: scale,
+            child: Transform.translate(
+              offset: Offset(0, 40 * (1.0 - value.clamp(0.0, 1.0))),
+              child: child,
+            ),
           ),
         );
       },
