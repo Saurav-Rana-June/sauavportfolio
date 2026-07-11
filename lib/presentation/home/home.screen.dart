@@ -661,10 +661,34 @@ class HomeScreen extends GetView<HomeController> {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SectionHeader(title: 'Projects', subtitle: 'Selected work'),
-              Spacing.s24.gapH,
+              Text(
+                'PROJECTS',
+                style: AppTextStyles.mono12.copyWith(
+                  color: AppColors.accent,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w700,
+                  fontSize: AppScale.font(10),
+                ),
+              ),
+              Spacing.s8.gapH,
+              Text(
+                'Selected Work',
+                style: AppTextStyles.b32.copyWith(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Spacing.s8.gapH,
+              Text(
+                'A collection of mobile applications and tools I\'ve built',
+                style: AppTextStyles.r14.copyWith(
+                  color: AppColors.textSecondary,
+                  fontSize: AppScale.font(14),
+                ),
+              ),
+              48.0.gapH,
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -677,9 +701,12 @@ class HomeScreen extends GetView<HomeController> {
                 itemCount: controller.projects.length,
                 itemBuilder: (context, index) {
                   final project = controller.projects[index];
-                  return ProjectCard(
-                    project: project,
-                    onTap: () => controller.openProject(project),
+                  return _AnimatedProjectCard(
+                    index: index,
+                    child: ProjectCard(
+                      project: project,
+                      onTap: () => controller.openProject(project),
+                    ),
                   );
                 },
               ),
@@ -2455,6 +2482,35 @@ class _SkillTileChipState extends State<_SkillTileChip> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _AnimatedProjectCard extends StatelessWidget {
+  final Widget child;
+  final int index;
+
+  const _AnimatedProjectCard({
+    required this.child,
+    required this.index,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0.0, end: 1.0),
+      duration: Duration(milliseconds: 400 + (index * 120)),
+      curve: Curves.easeOutCubic,
+      builder: (context, value, child) {
+        return Opacity(
+          opacity: value,
+          child: Transform.translate(
+            offset: Offset(0, 35 * (1.0 - value)),
+            child: child,
+          ),
+        );
+      },
+      child: child,
     );
   }
 }
