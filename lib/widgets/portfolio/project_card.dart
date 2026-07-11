@@ -79,48 +79,48 @@ class _ProjectCardState extends State<ProjectCard>
 
           return Transform.scale(
             scale: cardScale,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.surfaceDark.withValues(alpha: 0.3),
-                    Color.lerp(
+            child: CustomPaint(
+              foregroundPainter: _BorderFlowPainter(
+                hoverProgress: hoverVal,
+                flowProgress: _borderController.value,
+                color: themeColor,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
                       AppColors.surfaceDark.withValues(alpha: 0.3),
-                      themeColor.withValues(alpha: 0.05),
+                      Color.lerp(
+                        AppColors.surfaceDark.withValues(alpha: 0.3),
+                        themeColor.withValues(alpha: 0.05),
+                        hoverVal,
+                      )!,
+                      AppColors.surfaceDark.withValues(alpha: 0.3),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0.0, 0.01 + (hoverVal * 0.98), 1.0],
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: Color.lerp(
+                      AppColors.border.withValues(alpha: 0.5),
+                      themeColor.withValues(alpha: 0.4),
                       hoverVal,
                     )!,
-                    AppColors.surfaceDark.withValues(alpha: 0.3),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.0, 0.01 + (hoverVal * 0.98), 1.0],
-                ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: Color.lerp(
-                    AppColors.border.withValues(alpha: 0.5),
-                    themeColor.withValues(alpha: 0.4),
-                    hoverVal,
-                  )!,
-                  width: 1.5,
-                ),
-                boxShadow: [
-                  if (hoverVal > 0)
-                    BoxShadow(
-                      color: themeColor.withValues(alpha: hoverVal * 0.05),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: CustomPaint(
-                  foregroundPainter: _BorderFlowPainter(
-                    hoverProgress: hoverVal,
-                    flowProgress: _borderController.value,
-                    color: themeColor,
+                    width: 1.5,
                   ),
+                  boxShadow: [
+                    if (hoverVal > 0)
+                      BoxShadow(
+                        color: themeColor.withValues(alpha: hoverVal * 0.05),
+                        blurRadius: 16,
+                        offset: const Offset(0, 4),
+                      ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
                   child: InkWell(
                     onTap: widget.onTap,
                     borderRadius: BorderRadius.circular(16),
