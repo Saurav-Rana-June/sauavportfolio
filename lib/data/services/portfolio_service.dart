@@ -29,8 +29,8 @@ class PortfolioService {
         'Web',
         'System Design',
       ],
-      githubUrl: 'https://github.com/saurav',
-      linkedInUrl: 'https://linkedin.com/in/saurav',
+      githubUrl: 'https://github.com/Saurav-Rana-June',
+      linkedInUrl: 'https://www.linkedin.com/in/saurav-rana-841106258',
       resumeUrl: '#',
     );
   }
@@ -131,7 +131,14 @@ class PortfolioService {
           'Worked as a Junior Flutter Developer on Travel & Hospitality products. '
           'Responsible for implementing responsive user interfaces, modular components, and API integrations.',
       isRemote: false,
-      skills: const ['Flutter', 'REST APIs', 'Firebase', 'State Management', 'Git', 'Agile'],
+      skills: const [
+        'Flutter',
+        'REST APIs',
+        'Firebase',
+        'State Management',
+        'Git',
+        'Agile',
+      ],
     ),
     ExperienceModel(
       id: '3',
@@ -143,7 +150,13 @@ class PortfolioService {
           'Completed a 3-month Flutter internship, originally planned for 6 months. '
           'Focused on training in state management, cross-device compatibility, and code modularization.',
       isRemote: false,
-      skills: const ['Flutter', 'Dart', 'Clean Architecture', 'API Integration', 'UI/UX'],
+      skills: const [
+        'Flutter',
+        'Dart',
+        'Clean Architecture',
+        'API Integration',
+        'UI/UX',
+      ],
     ),
     ExperienceModel(
       id: '4',

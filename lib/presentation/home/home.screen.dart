@@ -70,7 +70,7 @@ class HomeScreen extends GetView<HomeController> {
                 SliverToBoxAdapter(
                   key: controller.contactSectionKey,
                   child: _buildContactSection(
-                    profile?.email ?? 'hello@saurav.dev',
+                    profile?.email ?? 'sauravsevenjune@gmail.com',
                   ),
                 ),
                 SliverToBoxAdapter(child: SizedBox(height: AppScale.h(64))),

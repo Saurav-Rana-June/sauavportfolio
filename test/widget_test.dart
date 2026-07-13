@@ -17,7 +17,7 @@ void main() {
         name: 'Saurav Rana',
         title: 'Flutter Developer',
         bio: 'Test bio',
-        email: 'hello@saurav.dev',
+        email: 'sauravsevenjune@gmail.com',
         location: 'India',
         skills: const ['Flutter'],
       ),
@@ -45,7 +45,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(find.text('About Me'), findsOneWidget);
+    expect(find.text('ABOUT ME'), findsOneWidget);
     expect(find.text('Saurav Rana'), findsWidgets);
   });
 }
