@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
-import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 
 /// Renders the professional career journey timeline.
@@ -20,7 +18,8 @@ class ExperienceSection extends StatefulWidget {
   State<ExperienceSection> createState() => _ExperienceSectionState();
 }
 
-class _ExperienceSectionState extends State<ExperienceSection> with AutomaticKeepAliveClientMixin {
+class _ExperienceSectionState extends State<ExperienceSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -103,76 +102,11 @@ class _ExperienceSectionState extends State<ExperienceSection> with AutomaticKee
 
 /// A node indicator in the timeline. If active, it renders a pulsing ripple.
 /// Performance-optimized to pause tickers when off-screen.
-class _TimelineNodeIndicator extends StatefulWidget {
+class _TimelineNodeIndicator extends StatelessWidget {
   final bool isLast;
   final bool isActive;
 
   const _TimelineNodeIndicator({required this.isLast, required this.isActive});
-
-  @override
-  State<_TimelineNodeIndicator> createState() => _TimelineNodeIndicatorState();
-}
-
-class _TimelineNodeIndicatorState extends State<_TimelineNodeIndicator>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulseController;
-  late final Animation<double> _pulseAnimation;
-  HomeController? _homeController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    );
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 2.0,
-    ).animate(CurvedAnimation(parent: _pulseController, curve: Curves.easeOut));
-
-    if (widget.isActive) {
-      _pulseController.repeat();
-      
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        try {
-          _homeController = Get.find<HomeController>();
-          _homeController?.scrollController.addListener(_onScroll);
-          _onScroll(); // initial check
-        } catch (_) {}
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _homeController?.scrollController.removeListener(_onScroll);
-    _pulseController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (!mounted || !widget.isActive) return;
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox == null || !renderBox.hasSize) return;
-
-    try {
-      final position = renderBox.localToGlobal(Offset.zero);
-      final screenHeight = MediaQuery.sizeOf(context).height;
-      final isVisible = position.dy < screenHeight && (position.dy + renderBox.size.height) > 0;
-
-      if (isVisible) {
-        if (!_pulseController.isAnimating) {
-          _pulseController.repeat();
-        }
-      } else {
-        if (_pulseController.isAnimating) {
-          _pulseController.stop();
-        }
-      }
-    } catch (_) {}
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +115,7 @@ class _TimelineNodeIndicatorState extends State<_TimelineNodeIndicator>
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          if (!widget.isLast)
+          if (!isLast)
             Positioned(
               top: 8,
               bottom: 0,
@@ -192,7 +126,7 @@ class _TimelineNodeIndicatorState extends State<_TimelineNodeIndicator>
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      widget.isActive
+                      isActive
                           ? AppColors.accent
                           : AppColors.primary.withValues(alpha: 0.3),
                       AppColors.primary.withValues(alpha: 0.05),
@@ -206,24 +140,6 @@ class _TimelineNodeIndicatorState extends State<_TimelineNodeIndicator>
             child: Stack(
               alignment: Alignment.center,
               children: [
-                if (widget.isActive)
-                  AnimatedBuilder(
-                    animation: _pulseAnimation,
-                    builder: (context, child) {
-                      return Container(
-                        width: 14 * _pulseAnimation.value,
-                        height: 14 * _pulseAnimation.value,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.accent.withValues(
-                            alpha:
-                                (2.0 - _pulseAnimation.value).clamp(0.0, 1.0) *
-                                0.4,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
                 Container(
                   width: 14,
                   height: 14,
@@ -231,20 +147,17 @@ class _TimelineNodeIndicatorState extends State<_TimelineNodeIndicator>
                     shape: BoxShape.circle,
                     color: AppColors.scaffoldDark,
                     border: Border.all(
-                      color: widget.isActive
+                      color: isActive
                           ? AppColors.accent
                           : AppColors.primary.withValues(alpha: 0.5),
                       width: 1.5,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color:
-                            (widget.isActive
-                                    ? AppColors.accent
-                                    : AppColors.primary)
-                                .withValues(alpha: widget.isActive ? 0.3 : 0.1),
-                        blurRadius: widget.isActive ? 8 : 4,
-                        spreadRadius: widget.isActive ? 1 : 0,
+                        color: (isActive ? AppColors.accent : AppColors.primary)
+                            .withValues(alpha: isActive ? 0.3 : 0.1),
+                        blurRadius: isActive ? 8 : 4,
+                        spreadRadius: isActive ? 1 : 0,
                       ),
                     ],
                   ),
@@ -254,7 +167,7 @@ class _TimelineNodeIndicatorState extends State<_TimelineNodeIndicator>
                   height: 6,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: widget.isActive
+                    color: isActive
                         ? AppColors.accent
                         : AppColors.textSecondary.withValues(alpha: 0.7),
                   ),
@@ -516,18 +429,6 @@ class _CardTechBorderPainter extends CustomPainter {
     const double offset = 1.0;
     const double lineLength = 12.0;
 
-    // Top-Left
-    canvas.drawLine(
-      const Offset(offset, offset + lineLength),
-      const Offset(offset, offset),
-      paint,
-    );
-    canvas.drawLine(
-      const Offset(offset, offset),
-      const Offset(offset + lineLength, offset),
-      paint,
-    );
-
     // Top-Right
     canvas.drawLine(
       Offset(size.width - offset - lineLength, offset),
@@ -537,18 +438,6 @@ class _CardTechBorderPainter extends CustomPainter {
     canvas.drawLine(
       Offset(size.width - offset, offset),
       Offset(size.width - offset, offset + lineLength),
-      paint,
-    );
-
-    // Bottom-Left
-    canvas.drawLine(
-      Offset(offset, size.height - offset - lineLength),
-      Offset(offset, size.height - offset),
-      paint,
-    );
-    canvas.drawLine(
-      Offset(offset, size.height - offset),
-      Offset(offset + lineLength, size.height - offset),
       paint,
     );
 

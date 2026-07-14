@@ -19,7 +19,8 @@ class ProjectsSection extends StatefulWidget {
   State<ProjectsSection> createState() => _ProjectsSectionState();
 }
 
-class _ProjectsSectionState extends State<ProjectsSection> with AutomaticKeepAliveClientMixin {
+class _ProjectsSectionState extends State<ProjectsSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -55,7 +56,7 @@ class _ProjectsSectionState extends State<ProjectsSection> with AutomaticKeepAli
               ),
               Spacing.s8.gapH,
               Text(
-                'Selected Work',
+                'My Work',
                 style: AppTextStyles.b32.copyWith(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.w800,
@@ -125,10 +126,7 @@ class _AnimatedProjectCard extends StatelessWidget {
         if (opacity >= 1.0) {
           return translatedChild;
         }
-        return Opacity(
-          opacity: opacity,
-          child: translatedChild,
-        );
+        return Opacity(opacity: opacity, child: translatedChild);
       },
       child: child,
     );
