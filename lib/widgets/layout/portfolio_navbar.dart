@@ -260,7 +260,12 @@ class _BrandLockupState extends State<_BrandLockup>
                   ).createShader(bounds),
                   child: Text(
                     'Saurav Rana',
-                    style: AppTextStyles.sb18.copyWith(color: Colors.white),
+                    style: AppTextStyles.sb18.copyWith(
+                      color: Colors.white,
+                      fontSize: AppScale.isMobile
+                          ? AppScale.font(22)
+                          : AppScale.title(),
+                    ),
                   ),
                 ),
                 if (widget.showSubtitle) ...[
