@@ -79,8 +79,8 @@ class _ProjectsSectionState extends State<ProjectsSection>
                   crossAxisSpacing: AppScale.w(16),
                   mainAxisSpacing: AppScale.h(16),
                   childAspectRatio: AppScale.isMobile
-                      ? 1.5
-                      : (AppScale.isTablet ? 1.05 : 1.1),
+                      ? 2
+                      : (AppScale.isTablet ? 1.3 : 1.1),
                 ),
                 itemCount: widget.projects.length,
                 itemBuilder: (context, index) {

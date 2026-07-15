@@ -99,17 +99,10 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: themeColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AppFaIcon(
-                  AppIcons.mail,
-                  color: themeColor,
-                  size: AppScale.icon(16),
-                ),
+              _ContactInfoIconButton(
+                icon: AppIcons.mail,
+                onTap: () => controller.openExternalLink('mailto:$email'),
+                accentColor: themeColor,
               ),
               Spacing.s16.gapW,
               Expanded(
@@ -354,6 +347,57 @@ class _SocialIconRoundButtonState extends State<_SocialIconRoundButton> {
               color: _isHovered ? widget.accentColor : AppColors.textSecondary,
               size: AppScale.icon(16),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactInfoIconButton extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final Color accentColor;
+
+  const _ContactInfoIconButton({
+    required this.icon,
+    required this.onTap,
+    required this.accentColor,
+  });
+
+  @override
+  State<_ContactInfoIconButton> createState() => _ContactInfoIconButtonState();
+}
+
+class _ContactInfoIconButtonState extends State<_ContactInfoIconButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: _isHovered
+                ? widget.accentColor.withValues(alpha: 0.15)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: _isHovered
+                  ? widget.accentColor
+                  : widget.accentColor.withValues(alpha: 0.35),
+              width: 1.5,
+            ),
+          ),
+          child: AppFaIcon(
+            widget.icon,
+            color: widget.accentColor,
+            size: AppScale.icon(16),
           ),
         ),
       ),
