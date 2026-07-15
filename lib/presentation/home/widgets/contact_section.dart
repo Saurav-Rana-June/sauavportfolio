@@ -23,7 +23,8 @@ class ContactSection extends StatefulWidget {
   State<ContactSection> createState() => _ContactSectionState();
 }
 
-class _ContactSectionState extends State<ContactSection> with AutomaticKeepAliveClientMixin {
+class _ContactSectionState extends State<ContactSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -85,7 +86,8 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
                     ),
                     4.0.gapH,
                     Text(
-                      widget.profile?.location ?? 'Rishikesh, Uttarakhand, India',
+                      widget.profile?.location ??
+                          'Rishikesh, Uttarakhand, India',
                       style: AppTextStyles.r14.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -144,10 +146,12 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
           Spacing.s16.gapH,
           Row(
             children: [
-              if (widget.profile?.githubUrl != null && widget.profile!.githubUrl!.isNotEmpty)
+              if (widget.profile?.githubUrl != null &&
+                  widget.profile!.githubUrl!.isNotEmpty)
                 _SocialIconRoundButton(
                   icon: AppIcons.github,
-                  onTap: () => controller.openExternalLink(widget.profile!.githubUrl),
+                  onTap: () =>
+                      controller.openExternalLink(widget.profile!.githubUrl),
                   accentColor: themeColor,
                 ),
               if (widget.profile?.linkedInUrl != null &&
@@ -155,7 +159,8 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
                 if (widget.profile!.githubUrl != null) Spacing.s12.gapW,
                 _SocialIconRoundButton(
                   icon: AppIcons.linkedin,
-                  onTap: () => controller.openExternalLink(widget.profile!.linkedInUrl),
+                  onTap: () =>
+                      controller.openExternalLink(widget.profile!.linkedInUrl),
                   accentColor: themeColor,
                 ),
               ],
