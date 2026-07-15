@@ -207,7 +207,7 @@ class _HeroSectionState extends State<HeroSection>
       AnimatedTypingText(
         texts: [
           title.isNotEmpty ? title : 'Senior Flutter Developer',
-          'UI/UX & Figma-to-Flutter Specialist',
+          'UI/UX & Figma Enthusiast',
           'FastAPI Learner',
           'Cross-Platform Apps Developer',
         ],

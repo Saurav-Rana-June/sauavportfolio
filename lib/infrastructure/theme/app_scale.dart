@@ -12,12 +12,12 @@ abstract final class AppScale {
     if (isMobile) {
       final double scale = ScreenUtil().scaleText;
       final double t = (_width - 320) / (600 - 320);
-      final double adaptedScale = (0.72 + t * (0.84 - 0.72)).clamp(0.70, 0.85);
+      final double adaptedScale = (0.90 + t * (0.96 - 0.90)).clamp(0.90, 0.96);
       return ScreenUtil().setSp(size * (adaptedScale / scale.clamp(0.001, double.infinity)));
     } else if (isTablet) {
       final double scale = ScreenUtil().scaleText;
       final double t = (_width - 600) / (1024 - 600);
-      final double adaptedScale = (0.85 + t * (0.95 - 0.85)).clamp(0.85, 0.95);
+      final double adaptedScale = (0.96 + t * (1.00 - 0.96)).clamp(0.96, 1.00);
       return ScreenUtil().setSp(size * (adaptedScale / scale.clamp(0.001, double.infinity)));
     } else {
       // Restore desktop / web view font size calculation to exactly what it was before
