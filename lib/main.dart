@@ -22,9 +22,10 @@ class PortfolioApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(1440, 900),
+      designSize: const Size(1440, 1024),
       minTextAdapt: true,
       splitScreenMode: true,
+      rebuildFactor: RebuildFactors.change,
       builder: (context, child) {
         return GetMaterialApp(
           title: AppConfig.appName,

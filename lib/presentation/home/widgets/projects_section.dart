@@ -70,15 +70,17 @@ class _ProjectsSectionState extends State<ProjectsSection>
                   fontSize: AppScale.font(14),
                 ),
               ),
-              48.0.gapH,
+              AppScale.h(48).gapH,
               GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: AppScale.isMobile ? 1.05 : 1.1,
+                  crossAxisSpacing: AppScale.w(16),
+                  mainAxisSpacing: AppScale.h(16),
+                  childAspectRatio: AppScale.isMobile
+                      ? 1.0
+                      : (AppScale.isTablet ? 1.05 : 1.1),
                 ),
                 itemCount: widget.projects.length,
                 itemBuilder: (context, index) {

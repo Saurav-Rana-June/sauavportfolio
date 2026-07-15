@@ -65,7 +65,7 @@ class _AboutSectionState extends State<AboutSection> with AutomaticKeepAliveClie
                   fontSize: AppScale.font(14),
                 ),
               ),
-              48.0.gapH,
+              AppScale.h(48).gapH,
               showRow
                   ? Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +74,7 @@ class _AboutSectionState extends State<AboutSection> with AutomaticKeepAliveClie
                           flex: 11,
                           child: _buildAboutLeftContent(bio, location),
                         ),
-                        48.0.gapW,
+                        AppScale.w(48).gapW,
                         Expanded(flex: 9, child: _buildAboutRightContent()),
                       ],
                     )
@@ -82,7 +82,7 @@ class _AboutSectionState extends State<AboutSection> with AutomaticKeepAliveClie
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildAboutLeftContent(bio, location),
-                        48.0.gapH,
+                        AppScale.h(48).gapH,
                         _buildAboutRightContent(),
                       ],
                     ),
@@ -207,7 +207,10 @@ class _AboutStatCardState extends State<_AboutStatCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppScale.w(20),
+          vertical: AppScale.h(24),
+        ),
         decoration: BoxDecoration(
           color: _isHovered
               ? AppColors.primary.withValues(alpha: 0.05)
@@ -284,7 +287,7 @@ class _AboutFocusCardState extends State<_AboutFocusCard> {
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOutCubic,
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(AppScale.w(20)),
         decoration: BoxDecoration(
           color: _isHovered
               ? AppColors.surfaceDark.withValues(alpha: 0.7)
@@ -310,7 +313,7 @@ class _AboutFocusCardState extends State<_AboutFocusCard> {
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 250),
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.all(AppScale.w(12)),
               decoration: BoxDecoration(
                 color: _isHovered
                     ? widget.highlightColor.withValues(alpha: 0.15)

@@ -62,7 +62,7 @@ class _ExperienceSectionState extends State<ExperienceSection>
                   fontSize: AppScale.font(14),
                 ),
               ),
-              48.0.gapH,
+              AppScale.h(48).gapH,
               _buildTimeline(widget.experiences),
             ],
           ),
@@ -85,10 +85,10 @@ class _ExperienceSectionState extends State<ExperienceSection>
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _TimelineNodeIndicator(isLast: isLast, isActive: isActive),
-              Spacing.s24.gapW,
+              AppScale.w(Spacing.s24).gapW,
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 24),
+                  padding: EdgeInsets.only(bottom: AppScale.h(24)),
                   child: _ExperienceCard(experience: exp),
                 ),
               ),
@@ -240,7 +240,7 @@ class _ExperienceCardState extends State<_ExperienceCard>
           final hoverVal = _hoverAnimation.value;
           return AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(24),
+            padding: EdgeInsets.all(AppScale.w(24)),
             decoration: BoxDecoration(
               color: _isHovered
                   ? AppColors.surfaceDark.withValues(alpha: 0.6)
@@ -278,7 +278,7 @@ class _ExperienceCardState extends State<_ExperienceCard>
                         color: themeColor,
                         size: AppScale.icon(12),
                       ),
-                      Spacing.s8.gapW,
+                      AppScale.w(Spacing.s8).gapW,
                       Text(
                         exp.period.toUpperCase(),
                         style: AppTextStyles.mono12.copyWith(
@@ -290,7 +290,7 @@ class _ExperienceCardState extends State<_ExperienceCard>
                       ),
                     ],
                   ),
-                  Spacing.s12.gapH,
+                  AppScale.h(Spacing.s12).gapH,
                   Text(
                     exp.role,
                     style: AppTextStyles.sb18.copyWith(
@@ -299,8 +299,11 @@ class _ExperienceCardState extends State<_ExperienceCard>
                       fontSize: AppScale.font(18),
                     ),
                   ),
-                  Spacing.s8.gapH,
-                  Row(
+                  AppScale.h(Spacing.s8).gapH,
+                  Wrap(
+                    spacing: AppScale.w(12),
+                    runSpacing: AppScale.h(8),
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       Text(
                         exp.company,
@@ -310,17 +313,16 @@ class _ExperienceCardState extends State<_ExperienceCard>
                           fontSize: AppScale.font(14),
                         ),
                       ),
-                      Spacing.s12.gapW,
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppScale.w(10),
+                          vertical: AppScale.h(4),
                         ),
                         decoration: BoxDecoration(
                           color: exp.isRemote
                               ? AppColors.primary.withValues(alpha: 0.1)
                               : AppColors.border.withValues(alpha: 0.3),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(AppScale.r(20)),
                           border: Border.all(
                             color: exp.isRemote
                                 ? AppColors.primary.withValues(alpha: 0.2)
@@ -339,7 +341,7 @@ class _ExperienceCardState extends State<_ExperienceCard>
                                   : AppColors.textSecondary,
                               size: AppScale.icon(10),
                             ),
-                            6.0.gapW,
+                            AppScale.w(6).gapW,
                             Text(
                               exp.location.toUpperCase(),
                               style: AppTextStyles.mono12.copyWith(
@@ -356,7 +358,7 @@ class _ExperienceCardState extends State<_ExperienceCard>
                       ),
                     ],
                   ),
-                  Spacing.s16.gapH,
+                  AppScale.h(Spacing.s16).gapH,
                   Text(
                     exp.description,
                     style: AppTextStyles.r14.copyWith(
@@ -366,15 +368,15 @@ class _ExperienceCardState extends State<_ExperienceCard>
                     ),
                   ),
                   if (exp.skills.isNotEmpty) ...[
-                    Spacing.s24.gapH,
+                    AppScale.h(Spacing.s24).gapH,
                     Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                      spacing: AppScale.w(8),
+                      runSpacing: AppScale.h(8),
                       children: exp.skills.map((skill) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppScale.w(10),
+                            vertical: AppScale.h(4),
                           ),
                           decoration: BoxDecoration(
                             color: themeColor.withValues(alpha: 0.03),

@@ -20,13 +20,16 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    // Register dependency on MediaQuery to trigger rebuilds on window resize
+    MediaQuery.of(context);
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldDark,
       body: Obx(() {
         if (controller.isLoading.value) {
           return const LoadingSpinner();
         }
-        return const HomeContent();
+        return HomeContent();
       }),
     );
   }
@@ -47,9 +50,7 @@ class HomeContent extends GetView<HomeController> {
             SliverToBoxAdapter(
               child: SizedBox(height: AppScale.navTopSpacer()),
             ),
-            SliverToBoxAdapter(
-              child: HeroSection(profile: profile),
-            ),
+            SliverToBoxAdapter(child: HeroSection(profile: profile)),
             SliverToBoxAdapter(
               key: controller.aboutSectionKey,
               child: AboutSection(profile: profile),

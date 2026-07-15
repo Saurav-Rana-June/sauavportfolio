@@ -28,7 +28,8 @@ class HeroSection extends StatefulWidget {
   State<HeroSection> createState() => _HeroSectionState();
 }
 
-class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClientMixin {
+class _HeroSectionState extends State<HeroSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -38,7 +39,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
     final controller = Get.find<HomeController>();
     final name = widget.profile?.name ?? 'Saurav Rana';
     final title = widget.profile?.title ?? '';
-    final showRow = !AppScale.isMobile;
+    final showRow = AppScale.isDesktop;
 
     return FuturisticBackground(
       child: Container(
@@ -60,12 +61,15 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ..._buildHeroLeftContent(controller, name, title),
-                            Spacing.s32.gapH,
-                            _buildSocialMediaSection(controller, widget.profile),
+                            AppScale.h(Spacing.s32).gapH,
+                            _buildSocialMediaSection(
+                              controller,
+                              widget.profile,
+                            ),
                           ],
                         ),
                       ),
-                      Spacing.s24.gapW,
+                      AppScale.w(Spacing.s24).gapW,
                       const Expanded(
                         flex: 3,
                         child: Align(
@@ -79,9 +83,9 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Center(child: FuturisticIllustration()),
-                      Spacing.s24.gapH,
+                      AppScale.h(Spacing.s24).gapH,
                       ..._buildHeroLeftContent(controller, name, title),
-                      Spacing.s32.gapH,
+                      AppScale.h(Spacing.s32).gapH,
                       _buildSocialMediaSection(controller, widget.profile),
                     ],
                   ),
@@ -91,7 +95,10 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
     );
   }
 
-  Widget _buildSocialMediaSection(HomeController controller, ProfileModel? profile) {
+  Widget _buildSocialMediaSection(
+    HomeController controller,
+    ProfileModel? profile,
+  ) {
     if (profile == null) return const SizedBox.shrink();
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -106,7 +113,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
             fontSize: AppScale.font(10),
           ),
         ),
-        Spacing.s16.gapW,
+        AppScale.w(Spacing.s16).gapW,
         if (profile.githubUrl != null &&
             profile.githubUrl!.isNotEmpty &&
             profile.githubUrl != '#') ...[
@@ -115,7 +122,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
             label: 'GITHUB',
             onPressed: () => controller.openExternalLink(profile.githubUrl),
           ),
-          Spacing.s8.gapW,
+          AppScale.w(Spacing.s8).gapW,
         ],
         if (profile.linkedInUrl != null &&
             profile.linkedInUrl!.isNotEmpty &&
@@ -125,7 +132,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
             label: 'LINKEDIN',
             onPressed: () => controller.openExternalLink(profile.linkedInUrl),
           ),
-          Spacing.s8.gapW,
+          AppScale.w(Spacing.s8).gapW,
         ],
         _SocialIconButton(
           icon: AppIcons.mail,
@@ -137,20 +144,27 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
     );
   }
 
-  List<Widget> _buildHeroLeftContent(HomeController controller, String name, String title) {
+  List<Widget> _buildHeroLeftContent(
+    HomeController controller,
+    String name,
+    String title,
+  ) {
     return [
       Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3.5),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppScale.w(8),
+          vertical: AppScale.h(3.5),
+        ),
         decoration: BoxDecoration(
           color: AppColors.success.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppScale.r(20)),
           border: Border.all(color: AppColors.success.withValues(alpha: 0.18)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             const PulsingStatusDot(color: AppColors.success),
-            6.0.gapW,
+            AppScale.w(6).gapW,
             Text(
               'AVAILABLE FOR OPPORTUNITIES',
               style: AppTextStyles.mono12.copyWith(
@@ -163,7 +177,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
           ],
         ),
       ),
-      Spacing.s16.gapH,
+      AppScale.h(Spacing.s16).gapH,
       Text(
         'Hi, I\'m',
         style: AppTextStyles.r16.copyWith(
@@ -171,7 +185,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
           fontWeight: FontWeight.w500,
         ),
       ),
-      Spacing.s8.gapH,
+      AppScale.h(Spacing.s8).gapH,
       ShaderMask(
         shaderCallback: (bounds) => const LinearGradient(
           colors: [Colors.white, AppColors.accent, AppColors.primaryLight],
@@ -189,7 +203,7 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
           ),
         ),
       ),
-      Spacing.s12.gapH,
+      AppScale.h(Spacing.s12).gapH,
       AnimatedTypingText(
         texts: [
           title.isNotEmpty ? title : 'Senior Flutter Developer',
@@ -202,18 +216,19 @@ class _HeroSectionState extends State<HeroSection> with AutomaticKeepAliveClient
           fontWeight: FontWeight.w600,
         ),
       ),
-      Spacing.s24.gapH,
+      AppScale.h(Spacing.s24).gapH,
       Text(
         'Passionate Flutter Engineer with 2+ years of experience building high-performance cross-platform apps. Skilled in Flutter, Figma-to-Flutter development, and UI/UX principles, with a focus on clean, scalable, and pixel-perfect applications. Currently learning FastAPI to strengthen my backend development skills.',
         style: AppTextStyles.r16.copyWith(
           color: AppColors.textSecondary,
           height: 1.6,
+          fontSize: AppScale.font(15),
         ),
       ),
-      Spacing.s32.gapH,
+      AppScale.h(Spacing.s32).gapH,
       Wrap(
-        spacing: 16,
-        runSpacing: 12,
+        spacing: AppScale.w(16),
+        runSpacing: AppScale.h(12),
         children: [
           PrimaryButton(
             label: 'View Projects',
@@ -296,7 +311,9 @@ class _FuturisticBackgroundState extends State<FuturisticBackground>
     try {
       final position = renderBox.localToGlobal(Offset.zero);
       final screenHeight = MediaQuery.sizeOf(context).height;
-      final isVisible = position.dy < screenHeight && (position.dy + renderBox.size.height) > 0;
+      final isVisible =
+          position.dy < screenHeight &&
+          (position.dy + renderBox.size.height) > 0;
 
       if (isVisible) {
         if (!_controller.isAnimating) {
@@ -368,14 +385,15 @@ class _FuturisticBgPainter extends CustomPainter {
     final double orb1Y =
         size.height * (0.35 + 0.15 * math.cos(animationValue * 2 * math.pi));
     final orb1Paint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          AppColors.primary.withValues(alpha: 0.12),
-          AppColors.primary.withValues(alpha: 0.0),
-        ],
-      ).createShader(
-        Rect.fromCircle(center: Offset(orb1X, orb1Y), radius: radius1),
-      );
+      ..shader =
+          RadialGradient(
+            colors: [
+              AppColors.primary.withValues(alpha: 0.12),
+              AppColors.primary.withValues(alpha: 0.0),
+            ],
+          ).createShader(
+            Rect.fromCircle(center: Offset(orb1X, orb1Y), radius: radius1),
+          );
     canvas.drawCircle(Offset(orb1X, orb1Y), radius1, orb1Paint);
 
     // Orb 2: Cyan (Accent) drifting right to bottom-left
@@ -384,30 +402,34 @@ class _FuturisticBgPainter extends CustomPainter {
     final double orb2Y =
         size.height * (0.45 + 0.12 * math.sin(animationValue * 2 * math.pi));
     final orb2Paint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          AppColors.accent.withValues(alpha: 0.09),
-          AppColors.accent.withValues(alpha: 0.0),
-        ],
-      ).createShader(
-        Rect.fromCircle(center: Offset(orb2X, orb2Y), radius: radius2),
-      );
+      ..shader =
+          RadialGradient(
+            colors: [
+              AppColors.accent.withValues(alpha: 0.09),
+              AppColors.accent.withValues(alpha: 0.0),
+            ],
+          ).createShader(
+            Rect.fromCircle(center: Offset(orb2X, orb2Y), radius: radius2),
+          );
     canvas.drawCircle(Offset(orb2X, orb2Y), radius2, orb2Paint);
 
     // Orb 3: Violet (Primary Light) drifting top-center to center-right
     final double orb3X =
-        size.width * (0.5 + 0.15 * math.sin((animationValue + 0.3) * 2 * math.pi));
+        size.width *
+        (0.5 + 0.15 * math.sin((animationValue + 0.3) * 2 * math.pi));
     final double orb3Y =
-        size.height * (0.25 + 0.08 * math.cos((animationValue + 0.3) * 2 * math.pi));
+        size.height *
+        (0.25 + 0.08 * math.cos((animationValue + 0.3) * 2 * math.pi));
     final orb3Paint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          AppColors.primaryLight.withValues(alpha: 0.05),
-          AppColors.primaryLight.withValues(alpha: 0.0),
-        ],
-      ).createShader(
-        Rect.fromCircle(center: Offset(orb3X, orb3Y), radius: radius3),
-      );
+      ..shader =
+          RadialGradient(
+            colors: [
+              AppColors.primaryLight.withValues(alpha: 0.05),
+              AppColors.primaryLight.withValues(alpha: 0.0),
+            ],
+          ).createShader(
+            Rect.fromCircle(center: Offset(orb3X, orb3Y), radius: radius3),
+          );
     canvas.drawCircle(Offset(orb3X, orb3Y), radius3, orb3Paint);
 
     // 3. Floating particle dust
@@ -427,7 +449,8 @@ class _FuturisticBgPainter extends CustomPainter {
           size.height;
 
       final double opacity =
-          0.12 + 0.12 * math.sin(animationValue * 2 * math.pi * speedFactor + i);
+          0.12 +
+          0.12 * math.sin(animationValue * 2 * math.pi * speedFactor + i);
       final double pRadius = 1.2 + (i % 3) * 0.6;
 
       final pPaint = Paint()
@@ -501,7 +524,9 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
     try {
       final position = renderBox.localToGlobal(Offset.zero);
       final screenHeight = MediaQuery.sizeOf(context).height;
-      final isVisible = position.dy < screenHeight && (position.dy + renderBox.size.height) > 0;
+      final isVisible =
+          position.dy < screenHeight &&
+          (position.dy + renderBox.size.height) > 0;
 
       if (isVisible) {
         if (!_rotationController.isAnimating) {
@@ -546,21 +571,30 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
 
               // Outer Orbit (Flutter & Figma, offset by pi)
               final double angle1 = _rotationController.value * 2 * math.pi;
-              final double node1X = centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
-              final double node1Y = centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
+              final double node1X =
+                  centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
+              final double node1Y =
+                  centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
 
               final double angle3 = angle1 + math.pi;
-              final double node3X = centerCoord + r1 * math.cos(angle3) - (nodeSize / 2);
-              final double node3Y = centerCoord + r1 * math.sin(angle3) - (nodeSize / 2);
+              final double node3X =
+                  centerCoord + r1 * math.cos(angle3) - (nodeSize / 2);
+              final double node3Y =
+                  centerCoord + r1 * math.sin(angle3) - (nodeSize / 2);
 
               // Inner Orbit (Dart & FastAPI, offset by pi)
-              final double angle2 = -_rotationController.value * 2 * math.pi + (math.pi / 2);
-              final double node2X = centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
-              final double node2Y = centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
+              final double angle2 =
+                  -_rotationController.value * 2 * math.pi + (math.pi / 2);
+              final double node2X =
+                  centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
+              final double node2Y =
+                  centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
 
               final double angle4 = angle2 + math.pi;
-              final double node4X = centerCoord + r2 * math.cos(angle4) - (nodeSize / 2);
-              final double node4Y = centerCoord + r2 * math.sin(angle4) - (nodeSize / 2);
+              final double node4X =
+                  centerCoord + r2 * math.cos(angle4) - (nodeSize / 2);
+              final double node4Y =
+                  centerCoord + r2 * math.sin(angle4) - (nodeSize / 2);
 
               return Stack(
                 children: [
@@ -612,7 +646,9 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFA259FF).withValues(alpha: 0.4),
+                            color: const Color(
+                              0xFFA259FF,
+                            ).withValues(alpha: 0.4),
                             blurRadius: 10,
                             spreadRadius: 1,
                           ),
@@ -662,7 +698,9 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFF05D3B4).withValues(alpha: 0.4),
+                            color: const Color(
+                              0xFF05D3B4,
+                            ).withValues(alpha: 0.4),
                             blurRadius: 10,
                             spreadRadius: 1,
                           ),
@@ -1064,7 +1102,9 @@ class _PulsingStatusDotState extends State<PulsingStatusDot>
     try {
       final position = renderBox.localToGlobal(Offset.zero);
       final screenHeight = MediaQuery.sizeOf(context).height;
-      final isVisible = position.dy < screenHeight && (position.dy + renderBox.size.height) > 0;
+      final isVisible =
+          position.dy < screenHeight &&
+          (position.dy + renderBox.size.height) > 0;
 
       if (isVisible) {
         if (!_controller.isAnimating) {
@@ -1186,9 +1226,9 @@ class _SocialIconButtonState extends State<_SocialIconButton>
                   inactiveColor: AppColors.glassBorder,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppScale.w(12),
+                    vertical: AppScale.h(10),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,

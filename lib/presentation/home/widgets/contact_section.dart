@@ -36,7 +36,7 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
     final email = widget.profile?.email ?? 'sauravsevenjune@gmail.com';
 
     final contactInfoCard = Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppScale.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surfaceDark.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
@@ -173,7 +173,7 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
     );
 
     final contactFormCard = Container(
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(AppScale.w(24)),
       decoration: BoxDecoration(
         color: AppColors.surfaceDark.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
@@ -273,7 +273,7 @@ class _ContactSectionState extends State<ContactSection> with AutomaticKeepAlive
                   fontSize: AppScale.font(14),
                 ),
               ),
-              48.0.gapH,
+              AppScale.h(48).gapH,
               if (isDesktop)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,

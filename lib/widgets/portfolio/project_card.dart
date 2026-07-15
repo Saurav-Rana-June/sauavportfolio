@@ -206,7 +206,7 @@ class _ProjectCardState extends State<ProjectCard>
                               ),
                             ],
                           ),
-                          20.0.gapH,
+                          AppScale.h(20).gapH,
                           Text(
                             project.title,
                             maxLines: 1,
@@ -219,7 +219,7 @@ class _ProjectCardState extends State<ProjectCard>
                               fontSize: AppScale.font(16),
                             ),
                           ),
-                          Spacing.s8.gapH,
+                          AppScale.h(Spacing.s8).gapH,
                           Expanded(
                             child: Text(
                               project.description,
@@ -234,16 +234,16 @@ class _ProjectCardState extends State<ProjectCard>
                               ),
                             ),
                           ),
-                          Spacing.s16.gapH,
+                          AppScale.h(Spacing.s16).gapH,
                           if (project.tags.isNotEmpty)
                             Wrap(
-                              spacing: 6,
-                              runSpacing: 6,
+                              spacing: AppScale.w(6),
+                              runSpacing: AppScale.h(6),
                               children: project.tags.take(3).map((tag) {
                                 return Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 3,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: AppScale.w(8),
+                                    vertical: AppScale.h(3),
                                   ),
                                   decoration: BoxDecoration(
                                     color: themeColor.withValues(alpha: 0.03),
