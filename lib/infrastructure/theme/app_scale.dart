@@ -34,7 +34,11 @@ abstract final class AppScale {
   static double title() => font(18);
 
   static double icon(double size) {
-    if (isMobile) return (size + 5).clamp(22.0, 30.0);
+    if (isMobile) {
+      final double t = (_width - 320) / (600 - 320);
+      final double adaptedScale = (0.80 + t * (0.90 - 0.80)).clamp(0.78, 0.95);
+      return size * adaptedScale;
+    }
     if (isTablet) return size + 2;
     return size * (_width / 1440).clamp(0.95, 1.08);
   }
