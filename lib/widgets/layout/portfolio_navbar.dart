@@ -120,12 +120,12 @@ class _PortfolioNavbarState extends State<PortfolioNavbar>
                       items: _navItems,
                       onTap: _resolveTap,
                     ),
-                    Spacing.s12.gapW,
-                    _ContactPill(
-                      isActive:
-                          widget.activeSection == PortfolioNavSection.contact,
-                      onTap: widget.onContactTap,
-                    ),
+                    // Spacing.s12.gapW,
+                    // _ContactPill(
+                    //   isActive:
+                    //       widget.activeSection == PortfolioNavSection.contact,
+                    //   onTap: widget.onContactTap,
+                    // ),
                   ] else
                     _MobileNavMenu(
                       activeSection: widget.activeSection,
@@ -776,11 +776,11 @@ class _MobileNavMenu extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _ContactPill(
-          isActive: activeSection == PortfolioNavSection.contact,
-          onTap: onContactTap,
-        ),
-        Spacing.s8.gapW,
+        // _ContactPill(
+        //   isActive: activeSection == PortfolioNavSection.contact,
+        //   onTap: onContactTap,
+        // ),
+        // Spacing.s8.gapW,
         Material(
           color: AppColors.surfaceDark.withValues(alpha: 0.85),
           shape: RoundedRectangleBorder(
