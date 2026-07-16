@@ -53,23 +53,29 @@ class HomeContent extends GetView<HomeController> {
             SliverToBoxAdapter(child: HeroSection(profile: profile)),
             SliverToBoxAdapter(
               key: controller.aboutSectionKey,
-              child: AboutSection(profile: profile),
+              child: ScrollReveal(child: AboutSection(profile: profile)),
             ),
             SliverToBoxAdapter(
               key: controller.experienceSectionKey,
-              child: ExperienceSection(experiences: controller.experiences),
+              child: ScrollReveal(
+                child: ExperienceSection(experiences: controller.experiences),
+              ),
             ),
             SliverToBoxAdapter(
               key: controller.skillsSectionKey,
-              child: SkillsSection(skills: profile?.skills ?? []),
+              child: ScrollReveal(
+                child: SkillsSection(skills: profile?.skills ?? []),
+              ),
             ),
             SliverToBoxAdapter(
               key: controller.projectsSectionKey,
-              child: ProjectsSection(projects: controller.projects),
+              child: ScrollReveal(
+                child: ProjectsSection(projects: controller.projects),
+              ),
             ),
             SliverToBoxAdapter(
               key: controller.contactSectionKey,
-              child: ContactSection(profile: profile),
+              child: ScrollReveal(child: ContactSection(profile: profile)),
             ),
             SliverToBoxAdapter(
               child: SizedBox(height: AppScale.sectionPaddingVertical()),
@@ -112,5 +118,126 @@ class HomeContent extends GetView<HomeController> {
         ),
       ],
     );
+  }
+}
+
+/// A high-performance entrance animation widget that triggers when scrolled into view.
+/// Automatically unsubscribes from scrolling once the animation finishes to run with zero overhead.
+class ScrollReveal extends StatefulWidget {
+  final Widget child;
+
+  const ScrollReveal({super.key, required this.child});
+
+  @override
+  State<ScrollReveal> createState() => _ScrollRevealState();
+}
+
+class _ScrollRevealState extends State<ScrollReveal>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _fadeAnimation;
+  late final Animation<Offset> _slideAnimation;
+  bool _hasRevealed = false;
+  ScrollPosition? _scrollPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 40.0), // Slide up 40 pixels
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        if (mounted) setState(() {});
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _subscribeToScroll();
+  }
+
+  @override
+  void dispose() {
+    _unsubscribeFromScroll();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _subscribeToScroll() {
+    _unsubscribeFromScroll();
+    try {
+      final scrollableState = Scrollable.maybeOf(context);
+      if (scrollableState != null) {
+        _scrollPosition = scrollableState.position;
+        _scrollPosition?.addListener(_checkVisibility);
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) => _checkVisibility());
+    } catch (_) {}
+  }
+
+  void _unsubscribeFromScroll() {
+    _scrollPosition?.removeListener(_checkVisibility);
+    _scrollPosition = null;
+  }
+
+  void _checkVisibility() {
+    if (!mounted || _hasRevealed) return;
+
+    final RenderObject? renderObject = context.findRenderObject();
+    if (renderObject is! RenderBox) return;
+
+    if (!renderObject.hasSize) return;
+
+    final size = renderObject.size;
+    final position = renderObject.localToGlobal(Offset.zero);
+    final double viewportHeight = MediaQuery.of(context).size.height;
+
+    // Trigger reveal when the top of the element is visible in the viewport
+    final double topOffset = position.dy;
+    if (topOffset < viewportHeight - 80 && topOffset + size.height > 0) {
+      setState(() {
+        _hasRevealed = true;
+      });
+      _controller.forward();
+      _unsubscribeFromScroll();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_controller.isCompleted) {
+      return widget.child;
+    }
+
+    if (_hasRevealed) {
+      return AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Opacity(
+            opacity: _fadeAnimation.value,
+            child: Transform.translate(
+              offset: _slideAnimation.value,
+              child: child,
+            ),
+          );
+        },
+        child: widget.child,
+      );
+    }
+
+    return Opacity(opacity: 0.0, child: widget.child);
   }
 }
