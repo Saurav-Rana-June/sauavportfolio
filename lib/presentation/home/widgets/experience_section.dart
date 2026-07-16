@@ -80,20 +80,23 @@ class _ExperienceSectionState extends State<ExperienceSection>
         final exp = experiences[index];
         final isLast = index == experiences.length - 1;
         final isActive = index == 0;
-        return IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _TimelineNodeIndicator(isLast: isLast, isActive: isActive),
-              AppScale.w(Spacing.s24).gapW,
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: AppScale.h(24)),
-                  child: _ExperienceCard(experience: exp),
-                ),
+        return Stack(
+          children: [
+            Positioned(
+              left: 0,
+              top: 0,
+              bottom: 0,
+              width: 24,
+              child: _TimelineNodeIndicator(isLast: isLast, isActive: isActive),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 24 + AppScale.w(Spacing.s24),
+                bottom: AppScale.h(24),
               ),
-            ],
-          ),
+              child: _ExperienceCard(experience: exp),
+            ),
+          ],
         );
       },
     );
