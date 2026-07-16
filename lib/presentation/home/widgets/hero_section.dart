@@ -44,9 +44,11 @@ class _HeroSectionState extends State<HeroSection>
     return FuturisticBackground(
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.symmetric(
-          horizontal: AppScale.pagePaddingHorizontal(),
-          vertical: AppScale.heroPaddingVertical(),
+        padding: EdgeInsets.only(
+          left: AppScale.pagePaddingHorizontal(),
+          right: AppScale.pagePaddingHorizontal(),
+          top: AppScale.heroPaddingVertical(),
+          bottom: AppScale.sectionPaddingVertical(),
         ),
         child: Center(
           child: ConstrainedBox(

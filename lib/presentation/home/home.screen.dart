@@ -71,7 +71,9 @@ class HomeContent extends GetView<HomeController> {
               key: controller.contactSectionKey,
               child: ContactSection(profile: profile),
             ),
-            SliverToBoxAdapter(child: SizedBox(height: AppScale.h(64))),
+            SliverToBoxAdapter(
+              child: SizedBox(height: AppScale.sectionPaddingVertical()),
+            ),
           ],
         ),
         Positioned(

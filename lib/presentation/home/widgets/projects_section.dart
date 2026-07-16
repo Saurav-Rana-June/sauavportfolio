@@ -72,6 +72,7 @@ class _ProjectsSectionState extends State<ProjectsSection>
               ),
               AppScale.h(48).gapH,
               GridView.builder(
+                padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

@@ -15,7 +15,8 @@ class SkillsSection extends StatefulWidget {
   State<SkillsSection> createState() => _SkillsSectionState();
 }
 
-class _SkillsSectionState extends State<SkillsSection> with AutomaticKeepAliveClientMixin {
+class _SkillsSectionState extends State<SkillsSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -88,7 +89,7 @@ class _SkillsSectionState extends State<SkillsSection> with AutomaticKeepAliveCl
                   fontSize: AppScale.font(14),
                 ),
               ),
-              48.0.gapH,
+              AppScale.h(48).gapH,
               Wrap(
                 spacing: 12,
                 runSpacing: 12,

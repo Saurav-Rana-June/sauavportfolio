@@ -73,6 +73,7 @@ class _ExperienceSectionState extends State<ExperienceSection>
 
   Widget _buildTimeline(List<ExperienceModel> experiences) {
     return ListView.builder(
+      padding: EdgeInsets.zero,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: experiences.length,
@@ -92,7 +93,7 @@ class _ExperienceSectionState extends State<ExperienceSection>
             Padding(
               padding: EdgeInsets.only(
                 left: 24 + AppScale.w(Spacing.s24),
-                bottom: AppScale.h(24),
+                bottom: isLast ? 0 : AppScale.h(24),
               ),
               child: _ExperienceCard(experience: exp),
             ),
