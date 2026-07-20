@@ -21,6 +21,9 @@ abstract final class AppIcons {
   static IconData get bolt => solid(FontAwesomeIcons.bolt);
   static IconData get calendar => solid(FontAwesomeIcons.calendarCheck);
   static IconData get remote => solid(FontAwesomeIcons.houseLaptop);
+  static IconData get android => brandIcon(FontAwesomeIcons.android);
+  static IconData get apple => brandIcon(FontAwesomeIcons.apple);
+  static IconData get googlePlay => brandIcon(FontAwesomeIcons.googlePlay);
 
   static IconData solid(IconData icon) => IconData(
         icon.codePoint,

@@ -15,6 +15,8 @@ class ProjectModel {
   final List<String> features;
   final List<String> screenshots;
   final String? bannerAsset;
+  final String? playStoreUrl;
+  final String? appStoreUrl;
 
   ProjectModel({
     required this.id,
@@ -28,6 +30,8 @@ class ProjectModel {
     this.features = const [],
     this.screenshots = const [],
     this.bannerAsset,
+    this.playStoreUrl,
+    this.appStoreUrl,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) =>
@@ -46,6 +50,8 @@ class ProjectModel {
     List<String>? features,
     List<String>? screenshots,
     String? bannerAsset,
+    String? playStoreUrl,
+    String? appStoreUrl,
   }) {
     return ProjectModel(
       id: id,
@@ -59,6 +65,8 @@ class ProjectModel {
       features: features ?? this.features,
       screenshots: screenshots ?? this.screenshots,
       bannerAsset: bannerAsset ?? this.bannerAsset,
+      playStoreUrl: playStoreUrl ?? this.playStoreUrl,
+      appStoreUrl: appStoreUrl ?? this.appStoreUrl,
     );
   }
 }

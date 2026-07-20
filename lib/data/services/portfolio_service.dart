@@ -71,6 +71,8 @@ class PortfolioService {
       liveUrl: '#',
       githubUrl: '#',
       bannerAsset: 'assets/images/pubmeme/feature graphic.jpg',
+      playStoreUrl: '#',
+      appStoreUrl: '#',
       screenshots: const [
         'assets/images/pubmeme/ss_1.png',
         'assets/images/pubmeme/ss_2.png',

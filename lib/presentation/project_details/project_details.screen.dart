@@ -643,6 +643,41 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       ),
                   ],
                 ),
+                if (project.playStoreUrl != null || project.appStoreUrl != null) ...[
+                  SizedBox(height: AppScale.h(24)),
+                  Text(
+                    'Download App',
+                    style: AppTextStyles.mono12.copyWith(
+                      color: AppColors.accent,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: AppScale.h(12)),
+                  Row(
+                    children: [
+                      if (project.playStoreUrl != null)
+                        Expanded(
+                          child: _buildStoreButton(
+                            icon: AppIcons.googlePlay,
+                            subtitle: 'GET IT ON',
+                            title: 'Google Play',
+                            onTap: () => controller.openExternalLink(project.playStoreUrl),
+                          ),
+                        ),
+                      if (project.playStoreUrl != null && project.appStoreUrl != null)
+                        SizedBox(width: AppScale.w(12)),
+                      if (project.appStoreUrl != null)
+                        Expanded(
+                          child: _buildStoreButton(
+                            icon: AppIcons.apple,
+                            subtitle: 'Download on the',
+                            title: 'App Store',
+                            onTap: () => controller.openExternalLink(project.appStoreUrl),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -752,6 +787,73 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildStoreButton({
+    required IconData icon,
+    required String subtitle,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppScale.w(12),
+          vertical: AppScale.h(8),
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.scaffoldDark.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: AppColors.border.withValues(alpha: 0.8),
+            width: 1.0,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: AppColors.textPrimary,
+              size: AppScale.icon(20),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.mono12.copyWith(
+                      fontSize: AppScale.font(7.5),
+                      color: AppColors.textSecondary,
+                      letterSpacing: 0.5,
+                      height: 1.1,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.r14.copyWith(
+                      fontSize: AppScale.font(12.5),
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                      height: 1.1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -26,6 +26,8 @@ ProjectModel _$ProjectModelFromJson(Map<String, dynamic> json) => ProjectModel(
               .toList() ??
           const [],
       bannerAsset: json['bannerAsset'] as String?,
+      playStoreUrl: json['playStoreUrl'] as String?,
+      appStoreUrl: json['appStoreUrl'] as String?,
     );
 
 Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
@@ -41,4 +43,6 @@ Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
       'features': instance.features,
       'screenshots': instance.screenshots,
       'bannerAsset': instance.bannerAsset,
+      'playStoreUrl': instance.playStoreUrl,
+      'appStoreUrl': instance.appStoreUrl,
     };
