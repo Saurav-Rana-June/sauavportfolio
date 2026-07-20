@@ -209,61 +209,199 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   }
 
   Widget _buildNavbar(ProjectModel project) {
+    final themeColor = AppColors.accent;
+    final showGithub = project.githubUrl != null && project.githubUrl != '#';
+    final showLive = project.liveUrl != null && project.liveUrl != '#';
+
     return ClipRRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
         child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: AppScale.pagePaddingHorizontal(),
-            vertical: AppScale.h(12),
+            vertical: AppScale.h(10),
           ),
           decoration: BoxDecoration(
-            color: AppColors.scaffoldDark.withValues(alpha: 0.7),
+            color: AppColors.scaffoldDark.withValues(alpha: 0.65),
             border: Border(
               bottom: BorderSide(
-                color: AppColors.border.withValues(alpha: 0.4),
+                color: AppColors.border.withValues(alpha: 0.3),
                 width: 1.0,
               ),
             ),
           ),
-          child: Row(
-            children: [
-              InkWell(
-                onTap: () => Get.back(),
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.arrow_back_ios_new,
-                        color: AppColors.accent,
-                        size: AppScale.icon(14),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
+              child: Row(
+                children: [
+                  // Back Button (Futuristic Pill Shape)
+                  InkWell(
+                    onTap: () => Get.back(),
+                    borderRadius: BorderRadius.circular(30),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppScale.w(14),
+                        vertical: AppScale.h(8),
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Back to Portfolio',
-                        style: AppTextStyles.r14.copyWith(
-                          color: AppColors.accent,
-                          fontWeight: FontWeight.w600,
-                          fontSize: AppScale.font(13),
+                      decoration: BoxDecoration(
+                        color: themeColor.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: themeColor.withValues(alpha: 0.25),
+                          width: 1.0,
                         ),
                       ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.arrow_back_ios_new,
+                            color: themeColor,
+                            size: AppScale.icon(12),
+                          ),
+                          const SizedBox(width: 6),
+                           Text(
+                            'Back',
+                            style: AppTextStyles.r14.copyWith(
+                              color: themeColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppScale.font(12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Divider
+                  Container(
+                    height: AppScale.h(18),
+                    width: 1,
+                    color: AppColors.border.withValues(alpha: 0.4),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Mini Project Identity
+                  Expanded(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (project.imageUrl != null) ...[
+                          Container(
+                            width: AppScale.icon(24),
+                            height: AppScale.icon(24),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(
+                                color: AppColors.border.withValues(alpha: 0.6),
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: Image.asset(
+                                project.imageUrl!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                        Flexible(
+                          child: Text(
+                            project.title,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.m16.copyWith(
+                              color: AppColors.textPrimary,
+                              fontWeight: FontWeight.w700,
+                              fontSize: AppScale.font(14),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        // Futuristic indicator dot
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: themeColor,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: themeColor.withValues(alpha: 0.6),
+                                blurRadius: 6,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Action shortcuts on the right side
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (showGithub)
+                        _buildMiniNavbarAction(
+                          icon: AppIcons.github,
+                          tooltip: 'View Source Code',
+                          onTap: () => controller.openExternalLink(project.githubUrl),
+                        ),
+                      if (showGithub && showLive) const SizedBox(width: 10),
+                      if (showLive)
+                        _buildMiniNavbarAction(
+                          icon: AppIcons.arrowExternal,
+                          tooltip: 'Launch Live Demo',
+                          isAccent: true,
+                          onTap: () => controller.openExternalLink(project.liveUrl),
+                        ),
                     ],
                   ),
-                ),
+                ],
               ),
-              const Spacer(),
-              Text(
-                'PROJECT DETAILS',
-                style: AppTextStyles.mono12.copyWith(
-                  color: AppColors.textSecondary,
-                  letterSpacing: 2.0,
-                  fontWeight: FontWeight.w700,
-                  fontSize: AppScale.font(9),
-                ),
-              ),
-            ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMiniNavbarAction({
+    required IconData icon,
+    required String tooltip,
+    required VoidCallback onTap,
+    bool isAccent = false,
+  }) {
+    final themeColor = AppColors.accent;
+
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          width: AppScale.icon(36),
+          height: AppScale.icon(36),
+          decoration: BoxDecoration(
+            color: isAccent 
+                ? themeColor.withValues(alpha: 0.1) 
+                : AppColors.surfaceDark.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isAccent 
+                  ? themeColor.withValues(alpha: 0.3) 
+                  : AppColors.border.withValues(alpha: 0.5),
+              width: 1.0,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Icon(
+            icon,
+            color: isAccent ? themeColor : AppColors.textPrimary,
+            size: AppScale.icon(16),
           ),
         ),
       ),
