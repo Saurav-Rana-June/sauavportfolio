@@ -61,45 +61,31 @@ class PortfolioService {
   static final List<ProjectModel> _seedProjects = [
     ProjectModel(
       id: '1',
-      title: 'Portfolio Web App',
+      title: 'Pub Meme',
       description:
-          'A responsive Flutter Web portfolio built with GetX and Clean Architecture. '
-          'Features route-based navigation, dark theme, and modular feature layout.',
-      techStack: 'Flutter, GetX, Dio, GetStorage',
-      tags: ['Flutter Web', 'GetX', 'Clean Architecture'],
+          'Welcome to Pub Meme, the ultimate social hub for meme creators, humor enthusiasts, and trendsetters! '
+          'Build, generate, and share memes using built-in AI tools and an active social community.',
+      techStack: 'Flutter, Firebase, ImageKit, AI Integration',
+      tags: const ['Flutter', 'AI Integration', 'Firebase', 'ImageKit'],
       liveUrl: '#',
       githubUrl: '#',
-    ),
-    ProjectModel(
-      id: '2',
-      title: 'E-Commerce Mobile App',
-      description:
-          'Cross-platform shopping experience with cart management, payment integration, '
-          'and real-time order tracking.',
-      techStack: 'Flutter, Firebase, Stripe',
-      tags: ['Mobile', 'Firebase', 'Payments'],
-      liveUrl: '#',
-      githubUrl: '#',
-    ),
-    ProjectModel(
-      id: '3',
-      title: 'Task Management Dashboard',
-      description:
-          'Team productivity dashboard with kanban boards, analytics, and role-based access control.',
-      techStack: 'Flutter Web, REST API, PostgreSQL',
-      tags: ['Web', 'Dashboard', 'REST'],
-      liveUrl: '#',
-      githubUrl: '#',
-    ),
-    ProjectModel(
-      id: '4',
-      title: 'Social Content Platform',
-      description:
-          'Content sharing platform with infinite scroll feeds, media uploads, and AI-assisted creation.',
-      techStack: 'Flutter, GetX, Dio, Cloud Storage',
-      tags: ['Social', 'Media', 'AI'],
-      liveUrl: '#',
-      githubUrl: '#',
+      screenshots: const [
+        'assets/images/pubmeme/ss_1.png',
+        'assets/images/pubmeme/ss_2.png',
+        'assets/images/pubmeme/ss_3.png',
+        'assets/images/pubmeme/ss_4.png',
+        'assets/images/pubmeme/ss_5.png',
+        'assets/images/pubmeme/ss_6.png',
+      ],
+      features: const [
+        'AI-Powered Meme & Image Generation: Describe what you want and generate custom meme templates and images in seconds using advanced AI tools.',
+        'Smart AI Captioning: Generate hilarious, witty, and contextual meme text instantly with our smart caption assistant.',
+        'Dedicated Social Meme Feed: Share memes, follow creators, browse trending feeds, and stay engaged with a lively community.',
+        'Explore by Categories & Tags: Easily browse memes organized by categories like tech humor, daily struggles, gaming, and pop culture.',
+        'Build Your Creator Profile: Customize your profile with a name and picture, keep track of your posts, and grow your audience.',
+        'Fast Sharing & Downloads: Download memes instantly or share them directly on WhatsApp, Instagram, Telegram, and other platforms.',
+        'Safe, Secure & Built for You: Secure auth, optimized ImageKit rendering, and full user control over account and data privacy.'
+      ],
     ),
   ];
 

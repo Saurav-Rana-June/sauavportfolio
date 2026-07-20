@@ -71,30 +71,51 @@ class _ProjectsSectionState extends State<ProjectsSection>
                 ),
               ),
               AppScale.h(48).gapH,
-              GridView.builder(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: AppScale.w(16),
-                  mainAxisSpacing: AppScale.h(16),
-                  childAspectRatio: AppScale.isMobile
-                      ? 1.5
-                      : (AppScale.isTablet ? 1.3 : 1.1),
-                ),
-                itemCount: widget.projects.length,
-                itemBuilder: (context, index) {
-                  final project = widget.projects[index];
-                  return _AnimatedProjectCard(
-                    index: index,
-                    child: ProjectCard(
-                      project: project,
-                      onTap: () => controller.openProject(project),
+              if (widget.projects.length == 1)
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: AppScale.isMobile ? double.infinity : 400,
                     ),
-                  );
-                },
-              ),
+                    child: AspectRatio(
+                      aspectRatio: AppScale.isMobile
+                          ? 1.5
+                          : (AppScale.isTablet ? 1.3 : 1.1),
+                      child: _AnimatedProjectCard(
+                        index: 0,
+                        child: ProjectCard(
+                          project: widget.projects.first,
+                          onTap: () => controller.openProject(widget.projects.first),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              else
+                GridView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: AppScale.w(16),
+                    mainAxisSpacing: AppScale.h(16),
+                    childAspectRatio: AppScale.isMobile
+                        ? 1.5
+                        : (AppScale.isTablet ? 1.3 : 1.1),
+                  ),
+                  itemCount: widget.projects.length,
+                  itemBuilder: (context, index) {
+                    final project = widget.projects[index];
+                    return _AnimatedProjectCard(
+                      index: index,
+                      child: ProjectCard(
+                        project: project,
+                        onTap: () => controller.openProject(project),
+                      ),
+                    );
+                  },
+                ),
             ],
           ),
         ),
@@ -125,9 +146,9 @@ class _AnimatedProjectCard extends StatelessWidget {
             child: child,
           ),
         );
-        // Performance optimization: bypass Opacity widget once fade animation completes.
+        // Performance optimization: bypass Opacity, Scale, and Translate widgets once animation completes.
         if (opacity >= 1.0) {
-          return translatedChild;
+          return this.child;
         }
         return Opacity(opacity: opacity, child: translatedChild);
       },

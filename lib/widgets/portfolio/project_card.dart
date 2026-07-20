@@ -68,10 +68,11 @@ class _ProjectCardState extends State<ProjectCard>
     final homeController = Get.find<HomeController>();
     final Color themeColor = AppColors.accent;
 
-    return MouseRegion(
-      onEnter: (_) => _handleHover(true),
-      onExit: (_) => _handleHover(false),
-      child: AnimatedBuilder(
+    return RepaintBoundary(
+      child: MouseRegion(
+        onEnter: (_) => _handleHover(true),
+        onExit: (_) => _handleHover(false),
+        child: AnimatedBuilder(
         animation: Listenable.merge([_hoverAnimation, _borderController]),
         builder: (context, child) {
           final hoverVal = _hoverAnimation.value;
@@ -289,7 +290,7 @@ class _ProjectCardState extends State<ProjectCard>
           );
         },
       ),
-    );
+    ),);
   }
 }
 

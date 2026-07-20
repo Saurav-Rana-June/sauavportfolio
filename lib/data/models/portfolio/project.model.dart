@@ -12,6 +12,8 @@ class ProjectModel {
   final String? liveUrl;
   final String? githubUrl;
   final List<String> tags;
+  final List<String> features;
+  final List<String> screenshots;
 
   ProjectModel({
     required this.id,
@@ -22,6 +24,8 @@ class ProjectModel {
     this.liveUrl,
     this.githubUrl,
     this.tags = const [],
+    this.features = const [],
+    this.screenshots = const [],
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) =>
@@ -37,6 +41,8 @@ class ProjectModel {
     String? liveUrl,
     String? githubUrl,
     List<String>? tags,
+    List<String>? features,
+    List<String>? screenshots,
   }) {
     return ProjectModel(
       id: id,
@@ -47,6 +53,8 @@ class ProjectModel {
       liveUrl: liveUrl ?? this.liveUrl,
       githubUrl: githubUrl ?? this.githubUrl,
       tags: tags ?? this.tags,
+      features: features ?? this.features,
+      screenshots: screenshots ?? this.screenshots,
     );
   }
 }

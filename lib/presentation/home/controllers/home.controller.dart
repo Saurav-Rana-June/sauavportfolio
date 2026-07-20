@@ -10,6 +10,7 @@ import 'package:saurav_portfolio/data/services/portfolio_service.dart';
 import 'package:saurav_portfolio/data/utils/app_utils.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import 'package:saurav_portfolio/widgets/portfolio/project_details_dialog.dart';
 import 'package:saurav_portfolio/widgets/layout/portfolio_nav_section.dart';
 
 class HomeController extends GetxController {
@@ -100,8 +101,12 @@ class HomeController extends GetxController {
   }
 
   Future<void> openProject(ProjectModel project) async {
-    final url = project.liveUrl ?? project.githubUrl;
-    await openExternalLink(url);
+    Get.dialog(
+      ProjectDetailsDialog(project: project),
+      barrierColor: Colors.black.withValues(alpha: 0.6),
+      transitionCurve: Curves.easeOutBack,
+      transitionDuration: const Duration(milliseconds: 350),
+    );
   }
 
   Future<void> openExternalLink(String? url) async {

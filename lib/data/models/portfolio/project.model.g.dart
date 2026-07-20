@@ -7,17 +7,25 @@ part of 'project.model.dart';
 // **************************************************************************
 
 ProjectModel _$ProjectModelFromJson(Map<String, dynamic> json) => ProjectModel(
-  id: json['id'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String,
-  techStack: json['techStack'] as String,
-  imageUrl: json['imageUrl'] as String?,
-  liveUrl: json['liveUrl'] as String?,
-  githubUrl: json['githubUrl'] as String?,
-  tags:
-      (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-      const [],
-);
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      techStack: json['techStack'] as String,
+      imageUrl: json['imageUrl'] as String?,
+      liveUrl: json['liveUrl'] as String?,
+      githubUrl: json['githubUrl'] as String?,
+      tags:
+          (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
+      features: (json['features'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      screenshots: (json['screenshots'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
 
 Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
     <String, dynamic>{
@@ -29,4 +37,6 @@ Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
       'liveUrl': instance.liveUrl,
       'githubUrl': instance.githubUrl,
       'tags': instance.tags,
+      'features': instance.features,
+      'screenshots': instance.screenshots,
     };
