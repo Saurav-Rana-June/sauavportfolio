@@ -153,35 +153,43 @@ class _ProjectCardState extends State<ProjectCard>
                                           : Colors.transparent,
                                     ),
                                   ),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      if (hoverVal > 0)
-                                        Container(
-                                          width:
-                                              AppScale.icon(28) +
-                                              (hoverVal * 8),
-                                          height:
-                                              AppScale.icon(28) +
-                                              (hoverVal * 8),
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: themeColor.withValues(
-                                                alpha: (1.0 - hoverVal) * 0.3,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(9),
+                                    child: project.imageUrl != null
+                                        ? Image.asset(
+                                            project.imageUrl!,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              if (hoverVal > 0)
+                                                Container(
+                                                  width:
+                                                      AppScale.icon(28) +
+                                                      (hoverVal * 8),
+                                                  height:
+                                                      AppScale.icon(28) +
+                                                      (hoverVal * 8),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                      color: themeColor.withValues(
+                                                        alpha: (1.0 - hoverVal) * 0.3,
+                                                      ),
+                                                      width: 1.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                              AppFaIcon(
+                                                AppIcons.folder,
+                                                color: _isHovered
+                                                    ? themeColor
+                                                    : AppColors.textSecondary,
+                                                size: AppScale.icon(18),
                                               ),
-                                              width: 1.0,
-                                            ),
+                                            ],
                                           ),
-                                        ),
-                                      AppFaIcon(
-                                        AppIcons.folder,
-                                        color: _isHovered
-                                            ? themeColor
-                                            : AppColors.textSecondary,
-                                        size: AppScale.icon(18),
-                                      ),
-                                    ],
                                   ),
                                 ),
                                 Row(

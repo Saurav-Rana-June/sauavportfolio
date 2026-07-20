@@ -25,6 +25,7 @@ ProjectModel _$ProjectModelFromJson(Map<String, dynamic> json) => ProjectModel(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      bannerAsset: json['bannerAsset'] as String?,
     );
 
 Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
@@ -39,4 +40,5 @@ Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
       'tags': instance.tags,
       'features': instance.features,
       'screenshots': instance.screenshots,
+      'bannerAsset': instance.bannerAsset,
     };

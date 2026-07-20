@@ -14,6 +14,7 @@ class ProjectModel {
   final List<String> tags;
   final List<String> features;
   final List<String> screenshots;
+  final String? bannerAsset;
 
   ProjectModel({
     required this.id,
@@ -26,6 +27,7 @@ class ProjectModel {
     this.tags = const [],
     this.features = const [],
     this.screenshots = const [],
+    this.bannerAsset,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +45,7 @@ class ProjectModel {
     List<String>? tags,
     List<String>? features,
     List<String>? screenshots,
+    String? bannerAsset,
   }) {
     return ProjectModel(
       id: id,
@@ -55,6 +58,7 @@ class ProjectModel {
       tags: tags ?? this.tags,
       features: features ?? this.features,
       screenshots: screenshots ?? this.screenshots,
+      bannerAsset: bannerAsset ?? this.bannerAsset,
     );
   }
 }

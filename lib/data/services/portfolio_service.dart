@@ -67,8 +67,10 @@ class PortfolioService {
           'Build, generate, and share memes using built-in AI tools and an active social community.',
       techStack: 'Flutter, Firebase, ImageKit, AI Integration',
       tags: const ['Flutter', 'AI Integration', 'Firebase', 'ImageKit'],
+      imageUrl: 'assets/images/pubmeme/app_logo.png',
       liveUrl: '#',
       githubUrl: '#',
+      bannerAsset: 'assets/images/pubmeme/feature graphic.jpg',
       screenshots: const [
         'assets/images/pubmeme/ss_1.png',
         'assets/images/pubmeme/ss_2.png',

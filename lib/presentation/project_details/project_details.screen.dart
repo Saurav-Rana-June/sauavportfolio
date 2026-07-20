@@ -111,9 +111,13 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    if (project.bannerAsset != null) ...[
+                      _buildFeatureBanner(project),
+                      SizedBox(height: AppScale.h(28)),
+                    ],
                     // Title Header
                     _buildTitleHeader(project, themeColor),
-                    SizedBox(height: AppScale.h(24)),
+                    SizedBox(height: AppScale.h(28)),
 
                     if (isDesktop)
                       Row(
@@ -224,6 +228,43 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     );
   }
 
+  Widget _buildFeatureBanner(ProjectModel project) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: double.infinity,
+        height: AppScale.isMobile ? AppScale.h(180) : AppScale.h(340),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppColors.border.withValues(alpha: 0.6),
+            width: 1.5,
+          ),
+        ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset(
+              project.bannerAsset!,
+              fit: BoxFit.cover,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.45),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildTitleHeader(ProjectModel project, Color themeColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -234,14 +275,25 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               width: AppScale.icon(42),
               height: AppScale.icon(42),
               decoration: BoxDecoration(
-                color: themeColor.withValues(alpha: 0.15),
+                color: themeColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: themeColor.withValues(alpha: 0.3)),
+                border: Border.all(
+                  color: project.imageUrl != null ? AppColors.border : themeColor.withValues(alpha: 0.3),
+                  width: 1.5,
+                ),
               ),
-              child: Icon(
-                AppIcons.folder,
-                color: themeColor,
-                size: AppScale.icon(18),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(9),
+                child: project.imageUrl != null
+                    ? Image.asset(
+                        project.imageUrl!,
+                        fit: BoxFit.cover,
+                      )
+                    : Icon(
+                        AppIcons.folder,
+                        color: themeColor,
+                        size: AppScale.icon(18),
+                      ),
               ),
             ),
             const SizedBox(width: 16),
@@ -262,7 +314,9 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
   Widget _buildScreenshotsSection(ProjectModel project) {
     if (project.screenshots.isEmpty) return const SizedBox.shrink();
-    final double galleryHeight = AppScale.isMobile ? AppScale.h(380) : AppScale.h(480);
+    final double galleryHeight = AppScale.isMobile
+        ? AppScale.h(380)
+        : AppScale.h(480);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,10 +683,7 @@ class _DeviceMockup extends StatelessWidget {
               // Screen image
               AspectRatio(
                 aspectRatio: 9 / 19.5,
-                child: Image.asset(
-                  assetPath,
-                  fit: BoxFit.cover,
-                ),
+                child: Image.asset(assetPath, fit: BoxFit.cover),
               ),
               // Dynamic Island / Camera Notch
               Align(
