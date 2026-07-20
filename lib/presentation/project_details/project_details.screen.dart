@@ -261,7 +261,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                             size: AppScale.icon(12),
                           ),
                           const SizedBox(width: 6),
-                           Text(
+                          Text(
                             'Back',
                             style: AppTextStyles.r14.copyWith(
                               color: themeColor,
@@ -273,72 +273,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 16),
 
-                  // Divider
-                  Container(
-                    height: AppScale.h(18),
-                    width: 1,
-                    color: AppColors.border.withValues(alpha: 0.4),
-                  ),
-                  const SizedBox(width: 16),
-
-                  // Mini Project Identity
-                  Expanded(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (project.imageUrl != null) ...[
-                          Container(
-                            width: AppScale.icon(24),
-                            height: AppScale.icon(24),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: AppColors.border.withValues(alpha: 0.6),
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: Image.asset(
-                                project.imageUrl!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                        Flexible(
-                          child: Text(
-                            project.title,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.m16.copyWith(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w700,
-                              fontSize: AppScale.font(14),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        // Futuristic indicator dot
-                        Container(
-                          width: 6,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: themeColor,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: themeColor.withValues(alpha: 0.6),
-                                blurRadius: 6,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const Spacer(),
 
                   // Action shortcuts on the right side
                   Row(
