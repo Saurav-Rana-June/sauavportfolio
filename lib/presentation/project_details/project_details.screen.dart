@@ -65,7 +65,11 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.search_off, color: AppColors.textSecondary, size: 64),
+          const Icon(
+            Icons.search_off,
+            color: AppColors.textSecondary,
+            size: 64,
+          ),
           const SizedBox(height: 16),
           Text(
             'Project not found',
@@ -101,7 +105,9 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             ),
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
+                constraints: BoxConstraints(
+                  maxWidth: AppScale.contentMaxWidth(),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -256,6 +262,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
   Widget _buildScreenshotsSection(ProjectModel project) {
     if (project.screenshots.isEmpty) return const SizedBox.shrink();
+    final double galleryHeight = AppScale.isMobile ? AppScale.h(380) : AppScale.h(480);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -264,11 +272,12 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           style: AppTextStyles.sb18.copyWith(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
+            fontSize: AppScale.font(16),
           ),
         ),
         SizedBox(height: AppScale.h(16)),
         SizedBox(
-          height: AppScale.h(320),
+          height: galleryHeight,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: project.screenshots.length,
@@ -281,7 +290,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(
-                        color: Colors.black.withValues(alpha: 0.85),
+                        color: Colors.black.withValues(alpha: 0.9),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -302,7 +311,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                                     color: Colors.white,
                                   ),
                                   onPressed: () => Get.back(),
-                                  iconSize: 30,
+                                  iconSize: AppScale.icon(24),
                                 ),
                               ),
                             ),
@@ -310,25 +319,12 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         ),
                       ),
                     ),
+                    barrierColor: Colors.black.withValues(alpha: 0.9),
                   );
                 },
                 child: Padding(
                   padding: EdgeInsets.only(right: AppScale.w(16)),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppColors.border.withValues(alpha: 0.6),
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Image.asset(
-                        screenshot,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  child: _DeviceMockup(assetPath: screenshot),
                 ),
               );
             },
@@ -431,7 +427,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               if (showGithub)
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => controller.openExternalLink(project.githubUrl),
+                    onPressed: () =>
+                        controller.openExternalLink(project.githubUrl),
                     icon: Icon(AppIcons.github, size: AppScale.icon(14)),
                     label: Text(
                       'GitHub',
@@ -456,7 +453,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               if (showLive)
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => controller.openExternalLink(project.liveUrl),
+                    onPressed: () =>
+                        controller.openExternalLink(project.liveUrl),
                     icon: Icon(AppIcons.arrowExternal, size: AppScale.icon(14)),
                     label: Text(
                       'Live Demo',
@@ -557,10 +555,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child: Text(
-              emoji,
-              style: TextStyle(fontSize: AppScale.font(14)),
-            ),
+            child: Text(emoji, style: TextStyle(fontSize: AppScale.font(14))),
           ),
           SizedBox(width: AppScale.w(12)),
           Expanded(
@@ -590,6 +585,93 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DeviceMockup extends StatelessWidget {
+  final String assetPath;
+
+  const _DeviceMockup({required this.assetPath});
+
+  @override
+  Widget build(BuildContext context) {
+    final double bezelWidth = AppScale.w(6);
+    final double innerRadius = AppScale.r(16);
+    final double outerRadius = AppScale.r(22);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(outerRadius),
+        border: Border.all(
+          color: const Color(0xFF2C2D3A), // Metallic outer frame rim
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.4),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Container(
+        padding: EdgeInsets.all(bezelWidth),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0F0F12), // Black bezel
+          borderRadius: BorderRadius.circular(outerRadius - 1),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(innerRadius),
+          child: Stack(
+            children: [
+              // Screen image
+              AspectRatio(
+                aspectRatio: 9 / 19.5,
+                child: Image.asset(
+                  assetPath,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              // Dynamic Island / Camera Notch
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(top: AppScale.h(6)),
+                  child: Container(
+                    width: AppScale.w(44),
+                    height: AppScale.h(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
+              // Diagonal glass glare sheen overlay
+              Positioned.fill(
+                child: FractionallySizedBox(
+                  alignment: Alignment.topLeft,
+                  widthFactor: 0.6,
+                  heightFactor: 0.8,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.white.withValues(alpha: 0.04),
+                          Colors.white.withValues(alpha: 0.0),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

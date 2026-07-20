@@ -84,12 +84,20 @@ class HomeController extends GetxController {
         message: messageController.text.trim(),
       );
       if (success) {
-        AppUtils.snackbar('Success', 'Message sent successfully!', SnackBarType.success);
+        AppUtils.snackbar(
+          'Success',
+          'Message sent successfully!',
+          SnackBarType.success,
+        );
         nameController.clear();
         emailController.clear();
         messageController.clear();
       } else {
-        AppUtils.snackbar('Failed', 'Could not send message.', SnackBarType.error);
+        AppUtils.snackbar(
+          'Failed',
+          'Could not send message.',
+          SnackBarType.error,
+        );
       }
     } catch (error) {
       log.e('submitContactForm failed: $error');
@@ -105,7 +113,11 @@ class HomeController extends GetxController {
 
   Future<void> openExternalLink(String? url) async {
     if (url == null || url.isEmpty || url == '#') {
-      AppUtils.snackbar('Coming soon', 'Link will be available shortly.', SnackBarType.info);
+      AppUtils.snackbar(
+        'Coming soon',
+        'Link will be available shortly.',
+        SnackBarType.info,
+      );
       return;
     }
     if (await canLaunchUrlString(url)) {
