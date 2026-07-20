@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
@@ -90,18 +91,65 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     final themeColor = AppColors.accent;
     final isDesktop = !AppScale.isMobile;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return Stack(
       children: [
-        // Navbar
-        _buildNavbar(project),
+        // 1. Futuristic Faded Background Banner
+        if (project.bannerAsset != null) ...[
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: AppScale.isMobile ? AppScale.h(280) : AppScale.h(420),
+            child: ShaderMask(
+              shaderCallback: (rect) {
+                return LinearGradient(
+                  colors: [
+                    Colors.black.withValues(alpha: 0.95), // Slight dark overlay at the very top
+                    Colors.black.withValues(alpha: 0.4),  // Visibility in center
+                    Colors.transparent,                   // Fade to zero at bottom
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0.0, 0.35, 1.0],
+                ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+              },
+              blendMode: BlendMode.dstIn,
+              child: Image.asset(
+                project.bannerAsset!,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // Subtle radial dark gradient to fade sides
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: AppScale.isMobile ? AppScale.h(280) : AppScale.h(420),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  colors: [
+                    Colors.transparent,
+                    AppColors.scaffoldDark.withValues(alpha: 0.8),
+                    AppColors.scaffoldDark,
+                  ],
+                  center: Alignment.center,
+                  radius: 1.2,
+                ),
+              ),
+            ),
+          ),
+        ],
 
-        // Screen Body
-        Expanded(
+        // 2. Scrollable Content Layer
+        Positioned.fill(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppScale.pagePaddingHorizontal(),
-              vertical: AppScale.h(24),
+            padding: EdgeInsets.fromLTRB(
+              AppScale.pagePaddingHorizontal(),
+              AppScale.h(90), // Spaced below navbar
+              AppScale.pagePaddingHorizontal(),
+              AppScale.h(42),
             ),
             child: Center(
               child: ConstrainedBox(
@@ -111,13 +159,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (project.bannerAsset != null) ...[
-                      _buildFeatureBanner(project),
-                      SizedBox(height: AppScale.h(28)),
-                    ],
+                    SizedBox(height: AppScale.h(20)),
                     // Title Header
                     _buildTitleHeader(project, themeColor),
-                    SizedBox(height: AppScale.h(28)),
+                    SizedBox(height: AppScale.h(32)),
 
                     if (isDesktop)
                       Row(
@@ -167,99 +212,75 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             ),
           ),
         ),
+
+        // 3. Sticky Glassmorphic Navbar (always on top)
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: _buildNavbar(project),
+        ),
       ],
     );
   }
 
   Widget _buildNavbar(ProjectModel project) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppScale.pagePaddingHorizontal(),
-        vertical: AppScale.h(16),
-      ),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceDark.withValues(alpha: 0.5),
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.border.withValues(alpha: 0.4),
-            width: 1.0,
+    return ClipRRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppScale.pagePaddingHorizontal(),
+            vertical: AppScale.h(12),
           ),
-        ),
-      ),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Get.back(),
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.arrow_back_ios_new,
-                    color: AppColors.accent,
-                    size: AppScale.icon(14),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Back to Portfolio',
-                    style: AppTextStyles.r14.copyWith(
-                      color: AppColors.accent,
-                      fontWeight: FontWeight.w600,
-                      fontSize: AppScale.font(13),
-                    ),
-                  ),
-                ],
+          decoration: BoxDecoration(
+            color: AppColors.scaffoldDark.withValues(alpha: 0.7),
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.border.withValues(alpha: 0.4),
+                width: 1.0,
               ),
             ),
           ),
-          const Spacer(),
-          Text(
-            'PROJECT DETAILS',
-            style: AppTextStyles.mono12.copyWith(
-              color: AppColors.textSecondary,
-              letterSpacing: 2.0,
-              fontWeight: FontWeight.w700,
-              fontSize: AppScale.font(9),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureBanner(ProjectModel project) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        width: double.infinity,
-        height: AppScale.isMobile ? AppScale.h(180) : AppScale.h(340),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.border.withValues(alpha: 0.6),
-            width: 1.5,
-          ),
-        ),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.asset(
-              project.bannerAsset!,
-              fit: BoxFit.cover,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.45),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+          child: Row(
+            children: [
+              InkWell(
+                onTap: () => Get.back(),
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.arrow_back_ios_new,
+                        color: AppColors.accent,
+                        size: AppScale.icon(14),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Back to Portfolio',
+                        style: AppTextStyles.r14.copyWith(
+                          color: AppColors.accent,
+                          fontWeight: FontWeight.w600,
+                          fontSize: AppScale.font(13),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              const Spacer(),
+              Text(
+                'PROJECT DETAILS',
+                style: AppTextStyles.mono12.copyWith(
+                  color: AppColors.textSecondary,
+                  letterSpacing: 2.0,
+                  fontWeight: FontWeight.w700,
+                  fontSize: AppScale.font(9),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -419,159 +440,193 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     final showLive = project.liveUrl != null && project.liveUrl != '#';
 
     return Container(
-      padding: EdgeInsets.all(AppScale.w(24)),
       decoration: BoxDecoration(
-        color: AppColors.surfaceDark,
+        color: AppColors.surfaceDark.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.border.withValues(alpha: 0.5),
+          color: AppColors.border.withValues(alpha: 0.45),
           width: 1.5,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: themeColor.withValues(alpha: 0.04),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Project Info',
-            style: AppTextStyles.sb18.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: AppScale.h(16)),
-          Text(
-            'Technologies Used',
-            style: AppTextStyles.mono12.copyWith(
-              color: AppColors.accent,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(height: AppScale.h(8)),
-          Wrap(
-            spacing: AppScale.w(8),
-            runSpacing: AppScale.h(8),
-            children: project.tags.map((tag) {
-              return Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: AppScale.w(10),
-                  vertical: AppScale.h(5),
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.2),
-                    width: 1.0,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: EdgeInsets.all(AppScale.w(24)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Project Info',
+                  style: AppTextStyles.sb18.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
-                child: Text(
-                  tag,
+                SizedBox(height: AppScale.h(16)),
+                Text(
+                  'Technologies Used',
                   style: AppTextStyles.mono12.copyWith(
-                    color: AppColors.textPrimary,
-                    fontSize: AppScale.font(10),
+                    color: AppColors.accent,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-              );
-            }).toList(),
+                SizedBox(height: AppScale.h(8)),
+                Wrap(
+                  spacing: AppScale.w(8),
+                  runSpacing: AppScale.h(8),
+                  children: project.tags.map((tag) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppScale.w(10),
+                        vertical: AppScale.h(5),
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.2),
+                          width: 1.0,
+                        ),
+                      ),
+                      child: Text(
+                        tag,
+                        style: AppTextStyles.mono12.copyWith(
+                          color: AppColors.textPrimary,
+                          fontSize: AppScale.font(10),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: AppScale.h(24)),
+                Row(
+                  children: [
+                    if (showGithub)
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () =>
+                              controller.openExternalLink(project.githubUrl),
+                          icon: Icon(AppIcons.github, size: AppScale.icon(14)),
+                          label: Text(
+                            'GitHub',
+                            style: AppTextStyles.r14.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppScale.font(13),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.scaffoldDark.withValues(alpha: 0.8),
+                            foregroundColor: AppColors.textPrimary,
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(color: AppColors.border),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (showGithub && showLive) SizedBox(width: AppScale.w(12)),
+                    if (showLive)
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () =>
+                              controller.openExternalLink(project.liveUrl),
+                          icon: Icon(AppIcons.arrowExternal, size: AppScale.icon(14)),
+                          label: Text(
+                            'Live Demo',
+                            style: AppTextStyles.r14.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppScale.font(13),
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: themeColor,
+                            foregroundColor: AppColors.scaffoldDark,
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                    if (!showGithub && !showLive)
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => controller.openExternalLink('#'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.border,
+                            foregroundColor: AppColors.textSecondary,
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            'Coming Soon',
+                            style: AppTextStyles.r14.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: AppScale.font(13),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: AppScale.h(24)),
-          Row(
-            children: [
-              if (showGithub)
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () =>
-                        controller.openExternalLink(project.githubUrl),
-                    icon: Icon(AppIcons.github, size: AppScale.icon(14)),
-                    label: Text(
-                      'GitHub',
-                      style: AppTextStyles.r14.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppScale.font(13),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.scaffoldDark,
-                      foregroundColor: AppColors.textPrimary,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: const BorderSide(color: AppColors.border),
-                      ),
-                    ),
-                  ),
-                ),
-              if (showGithub && showLive) SizedBox(width: AppScale.w(12)),
-              if (showLive)
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () =>
-                        controller.openExternalLink(project.liveUrl),
-                    icon: Icon(AppIcons.arrowExternal, size: AppScale.icon(14)),
-                    label: Text(
-                      'Live Demo',
-                      style: AppTextStyles.r14.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppScale.font(13),
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: themeColor,
-                      foregroundColor: AppColors.scaffoldDark,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-              if (!showGithub && !showLive)
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => controller.openExternalLink('#'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.border,
-                      foregroundColor: AppColors.textSecondary,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      'Coming Soon',
-                      style: AppTextStyles.r14.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppScale.font(13),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildFeaturesSection(ProjectModel project) {
     if (project.features.isEmpty) return const SizedBox.shrink();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Key Features',
-          style: AppTextStyles.sb18.copyWith(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w700,
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDark.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: AppColors.border.withValues(alpha: 0.45),
+          width: 1.5,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: EdgeInsets.all(AppScale.w(24)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Key Features',
+                  style: AppTextStyles.sb18.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                SizedBox(height: AppScale.h(20)),
+                ...project.features.map(_buildFeatureItem),
+              ],
+            ),
           ),
         ),
-        SizedBox(height: AppScale.h(16)),
-        ...project.features.map(_buildFeatureItem),
-      ],
+      ),
     );
   }
 
