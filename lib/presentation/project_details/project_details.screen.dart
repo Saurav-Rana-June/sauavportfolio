@@ -94,53 +94,37 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     return Stack(
       children: [
         // 1. Futuristic Faded Background Banner
-        if (project.bannerAsset != null) ...[
+        if (project.bannerAsset != null)
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             height: AppScale.isMobile ? AppScale.h(280) : AppScale.h(420),
-            child: ShaderMask(
-              shaderCallback: (rect) {
-                return LinearGradient(
-                  colors: [
-                    Colors.black.withValues(alpha: 0.95), // Slight dark overlay at the very top
-                    Colors.black.withValues(alpha: 0.4),  // Visibility in center
-                    Colors.transparent,                   // Fade to zero at bottom
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: const [0.0, 0.35, 1.0],
-                ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-              },
-              blendMode: BlendMode.dstIn,
-              child: Image.asset(
-                project.bannerAsset!,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          // Subtle radial dark gradient to fade sides
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: AppScale.isMobile ? AppScale.h(280) : AppScale.h(420),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    Colors.transparent,
-                    AppColors.scaffoldDark.withValues(alpha: 0.8),
-                    AppColors.scaffoldDark,
-                  ],
-                  center: Alignment.center,
-                  radius: 1.2,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  project.bannerAsset!,
+                  fit: BoxFit.cover,
+                  opacity: const AlwaysStoppedAnimation(0.35),
                 ),
-              ),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Colors.transparent,
+                        AppColors.scaffoldDark.withValues(alpha: 0.5),
+                        AppColors.scaffoldDark,
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: const [0.0, 0.7, 1.0],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
 
         // 2. Scrollable Content Layer
         Positioned.fill(
