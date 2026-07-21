@@ -65,8 +65,15 @@ class PortfolioService {
       description:
           'Welcome to Pub Meme, the ultimate social hub for meme creators, humor enthusiasts, and trendsetters! '
           'Build, generate, and share memes using built-in AI tools and an active social community.',
-      techStack: 'Flutter, Firebase, ImageKit, AI Integration',
-      tags: const ['Flutter', 'AI Integration', 'Firebase', 'ImageKit'],
+      techStack: 'Flutter, GetX, FastAPI, Replicate API, ImgFlip, ImageKit',
+      tags: const [
+        'Flutter',
+        'GetX',
+        'FastAPI',
+        'Replicate API',
+        'ImgFlip',
+        'ImageKit',
+      ],
       imageUrl: 'assets/images/pubmeme/app_logo.png',
       liveUrl: '#',
       githubUrl: '#',
@@ -88,7 +95,7 @@ class PortfolioService {
         'Explore by Categories & Tags: Easily browse memes organized by categories like tech humor, daily struggles, gaming, and pop culture.',
         'Build Your Creator Profile: Customize your profile with a name and picture, keep track of your posts, and grow your audience.',
         'Fast Sharing & Downloads: Download memes instantly or share them directly on WhatsApp, Instagram, Telegram, and other platforms.',
-        'Safe, Secure & Built for You: Secure auth, optimized ImageKit rendering, and full user control over account and data privacy.'
+        'Safe, Secure & Built for You: Secure auth, optimized ImageKit rendering, and full user control over account and data privacy.',
       ],
     ),
   ];
