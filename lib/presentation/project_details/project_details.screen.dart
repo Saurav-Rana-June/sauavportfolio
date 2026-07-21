@@ -198,12 +198,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
         ),
 
         // 3. Sticky Glassmorphic Navbar (always on top)
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: _buildNavbar(project),
-        ),
+        Positioned(top: 0, left: 0, right: 0, child: _buildNavbar(project)),
       ],
     );
   }
@@ -284,7 +279,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         _buildMiniNavbarAction(
                           icon: AppIcons.github,
                           tooltip: 'View Source Code',
-                          onTap: () => controller.openExternalLink(project.githubUrl),
+                          onTap: () =>
+                              controller.openExternalLink(project.githubUrl),
                         ),
                       if (showGithub && showLive) const SizedBox(width: 10),
                       if (showLive)
@@ -292,7 +288,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                           icon: AppIcons.arrowExternal,
                           tooltip: 'Launch Live Demo',
                           isAccent: true,
-                          onTap: () => controller.openExternalLink(project.liveUrl),
+                          onTap: () =>
+                              controller.openExternalLink(project.liveUrl),
                         ),
                     ],
                   ),
@@ -322,13 +319,13 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           width: AppScale.icon(36),
           height: AppScale.icon(36),
           decoration: BoxDecoration(
-            color: isAccent 
-                ? themeColor.withValues(alpha: 0.1) 
+            color: isAccent
+                ? themeColor.withValues(alpha: 0.1)
                 : AppColors.surfaceDark.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isAccent 
-                  ? themeColor.withValues(alpha: 0.3) 
+              color: isAccent
+                  ? themeColor.withValues(alpha: 0.3)
                   : AppColors.border.withValues(alpha: 0.5),
               width: 1.0,
             ),
@@ -357,17 +354,16 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                 color: themeColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: project.imageUrl != null ? AppColors.border : themeColor.withValues(alpha: 0.3),
+                  color: project.imageUrl != null
+                      ? AppColors.border
+                      : themeColor.withValues(alpha: 0.3),
                   width: 1.5,
                 ),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(9),
                 child: project.imageUrl != null
-                    ? Image.asset(
-                        project.imageUrl!,
-                        fit: BoxFit.cover,
-                      )
+                    ? Image.asset(project.imageUrl!, fit: BoxFit.cover)
                     : Icon(
                         AppIcons.folder,
                         color: themeColor,
@@ -583,10 +579,14 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                             ),
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.scaffoldDark.withValues(alpha: 0.8),
+                            backgroundColor: AppColors.scaffoldDark.withValues(
+                              alpha: 0.8,
+                            ),
                             foregroundColor: AppColors.textPrimary,
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppScale.h(14),
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(color: AppColors.border),
@@ -600,7 +600,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         child: ElevatedButton.icon(
                           onPressed: () =>
                               controller.openExternalLink(project.liveUrl),
-                          icon: Icon(AppIcons.arrowExternal, size: AppScale.icon(14)),
+                          icon: Icon(
+                            AppIcons.arrowExternal,
+                            size: AppScale.icon(14),
+                          ),
                           label: Text(
                             'Live Demo',
                             style: AppTextStyles.r14.copyWith(
@@ -612,7 +615,9 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                             backgroundColor: themeColor,
                             foregroundColor: AppColors.scaffoldDark,
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppScale.h(14),
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -627,7 +632,9 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                             backgroundColor: AppColors.border,
                             foregroundColor: AppColors.textSecondary,
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(vertical: AppScale.h(14)),
+                            padding: EdgeInsets.symmetric(
+                              vertical: AppScale.h(14),
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -643,7 +650,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       ),
                   ],
                 ),
-                if (project.playStoreUrl != null || project.appStoreUrl != null) ...[
+                if (project.playStoreUrl != null ||
+                    project.appStoreUrl != null) ...[
                   SizedBox(height: AppScale.h(24)),
                   Text(
                     'Download App',
@@ -657,24 +665,32 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     children: [
                       if (project.playStoreUrl != null)
                         Expanded(
-                          child: _buildStoreButton(
-                            icon: AppIcons.googlePlay,
-                            subtitle: 'GET IT ON',
-                            title: 'Google Play',
-                            onTap: () => controller.openExternalLink(project.playStoreUrl),
+                          child: _FuturisticDownloadButton(
+                            title: 'Download for Android',
+                            subtitle: 'Official Build',
+                            icon: AppIcons.android,
+                            accentColor: AppColors.accent,
+                            onTap: () => controller.openExternalLink(
+                              project.playStoreUrl,
+                            ),
                           ),
                         ),
-                      if (project.playStoreUrl != null && project.appStoreUrl != null)
+                      /*
+                      if (project.playStoreUrl != null &&
+                          project.appStoreUrl != null)
                         SizedBox(width: AppScale.w(12)),
                       if (project.appStoreUrl != null)
                         Expanded(
-                          child: _buildStoreButton(
-                            icon: AppIcons.apple,
-                            subtitle: 'Download on the',
-                            title: 'App Store',
-                            onTap: () => controller.openExternalLink(project.appStoreUrl),
+                          child: _FuturisticDownloadButton(
+                            title: 'Download for iOS',
+                            subtitle: 'App Store',
+                            icon: AppIcons.ios,
+                            onTap: () => controller.openExternalLink(
+                              project.appStoreUrl,
+                            ),
                           ),
                         ),
+                      */
                     ],
                   ),
                 ],
@@ -790,73 +806,6 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
       ),
     );
   }
-
-  Widget _buildStoreButton({
-    required IconData icon,
-    required String subtitle,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppScale.w(12),
-          vertical: AppScale.h(8),
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.scaffoldDark.withValues(alpha: 0.9),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: AppColors.border.withValues(alpha: 0.8),
-            width: 1.0,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: AppColors.textPrimary,
-              size: AppScale.icon(20),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.mono12.copyWith(
-                      fontSize: AppScale.font(7.5),
-                      color: AppColors.textSecondary,
-                      letterSpacing: 0.5,
-                      height: 1.1,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.r14.copyWith(
-                      fontSize: AppScale.font(12.5),
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
-                      height: 1.1,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _DeviceMockup extends StatelessWidget {
@@ -933,6 +882,185 @@ class _DeviceMockup extends StatelessWidget {
                       ),
                     ),
                   ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FuturisticDownloadButton extends StatefulWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+  final Color accentColor;
+
+  const _FuturisticDownloadButton({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+    this.accentColor = AppColors.accent,
+  });
+
+  @override
+  State<_FuturisticDownloadButton> createState() =>
+      __FuturisticDownloadButtonState();
+}
+
+class __FuturisticDownloadButtonState extends State<_FuturisticDownloadButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          padding: EdgeInsets.symmetric(
+            horizontal: AppScale.w(18),
+            vertical: AppScale.h(14),
+          ),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: _isHovered
+                  ? [
+                      widget.accentColor.withValues(alpha: 0.22),
+                      AppColors.surfaceDark.withValues(alpha: 0.95),
+                      AppColors.primary.withValues(alpha: 0.18),
+                    ]
+                  : [
+                      AppColors.surfaceDark.withValues(alpha: 0.9),
+                      const Color(0xFF14141B),
+                    ],
+            ),
+            border: Border.all(
+              color: _isHovered
+                  ? widget.accentColor
+                  : widget.accentColor.withValues(alpha: 0.35),
+              width: 1.2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: widget.accentColor.withValues(
+                  alpha: _isHovered ? 0.35 : 0.12,
+                ),
+                blurRadius: _isHovered ? 20 : 10,
+                spreadRadius: _isHovered ? 1 : 0,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: EdgeInsets.all(AppScale.w(10)),
+                decoration: BoxDecoration(
+                  color: widget.accentColor.withValues(
+                    alpha: _isHovered ? 0.25 : 0.12,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: widget.accentColor.withValues(
+                      alpha: _isHovered ? 0.6 : 0.3,
+                    ),
+                  ),
+                  boxShadow: [
+                    if (_isHovered)
+                      BoxShadow(
+                        color: widget.accentColor.withValues(alpha: 0.3),
+                        blurRadius: 10,
+                      ),
+                  ],
+                ),
+                child: Icon(
+                  widget.icon,
+                  color: _isHovered ? Colors.white : widget.accentColor,
+                  size: AppScale.icon(18),
+                ),
+              ),
+              SizedBox(width: AppScale.w(14)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: AppScale.w(6),
+                          height: AppScale.h(6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF22C55E),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFF22C55E,
+                                ).withValues(alpha: 0.8),
+                                blurRadius: 6,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: AppScale.w(6)),
+                        Text(
+                          widget.subtitle.toUpperCase(),
+                          style: AppTextStyles.mono12.copyWith(
+                            fontSize: AppScale.font(9.5),
+                            color: widget.accentColor,
+                            letterSpacing: 1.1,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: AppScale.h(3)),
+                    Text(
+                      widget.title,
+                      style: AppTextStyles.r16.copyWith(
+                        fontSize: AppScale.font(13.5),
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: AppScale.w(10)),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: EdgeInsets.all(AppScale.w(8)),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(
+                    alpha: _isHovered ? 0.15 : 0.05,
+                  ),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white.withValues(
+                      alpha: _isHovered ? 0.3 : 0.1,
+                    ),
+                  ),
+                ),
+                child: Icon(
+                  AppIcons.download,
+                  color: _isHovered
+                      ? widget.accentColor
+                      : AppColors.textSecondary,
+                  size: AppScale.icon(12),
                 ),
               ),
             ],

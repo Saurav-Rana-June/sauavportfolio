@@ -24,6 +24,8 @@ abstract final class AppIcons {
   static IconData get android => brandIcon(FontAwesomeIcons.android);
   static IconData get apple => brandIcon(FontAwesomeIcons.apple);
   static IconData get googlePlay => brandIcon(FontAwesomeIcons.googlePlay);
+  static IconData get ios => brandIcon(FontAwesomeIcons.appStoreIos);
+  static IconData get download => solid(FontAwesomeIcons.download);
 
   static IconData solid(IconData icon) => IconData(
         icon.codePoint,
