@@ -160,6 +160,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                               children: [
                                 _buildScreenshotsSection(project),
                                 _buildDescriptionSection(project),
+                                _buildCheckoutCodeSection(project),
                               ],
                             ),
                           ),
@@ -184,6 +185,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         children: [
                           _buildScreenshotsSection(project),
                           _buildDescriptionSection(project),
+                          _buildCheckoutCodeSection(project),
                           SizedBox(height: AppScale.h(24)),
                           _buildActionsCard(project, themeColor),
                           SizedBox(height: AppScale.h(24)),
@@ -482,6 +484,80 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             color: AppColors.textSecondary,
             height: 1.6,
             fontSize: AppScale.font(14),
+          ),
+        ),
+        SizedBox(height: AppScale.h(24)),
+      ],
+    );
+  }
+
+  Widget _buildCheckoutCodeSection(ProjectModel project) {
+    final gitUrl = (project.githubUrl != null && project.githubUrl != '#')
+        ? project.githubUrl!
+        : 'https://github.com/Saurav-Rana-June/pub-meme.git';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Checkout Code',
+          style: AppTextStyles.sb18.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(height: AppScale.h(12)),
+        InkWell(
+          onTap: () => controller.openExternalLink(gitUrl),
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppScale.w(16),
+              vertical: AppScale.h(14),
+            ),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceDark.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: AppColors.accent.withValues(alpha: 0.3),
+                width: 1.0,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.accent.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  AppIcons.github,
+                  color: AppColors.accent,
+                  size: AppScale.icon(18),
+                ),
+                SizedBox(width: AppScale.w(12)),
+                Expanded(
+                  child: Text(
+                    gitUrl,
+                    style: AppTextStyles.mono12.copyWith(
+                      color: AppColors.textPrimary,
+                      fontSize: AppScale.font(13),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                SizedBox(width: AppScale.w(8)),
+                Icon(
+                  AppIcons.arrowExternal,
+                  color: AppColors.textSecondary,
+                  size: AppScale.icon(14),
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(height: AppScale.h(24)),
