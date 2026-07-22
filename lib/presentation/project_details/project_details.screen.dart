@@ -160,7 +160,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                               children: [
                                 _buildScreenshotsSection(project),
                                 _buildDescriptionSection(project),
-                                _buildCheckoutCodeSection(project),
+                                if (project.showCode)
+                                  _buildCheckoutCodeSection(project),
                               ],
                             ),
                           ),
@@ -185,7 +186,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         children: [
                           _buildScreenshotsSection(project),
                           _buildDescriptionSection(project),
-                          _buildCheckoutCodeSection(project),
+                          if (project.showCode)
+                            _buildCheckoutCodeSection(project),
                           SizedBox(height: AppScale.h(24)),
                           _buildActionsCard(project, themeColor),
                           SizedBox(height: AppScale.h(24)),
@@ -589,7 +591,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   }
 
   Widget _buildActionsCard(ProjectModel project, Color themeColor) {
-    final showGithub = project.githubUrl != null && project.githubUrl != '#';
+    final showGithub =
+        project.showCode &&
+        project.githubUrl != null &&
+        project.githubUrl != '#';
     final showLive = project.liveUrl != null && project.liveUrl != '#';
     final hasPlayStore =
         project.playStoreUrl != null && project.playStoreUrl != '#';

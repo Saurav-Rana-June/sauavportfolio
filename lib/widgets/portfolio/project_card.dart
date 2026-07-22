@@ -237,7 +237,8 @@ class _ProjectCardState extends State<ProjectCard>
                                       ),
                                       Spacing.s8.gapW,
                                     ],
-                                    if (project.githubUrl != null &&
+                                    if (project.showCode &&
+                                        project.githubUrl != null &&
                                         project.githubUrl != '#') ...[
                                       _ActionIconButton(
                                         icon: AppIcons.github,

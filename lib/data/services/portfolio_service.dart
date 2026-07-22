@@ -61,6 +61,54 @@ class PortfolioService {
   static final List<ProjectModel> _seedProjects = [
     ProjectModel(
       id: '1',
+      title: 'Schoolbox',
+      description:
+          'SchoolBox – Fresh, Delicious Tiffins Delivered Daily. '
+          'The Smart Lunchbox Solution for Busy Families! '
+          'Make school mornings simpler with SchoolBox. Skip the daily hassle of deciding what to pack, planning meals, and preparing lunchboxes. '
+          'We deliver fresh, nutritious, and delicious tiffins right to your doorstep, ensuring your child enjoys a balanced meal every day. '
+          'With SchoolBox, you can save time, reduce morning stress, and focus on what matters most—spending quality time with your family while we take care of the lunchbox.',
+      techStack:
+          'Flutter, BLoC, PHP Laravel, Playstore AppStore, Razorpay, Firebase Cloud Messaging',
+      tags: const [
+        'Flutter',
+        'BLoC',
+        'PHP Laravel',
+        'Playstore AppStore',
+        'Razorpay SDK',
+        'FCM',
+      ],
+      imageUrl: 'assets/images/schoolbox/app_logo.png',
+      liveUrl: '#',
+      githubUrl: '#',
+      showCode: false,
+      bannerAsset: 'assets/images/schoolbox/feature graphic.png',
+      playStoreUrl:
+          'https://play.google.com/store/apps/details?id=com.schoolbox.schoolbox',
+      appStoreUrl:
+          'https://apps.apple.com/in/app/schoolbox-doorstep-lunchbox/id6754038198',
+      screenshots: const [
+        'assets/images/schoolbox/ss_1.png',
+        'assets/images/schoolbox/ss_2.png',
+        'assets/images/schoolbox/ss_3.png',
+        'assets/images/schoolbox/ss_4.png',
+        'assets/images/schoolbox/ss_5.png',
+        'assets/images/schoolbox/ss_6.png',
+        'assets/images/schoolbox/ss_7.png',
+        'assets/images/schoolbox/ss_8.png',
+        'assets/images/schoolbox/ss_9.png',
+        'assets/images/schoolbox/ss_10.png',
+        'assets/images/schoolbox/ss_11.png',
+      ],
+      features: const [
+        'Fresh, Delicious Tiffins Delivered Daily: High quality, nutritious lunchboxes delivered directly to your doorstep.',
+        'The Smart Lunchbox Solution for Busy Families: Takes care of daily meal planning and food prep to save you time.',
+        'Stress-Free Mornings: Skip the morning rush of deciding what to pack and preparing school meals.',
+        'Balanced & Nutritious Meals: Ensures children enjoy healthy, tasty, and well-rounded meals every single day.',
+      ],
+    ),
+    ProjectModel(
+      id: '2',
       title: 'Pub Meme',
       description:
           'Welcome to Pub Meme, the ultimate social hub for meme creators, humor enthusiasts, and trendsetters! '
@@ -97,53 +145,6 @@ class PortfolioService {
         'Build Your Creator Profile: Customize your profile with a name and picture, keep track of your posts, and grow your audience.',
         'Fast Sharing & Downloads: Download memes instantly or share them directly on WhatsApp, Instagram, Telegram, and other platforms.',
         'Safe, Secure & Built for You: Secure auth, optimized ImageKit rendering, and full user control over account and data privacy.',
-      ],
-    ),
-    ProjectModel(
-      id: '2',
-      title: 'Schoolbox',
-      description:
-          'SchoolBox – Fresh, Delicious Tiffins Delivered Daily. '
-          'The Smart Lunchbox Solution for Busy Families! '
-          'Make school mornings simpler with SchoolBox. Skip the daily hassle of deciding what to pack, planning meals, and preparing lunchboxes. '
-          'We deliver fresh, nutritious, and delicious tiffins right to your doorstep, ensuring your child enjoys a balanced meal every day. '
-          'With SchoolBox, you can save time, reduce morning stress, and focus on what matters most—spending quality time with your family while we take care of the lunchbox.',
-      techStack:
-          'Flutter, BLoC, PHP Laravel, Playstore AppStore, Razorpay, Firebase Cloud Messaging',
-      tags: const [
-        'Flutter',
-        'BLoC',
-        'PHP Laravel',
-        'Playstore AppStore',
-        'Razorpay',
-        'Firebase Cloud Messaging',
-      ],
-      imageUrl: 'assets/images/schoolbox/app_logo.png',
-      liveUrl: '#',
-      githubUrl: '#',
-      bannerAsset: 'assets/images/schoolbox/feature graphic.png',
-      playStoreUrl:
-          'https://play.google.com/store/apps/details?id=com.schoolbox.schoolbox',
-      appStoreUrl:
-          'https://apps.apple.com/in/app/schoolbox-doorstep-lunchbox/id6754038198',
-      screenshots: const [
-        'assets/images/schoolbox/ss_1.png',
-        'assets/images/schoolbox/ss_2.png',
-        'assets/images/schoolbox/ss_3.png',
-        'assets/images/schoolbox/ss_4.png',
-        'assets/images/schoolbox/ss_5.png',
-        'assets/images/schoolbox/ss_6.png',
-        'assets/images/schoolbox/ss_7.png',
-        'assets/images/schoolbox/ss_8.png',
-        'assets/images/schoolbox/ss_9.png',
-        'assets/images/schoolbox/ss_10.png',
-        'assets/images/schoolbox/ss_11.png',
-      ],
-      features: const [
-        'Fresh, Delicious Tiffins Delivered Daily: High quality, nutritious lunchboxes delivered directly to your doorstep.',
-        'The Smart Lunchbox Solution for Busy Families: Takes care of daily meal planning and food prep to save you time.',
-        'Stress-Free Mornings: Skip the morning rush of deciding what to pack and preparing school meals.',
-        'Balanced & Nutritious Meals: Ensures children enjoy healthy, tasty, and well-rounded meals every single day.',
       ],
     ),
   ];
