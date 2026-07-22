@@ -108,8 +108,16 @@ class PortfolioService {
           'Make school mornings simpler with SchoolBox. Skip the daily hassle of deciding what to pack, planning meals, and preparing lunchboxes. '
           'We deliver fresh, nutritious, and delicious tiffins right to your doorstep, ensuring your child enjoys a balanced meal every day. '
           'With SchoolBox, you can save time, reduce morning stress, and focus on what matters most—spending quality time with your family while we take care of the lunchbox.',
-      techStack: 'Flutter, GetX, Firebase, REST APIs',
-      tags: const ['Flutter', 'GetX', 'Firebase', 'REST APIs', 'Mobile App'],
+      techStack:
+          'Flutter, BLoC, PHP Laravel, Playstore AppStore, Razorpay, Firebase Cloud Messaging',
+      tags: const [
+        'Flutter',
+        'BLoC',
+        'PHP Laravel',
+        'Playstore AppStore',
+        'Razorpay',
+        'Firebase Cloud Messaging',
+      ],
       imageUrl: 'assets/images/schoolbox/app_logo.png',
       liveUrl: '#',
       githubUrl: '#',

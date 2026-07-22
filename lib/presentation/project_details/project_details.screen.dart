@@ -735,30 +735,6 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                           ),
                         ),
                       ),
-                    if (!showGithub && !showLive)
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () => controller.openExternalLink('#'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.border,
-                            foregroundColor: AppColors.textSecondary,
-                            elevation: 0,
-                            padding: EdgeInsets.symmetric(
-                              vertical: AppScale.h(14),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: Text(
-                            'Coming Soon',
-                            style: AppTextStyles.r14.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppScale.font(13),
-                            ),
-                          ),
-                        ),
-                      ),
                   ],
                 ),
                 if (hasPlayStore || hasAppStore) ...[
