@@ -33,6 +33,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/pubmeme/
+    - assets/images/schoolbox/
     - assets/data/
   fonts:
     - family: FontAwesomeRegular

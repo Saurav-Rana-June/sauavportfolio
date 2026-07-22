@@ -207,6 +207,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
   Widget _buildNavbar(ProjectModel project) {
     final themeColor = AppColors.accent;
+    final showPlayStore =
+        project.playStoreUrl != null && project.playStoreUrl != '#';
+    final showAppStore =
+        project.appStoreUrl != null && project.appStoreUrl != '#';
     final showGithub = project.githubUrl != null && project.githubUrl != '#';
     final showLive = project.liveUrl != null && project.liveUrl != '#';
 
@@ -229,7 +233,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
+              constraints:
+                  BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
               child: Row(
                 children: [
                   // Back Button (Futuristic Pill Shape)
@@ -277,6 +282,25 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (showPlayStore)
+                        _buildMiniNavbarAction(
+                          icon: AppIcons.googlePlay,
+                          tooltip: 'Get on Google Play',
+                          onTap: () =>
+                              controller.openExternalLink(project.playStoreUrl),
+                        ),
+                      if (showPlayStore &&
+                          (showAppStore || showGithub || showLive))
+                        const SizedBox(width: 10),
+                      if (showAppStore)
+                        _buildMiniNavbarAction(
+                          icon: AppIcons.ios,
+                          tooltip: 'Get on App Store',
+                          onTap: () =>
+                              controller.openExternalLink(project.appStoreUrl),
+                        ),
+                      if (showAppStore && (showGithub || showLive))
+                        const SizedBox(width: 10),
                       if (showGithub)
                         _buildMiniNavbarAction(
                           icon: AppIcons.github,
@@ -568,6 +592,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   Widget _buildActionsCard(ProjectModel project, Color themeColor) {
     final showGithub = project.githubUrl != null && project.githubUrl != '#';
     final showLive = project.liveUrl != null && project.liveUrl != '#';
+    final hasPlayStore =
+        project.playStoreUrl != null && project.playStoreUrl != '#';
+    final hasAppStore =
+        project.appStoreUrl != null && project.appStoreUrl != '#';
 
     return Container(
       decoration: BoxDecoration(
@@ -726,8 +754,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       ),
                   ],
                 ),
-                if (project.playStoreUrl != null ||
-                    project.appStoreUrl != null) ...[
+                if (hasPlayStore || hasAppStore) ...[
                   SizedBox(height: AppScale.h(24)),
                   Text(
                     'Download App',
@@ -739,34 +766,32 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                   SizedBox(height: AppScale.h(12)),
                   Row(
                     children: [
-                      if (project.playStoreUrl != null)
+                      if (hasPlayStore)
                         Expanded(
                           child: _FuturisticDownloadButton(
                             title: 'Download for Android',
-                            subtitle: 'Official Build',
-                            icon: AppIcons.android,
+                            subtitle: 'Play Store',
+                            icon: AppIcons.googlePlay,
                             accentColor: AppColors.accent,
                             onTap: () => controller.openExternalLink(
                               project.playStoreUrl,
                             ),
                           ),
                         ),
-                      /*
-                      if (project.playStoreUrl != null &&
-                          project.appStoreUrl != null)
+                      if (hasPlayStore && hasAppStore)
                         SizedBox(width: AppScale.w(12)),
-                      if (project.appStoreUrl != null)
+                      if (hasAppStore)
                         Expanded(
                           child: _FuturisticDownloadButton(
                             title: 'Download for iOS',
                             subtitle: 'App Store',
                             icon: AppIcons.ios,
+                            accentColor: AppColors.accent,
                             onTap: () => controller.openExternalLink(
                               project.appStoreUrl,
                             ),
                           ),
                         ),
-                      */
                     ],
                   ),
                 ],

@@ -195,8 +195,32 @@ class _ProjectCardState extends State<ProjectCard>
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    if (project.playStoreUrl != null &&
+                                        project.playStoreUrl != '#') ...[
+                                      _ActionIconButton(
+                                        icon: AppIcons.googlePlay,
+                                        onTap: () =>
+                                            homeController.openExternalLink(
+                                              project.playStoreUrl,
+                                            ),
+                                        accentColor: themeColor,
+                                      ),
+                                      Spacing.s8.gapW,
+                                    ],
+                                    if (project.appStoreUrl != null &&
+                                        project.appStoreUrl != '#') ...[
+                                      _ActionIconButton(
+                                        icon: AppIcons.ios,
+                                        onTap: () =>
+                                            homeController.openExternalLink(
+                                              project.appStoreUrl,
+                                            ),
+                                        accentColor: themeColor,
+                                      ),
+                                      Spacing.s8.gapW,
+                                    ],
                                     if (project.githubUrl != null &&
-                                        project.githubUrl != '#')
+                                        project.githubUrl != '#') ...[
                                       _ActionIconButton(
                                         icon: AppIcons.github,
                                         onTap: () =>
@@ -205,16 +229,16 @@ class _ProjectCardState extends State<ProjectCard>
                                             ),
                                         accentColor: themeColor,
                                       ),
-                                    if (project.liveUrl != null &&
-                                        project.liveUrl != '#') ...[
                                       Spacing.s8.gapW,
+                                    ],
+                                    if (project.liveUrl != null &&
+                                        project.liveUrl != '#')
                                       _ActionIconButton(
                                         icon: AppIcons.arrowExternal,
                                         onTap: () => homeController
                                             .openExternalLink(project.liveUrl),
                                         accentColor: themeColor,
                                       ),
-                                    ],
                                   ],
                                 ),
                               ],

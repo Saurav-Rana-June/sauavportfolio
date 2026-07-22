@@ -370,6 +370,10 @@ class ProjectDetailsDialog extends StatelessWidget {
   }
 
   Widget _buildFooter(BuildContext context, Color themeColor) {
+    final showPlayStore =
+        project.playStoreUrl != null && project.playStoreUrl != '#';
+    final showAppStore =
+        project.appStoreUrl != null && project.appStoreUrl != '#';
     final showGithub = project.githubUrl != null && project.githubUrl != '#';
     final showLive = project.liveUrl != null && project.liveUrl != '#';
 
@@ -410,8 +414,78 @@ class ProjectDetailsDialog extends StatelessWidget {
               ),
             ),
           ),
-          if (showGithub || showLive) SizedBox(width: AppScale.w(12)),
-          if (showGithub)
+          if (showPlayStore) ...[
+            SizedBox(width: AppScale.w(12)),
+            ElevatedButton.icon(
+              onPressed: () {
+                final controller = Get.find<HomeController>();
+                controller.openExternalLink(project.playStoreUrl);
+              },
+              icon: Icon(
+                AppIcons.googlePlay,
+                size: AppScale.icon(14),
+              ),
+              label: Text(
+                'Play Store',
+                style: AppTextStyles.r14.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppScale.font(13),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.surfaceDark,
+                foregroundColor: AppColors.textPrimary,
+                elevation: 0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppScale.w(16),
+                  vertical: AppScale.h(14),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: const BorderSide(
+                    color: AppColors.border,
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (showAppStore) ...[
+            SizedBox(width: AppScale.w(12)),
+            ElevatedButton.icon(
+              onPressed: () {
+                final controller = Get.find<HomeController>();
+                controller.openExternalLink(project.appStoreUrl);
+              },
+              icon: Icon(
+                AppIcons.ios,
+                size: AppScale.icon(14),
+              ),
+              label: Text(
+                'App Store',
+                style: AppTextStyles.r14.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: AppScale.font(13),
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.surfaceDark,
+                foregroundColor: AppColors.textPrimary,
+                elevation: 0,
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppScale.w(16),
+                  vertical: AppScale.h(14),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  side: const BorderSide(
+                    color: AppColors.border,
+                  ),
+                ),
+              ),
+            ),
+          ],
+          if (showGithub) ...[
+            SizedBox(width: AppScale.w(12)),
             ElevatedButton.icon(
               onPressed: () {
                 final controller = Get.find<HomeController>();
@@ -444,6 +518,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 ),
               ),
             ),
+          ],
           if (showLive) ...[
             SizedBox(width: AppScale.w(12)),
             ElevatedButton.icon(
