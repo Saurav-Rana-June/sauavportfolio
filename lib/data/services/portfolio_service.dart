@@ -79,7 +79,7 @@ class PortfolioService {
       githubUrl: '#',
       bannerAsset: 'assets/images/pubmeme/feature graphic.jpg',
       playStoreUrl:
-          'https://play.google.com/store/apps/details?id=com.pubmeme.app',
+          'https://drive.google.com/file/d/1J3bX0hr6vcCzpXOwSl5fderBbMR5cU3H/view?usp=drive_link',
       appStoreUrl: '#',
       screenshots: const [
         'assets/images/pubmeme/ss_1.png',

@@ -596,6 +596,14 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     final hasAppStore =
         project.appStoreUrl != null && project.appStoreUrl != '#';
 
+    final isPlayStoreLink =
+        hasPlayStore &&
+        project.playStoreUrl!.toLowerCase().contains('play.google.com');
+    final isAppStoreLink =
+        hasAppStore &&
+        (project.appStoreUrl!.toLowerCase().contains('apple.com') ||
+            project.appStoreUrl!.toLowerCase().contains('apps.apple.com'));
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surfaceDark.withValues(alpha: 0.45),
@@ -769,8 +777,12 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       if (hasPlayStore)
                         _FuturisticDownloadButton(
                           title: 'Download for Android',
-                          subtitle: 'Play Store',
-                          icon: AppIcons.googlePlay,
+                          subtitle: isPlayStoreLink
+                              ? 'Play Store'
+                              : 'Direct APK',
+                          icon: isPlayStoreLink
+                              ? AppIcons.googlePlay
+                              : AppIcons.android,
                           accentColor: AppColors.accent,
                           onTap: () =>
                               controller.openExternalLink(project.playStoreUrl),
@@ -780,8 +792,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       if (hasAppStore)
                         _FuturisticDownloadButton(
                           title: 'Download for iOS',
-                          subtitle: 'App Store',
-                          icon: AppIcons.ios,
+                          subtitle: isAppStoreLink
+                              ? 'App Store'
+                              : 'Direct Download',
+                          icon: isAppStoreLink ? AppIcons.ios : AppIcons.apple,
                           accentColor: AppColors.accent,
                           onTap: () =>
                               controller.openExternalLink(project.appStoreUrl),
