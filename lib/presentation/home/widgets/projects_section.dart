@@ -85,7 +85,8 @@ class _ProjectsSectionState extends State<ProjectsSection>
                         index: 0,
                         child: ProjectCard(
                           project: widget.projects.first,
-                          onTap: () => controller.openProject(widget.projects.first),
+                          onTap: () =>
+                              controller.openProject(widget.projects.first),
                         ),
                       ),
                     ),

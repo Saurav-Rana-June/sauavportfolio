@@ -114,7 +114,8 @@ class PortfolioService {
       liveUrl: '#',
       githubUrl: '#',
       bannerAsset: 'assets/images/schoolbox/feature graphic.png',
-      playStoreUrl: '#',
+      playStoreUrl:
+          'https://play.google.com/store/apps/details?id=com.schoolbox.schoolbox',
       appStoreUrl:
           'https://apps.apple.com/in/app/schoolbox-doorstep-lunchbox/id6754038198',
       screenshots: const [

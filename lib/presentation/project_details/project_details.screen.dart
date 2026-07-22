@@ -233,8 +233,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
+              constraints: BoxConstraints(maxWidth: AppScale.contentMaxWidth()),
               child: Row(
                 children: [
                   // Back Button (Futuristic Pill Shape)
@@ -764,33 +763,28 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     ),
                   ),
                   SizedBox(height: AppScale.h(12)),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (hasPlayStore)
-                        Expanded(
-                          child: _FuturisticDownloadButton(
-                            title: 'Download for Android',
-                            subtitle: 'Play Store',
-                            icon: AppIcons.googlePlay,
-                            accentColor: AppColors.accent,
-                            onTap: () => controller.openExternalLink(
-                              project.playStoreUrl,
-                            ),
-                          ),
+                        _FuturisticDownloadButton(
+                          title: 'Download for Android',
+                          subtitle: 'Play Store',
+                          icon: AppIcons.googlePlay,
+                          accentColor: AppColors.accent,
+                          onTap: () =>
+                              controller.openExternalLink(project.playStoreUrl),
                         ),
                       if (hasPlayStore && hasAppStore)
-                        SizedBox(width: AppScale.w(12)),
+                        SizedBox(height: AppScale.h(12)),
                       if (hasAppStore)
-                        Expanded(
-                          child: _FuturisticDownloadButton(
-                            title: 'Download for iOS',
-                            subtitle: 'App Store',
-                            icon: AppIcons.ios,
-                            accentColor: AppColors.accent,
-                            onTap: () => controller.openExternalLink(
-                              project.appStoreUrl,
-                            ),
-                          ),
+                        _FuturisticDownloadButton(
+                          title: 'Download for iOS',
+                          subtitle: 'App Store',
+                          icon: AppIcons.ios,
+                          accentColor: AppColors.accent,
+                          onTap: () =>
+                              controller.openExternalLink(project.appStoreUrl),
                         ),
                     ],
                   ),
