@@ -68,6 +68,18 @@ class _ProjectCardState extends State<ProjectCard>
     final homeController = Get.find<HomeController>();
     final Color themeColor = AppColors.accent;
 
+    final hasPlayStore =
+        project.playStoreUrl != null && project.playStoreUrl != '#';
+    final hasAppStore =
+        project.appStoreUrl != null && project.appStoreUrl != '#';
+    final isPlayStoreLink =
+        hasPlayStore &&
+        project.playStoreUrl!.toLowerCase().contains('play.google.com');
+    final isAppStoreLink =
+        hasAppStore &&
+        (project.appStoreUrl!.toLowerCase().contains('apple.com') ||
+            project.appStoreUrl!.toLowerCase().contains('apps.apple.com'));
+
     return RepaintBoundary(
       child: MouseRegion(
         onEnter: (_) => _handleHover(true),
@@ -174,9 +186,13 @@ class _ProjectCardState extends State<ProjectCard>
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
                                                     border: Border.all(
-                                                      color: themeColor.withValues(
-                                                        alpha: (1.0 - hoverVal) * 0.3,
-                                                      ),
+                                                      color: themeColor
+                                                          .withValues(
+                                                            alpha:
+                                                                (1.0 -
+                                                                    hoverVal) *
+                                                                0.3,
+                                                          ),
                                                       width: 1.0,
                                                     ),
                                                   ),
@@ -195,10 +211,11 @@ class _ProjectCardState extends State<ProjectCard>
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    if (project.playStoreUrl != null &&
-                                        project.playStoreUrl != '#') ...[
+                                    if (hasPlayStore) ...[
                                       _ActionIconButton(
-                                        icon: AppIcons.googlePlay,
+                                        icon: isPlayStoreLink
+                                            ? AppIcons.googlePlay
+                                            : AppIcons.android,
                                         onTap: () =>
                                             homeController.openExternalLink(
                                               project.playStoreUrl,
@@ -207,10 +224,11 @@ class _ProjectCardState extends State<ProjectCard>
                                       ),
                                       Spacing.s8.gapW,
                                     ],
-                                    if (project.appStoreUrl != null &&
-                                        project.appStoreUrl != '#') ...[
+                                    if (hasAppStore) ...[
                                       _ActionIconButton(
-                                        icon: AppIcons.ios,
+                                        icon: isAppStoreLink
+                                            ? AppIcons.ios
+                                            : AppIcons.apple,
                                         onTap: () =>
                                             homeController.openExternalLink(
                                               project.appStoreUrl,
