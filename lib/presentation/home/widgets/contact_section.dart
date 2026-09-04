@@ -212,7 +212,7 @@ class _ContactSectionState extends State<ContactSection>
             AppTextField(
               controller: controller.messageController,
               label: 'Message',
-              hint: 'Tell me about your project...',
+              hint: 'Please type your message here...',
               maxLines: 5,
               validator: (value) => value == null || value.trim().isEmpty
                   ? 'Message is required'

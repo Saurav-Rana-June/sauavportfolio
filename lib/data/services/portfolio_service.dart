@@ -1,9 +1,21 @@
+import 'package:dio/dio.dart';
 import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/profile.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 
 class PortfolioService {
   PortfolioService._();
+
+  static final Dio _dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    ),
+  );
 
   static Future<ProfileModel> fetchProfile() async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
@@ -54,8 +66,27 @@ class PortfolioService {
     required String email,
     required String message,
   }) async {
-    await Future<void>.delayed(const Duration(milliseconds: 800));
-    return name.isNotEmpty && email.isNotEmpty && message.isNotEmpty;
+    try {
+      final response = await _dio.post(
+        'https://formsubmit.co/ajax/sauravsevenjune@gmail.com',
+        data: {
+          'name': name,
+          'email': email,
+          '_replyto': email,
+          'message': message,
+          '_subject': 'Portfolio Inquiry from $name',
+          '_template': 'table',
+          '_captcha': 'false',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (_) {
+      return false;
+    }
   }
 
   static final List<ProjectModel> _seedProjects = [
