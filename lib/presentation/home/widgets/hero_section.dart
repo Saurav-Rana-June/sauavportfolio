@@ -220,7 +220,7 @@ class _HeroSectionState extends State<HeroSection>
       ),
       AppScale.h(Spacing.s24).gapH,
       Text(
-        'Passionate Flutter Engineer with 2+ years of experience building high-performance cross-platform apps. Skilled in Flutter, Figma-to-Flutter development, and UI/UX principles, with a focus on clean, scalable, and pixel-perfect applications. Currently learning FastAPI to strengthen my backend development skills.',
+        'Passionate Flutter Engineer with 2.5+ years of experience building high-performance cross-platform apps. Skilled in Flutter, Figma-to-Flutter development, and UI/UX principles, with a focus on clean, scalable, and pixel-perfect applications. Currently learning FastAPI to strengthen my backend development skills.',
         style: AppTextStyles.r16.copyWith(
           color: AppColors.textSecondary,
           height: 1.6,
@@ -250,11 +250,7 @@ class _HeroSectionState extends State<HeroSection>
           ),
           SecondaryButton(
             label: 'Review CV',
-            onPressed: () {
-              final resumeUrl =
-                  controller.globalController.profile.value?.resumeUrl;
-              controller.openExternalLink(resumeUrl);
-            },
+            onPressed: () => controller.downloadCv(),
             icon: AppIcons.resume,
           ),
         ],

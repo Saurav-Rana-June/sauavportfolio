@@ -8,6 +8,7 @@ import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 import 'package:saurav_portfolio/data/services/portfolio_service.dart';
 import 'package:saurav_portfolio/data/utils/app_utils.dart';
+import 'package:saurav_portfolio/data/utils/download_helper/download_helper.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'package:saurav_portfolio/widgets/layout/portfolio_nav_section.dart';
@@ -122,6 +123,28 @@ class HomeController extends GetxController {
     }
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> downloadCv() async {
+    try {
+      const assetPath = 'assets/cv/SAURAV_RANA_RESUME_01.pdf';
+      await FileDownloader.downloadAsset(
+        assetPath,
+        fileName: 'SAURAV_RANA_RESUME_01.pdf',
+      );
+      AppUtils.snackbar(
+        'Downloading CV',
+        'Resume download initiated.',
+        SnackBarType.success,
+      );
+    } catch (error) {
+      log.e('downloadCv failed: $error');
+      AppUtils.snackbar(
+        'Download Failed',
+        'Could not download resume. Please try again.',
+        SnackBarType.error,
+      );
     }
   }
 

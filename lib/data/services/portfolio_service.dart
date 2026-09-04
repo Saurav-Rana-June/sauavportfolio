@@ -11,7 +11,7 @@ class PortfolioService {
       name: 'Saurav Rana',
       title: 'Senior Flutter Developer',
       bio:
-          'I am a passionate Senior Flutter Developer with 2+ years of experience specializing in building '
+          'I am a passionate Senior Flutter Developer with 2.5+ years of experience specializing in building '
           'high-performance, pixel-perfect, and cross-platform applications. My core expertise lies in '
           'implementing Clean Architecture, robust state management, and elegant UI/UX design patterns. '
           'I love bridging the gap between design and code, crafting seamless user interfaces that delight. '
@@ -31,7 +31,7 @@ class PortfolioService {
       ],
       githubUrl: 'https://github.com/Saurav-Rana-June',
       linkedInUrl: 'https://www.linkedin.com/in/saurav-rana-841106258',
-      resumeUrl: '#',
+      resumeUrl: 'assets/cv/SAURAV_RANA_RESUME_01.pdf',
     );
   }
 
@@ -110,6 +110,61 @@ class PortfolioService {
     ),
     ProjectModel(
       id: '2',
+      title: 'Mentora',
+      description:
+          'Mentora – Your Path to Well-being. '
+          'A comprehensive mental health and mindfulness mobile application designed to help users manage stress, build healthy habits, and improve emotional wellness. '
+          'Features intelligent daily mood tracking, personalized growth analytics, guided meditation and breathing exercises with audio playback, an empathetic AI-powered companion (Mentora AI) for mental well-being support, and seamless 1-on-1 session scheduling with licensed clinical psychologists.',
+      techStack:
+          'Flutter, Dart, GetX, Clean Architecture, AI Assistant API, Audio Streaming, Data Visualization',
+      tags: const [
+        'Flutter',
+        'Dart',
+        'GetX',
+        'Clean Architecture',
+        'AI Assistant',
+        'Audio Streaming',
+        'Mindfulness',
+      ],
+      imageUrl: 'assets/images/mentora/app_logo.png',
+      liveUrl: '#',
+      githubUrl: '#',
+      showCode: false,
+      bannerAsset: 'assets/images/mentora/feature graphic.png',
+      playStoreUrl: '#',
+      appStoreUrl: '#',
+      screenshots: const [
+        'assets/images/mentora/ss_1.png',
+        'assets/images/mentora/ss_2.png',
+        'assets/images/mentora/ss_3.png',
+        'assets/images/mentora/ss_4.png',
+        'assets/images/mentora/ss_5.png',
+        'assets/images/mentora/ss_6.png',
+        'assets/images/mentora/ss_7.png',
+        'assets/images/mentora/ss_8.png',
+        'assets/images/mentora/ss_9.png',
+        'assets/images/mentora/ss_10.png',
+        'assets/images/mentora/ss_11.png',
+        'assets/images/mentora/ss_12.png',
+        'assets/images/mentora/ss_13.png',
+        'assets/images/mentora/ss_14.png',
+        'assets/images/mentora/ss_15.png',
+        'assets/images/mentora/ss_16.png',
+        'assets/images/mentora/ss_17.png',
+        'assets/images/mentora/ss_18.png',
+        'assets/images/mentora/ss_19.png',
+      ],
+      features: const [
+        'Daily Mood Tracking & Check-ins: Log emotions, track active streaks, monitor weekly mood trends, and identify wellness triggers.',
+        'Mentora AI Mental Health Companion: A safe conversational space powered by AI to provide immediate support, guidance, and stress relief exercises.',
+        'Guided Meditation & Audio Tracks: Curated audio sessions for Morning Clarity, Deep Restful Sleep, Stress Relief, and focused breathing with real-time player controls.',
+        'Personalized Growth Insights: Detailed radar and progress metrics measuring mental health, mindfulness, relationships, and self-awareness.',
+        '1-on-1 Professional Therapy Sessions: Integrated scheduling and direct voice/video call session management with clinical psychologists.',
+        'Sleep & Breathing Exercises: Interactive relaxation timers, guided sleep routines, and daily journaling to foster lasting well-being habits.',
+      ],
+    ),
+    ProjectModel(
+      id: '3',
       title: 'Pub Meme',
       description:
           'Welcome to Pub Meme, the ultimate social hub for meme creators, humor enthusiasts, and trendsetters! '
@@ -171,7 +226,7 @@ class PortfolioService {
     ExperienceModel(
       id: '2',
       role: 'Junior Flutter Developer',
-      company: 'Qwetzal Technologies',
+      company: 'Qwetzal Technologies Pvt. Ltd.',
       period: 'Nov 2024 — Mar 2025',
       location: 'Raipur, Uttarakhand, India',
       description:
@@ -190,7 +245,7 @@ class PortfolioService {
     ExperienceModel(
       id: '3',
       role: 'Flutter Intern',
-      company: 'Qwetzal Technologies',
+      company: 'Qwetzal Technologies Pvt. Ltd.',
       period: 'Aug 2024 — Nov 2024',
       location: 'Dehradun, Uttarakhand, India',
       description:
@@ -208,7 +263,7 @@ class PortfolioService {
     ExperienceModel(
       id: '4',
       role: 'Flutter Trainee',
-      company: 'Qwetzal Technologies',
+      company: 'Qwetzal Technologies Pvt. Ltd.',
       period: 'Jun 2024 — Aug 2024',
       location: 'Raipur, Uttarakhand, India',
       description:

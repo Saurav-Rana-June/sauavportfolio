@@ -436,8 +436,12 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           height: galleryHeight,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
             itemCount: project.screenshots.length,
-            padding: EdgeInsets.zero,
+            padding: EdgeInsets.symmetric(
+              horizontal: AppScale.w(4),
+              vertical: AppScale.h(8),
+            ),
             itemBuilder: (context, index) {
               final screenshot = project.screenshots[index];
               return GestureDetector(
@@ -446,11 +450,12 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     GestureDetector(
                       onTap: () => Get.back(),
                       child: Container(
-                        color: Colors.black.withValues(alpha: 0.9),
+                        color: Colors.black.withValues(alpha: 0.92),
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
                             InteractiveViewer(
+                              maxScale: 4.0,
                               child: Image.asset(
                                 screenshot,
                                 fit: BoxFit.contain,
@@ -475,11 +480,11 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         ),
                       ),
                     ),
-                    barrierColor: Colors.black.withValues(alpha: 0.9),
+                    barrierColor: Colors.black.withValues(alpha: 0.92),
                   );
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(right: AppScale.w(16)),
+                  padding: EdgeInsets.only(right: AppScale.w(18)),
                   child: _DeviceMockup(assetPath: screenshot),
                 ),
               );
@@ -898,78 +903,315 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   }
 }
 
-class _DeviceMockup extends StatelessWidget {
+class _DeviceMockup extends StatefulWidget {
   final String assetPath;
 
   const _DeviceMockup({required this.assetPath});
 
   @override
-  Widget build(BuildContext context) {
-    final double bezelWidth = AppScale.w(6);
-    final double innerRadius = AppScale.r(16);
-    final double outerRadius = AppScale.r(22);
+  State<_DeviceMockup> createState() => _DeviceMockupState();
+}
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(outerRadius),
-        border: Border.all(
-          color: const Color(0xFF2C2D3A), // Metallic outer frame rim
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Container(
-        padding: EdgeInsets.all(bezelWidth),
-        decoration: BoxDecoration(
-          color: const Color(0xFF0F0F12), // Black bezel
-          borderRadius: BorderRadius.circular(outerRadius - 1),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(innerRadius),
+class _DeviceMockupState extends State<_DeviceMockup> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final double bezelWidth = AppScale.w(5.5);
+    final double outerRadius = AppScale.r(26);
+    final double innerRadius = AppScale.r(20);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+        transform: Matrix4.translationValues(0.0, _isHovered ? -6.0 : 0.0, 0.0),
+        child: AspectRatio(
+          aspectRatio: 9 / 19.5,
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              // Screen image
-              AspectRatio(
-                aspectRatio: 9 / 19.5,
-                child: Image.asset(assetPath, fit: BoxFit.cover),
-              ),
-              // Dynamic Island / Camera Notch
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: EdgeInsets.only(top: AppScale.h(6)),
-                  child: Container(
-                    width: AppScale.w(44),
-                    height: AppScale.h(10),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(8),
+              // Hardware Buttons on left side (Volume up, Volume down, Action button)
+              Positioned(
+                left: -2.5,
+                top: AppScale.h(60),
+                child: Container(
+                  width: 3.5,
+                  height: AppScale.h(22),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF383A4A),
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(2),
                     ),
                   ),
                 ),
               ),
-              // Diagonal glass glare sheen overlay
-              Positioned.fill(
-                child: FractionallySizedBox(
-                  alignment: Alignment.topLeft,
-                  widthFactor: 0.6,
-                  heightFactor: 0.8,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.white.withValues(alpha: 0.04),
-                          Colors.white.withValues(alpha: 0.0),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+              Positioned(
+                left: -2.5,
+                top: AppScale.h(90),
+                child: Container(
+                  width: 3.5,
+                  height: AppScale.h(38),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF383A4A),
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                left: -2.5,
+                top: AppScale.h(134),
+                child: Container(
+                  width: 3.5,
+                  height: AppScale.h(38),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF383A4A),
+                    borderRadius: BorderRadius.horizontal(
+                      left: Radius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
+              // Hardware Button on right side (Power button)
+              Positioned(
+                right: -2.5,
+                top: AppScale.h(85),
+                child: Container(
+                  width: 3.5,
+                  height: AppScale.h(50),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF383A4A),
+                    borderRadius: BorderRadius.horizontal(
+                      right: Radius.circular(2),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Main Phone Body Container
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(outerRadius),
+                  gradient: const LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF424558), // Titanium highlight rim
+                      Color(0xFF20222D),
+                      Color(0xFF14151D),
+                      Color(0xFF353849),
+                    ],
+                    stops: [0.0, 0.3, 0.7, 1.0],
+                  ),
+                  border: Border.all(
+                    color: _isHovered
+                        ? AppColors.accent.withValues(alpha: 0.6)
+                        : const Color(0xFF3A3D50),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    // Deep ambient shadow
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.55),
+                      blurRadius: _isHovered ? 24 : 16,
+                      spreadRadius: _isHovered ? 2 : 0,
+                      offset: Offset(0, _isHovered ? 12 : 8),
+                    ),
+                    // Accent neon glow when hovered
+                    if (_isHovered)
+                      BoxShadow(
+                        color: AppColors.accent.withValues(alpha: 0.25),
+                        blurRadius: 28,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 6),
                       ),
+                  ],
+                ),
+                child: Container(
+                  margin: EdgeInsets.all(bezelWidth),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF07080B), // Black inner bezel
+                    borderRadius: BorderRadius.circular(innerRadius),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(innerRadius - 1),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        // 1. Screenshot Image perfectly filled
+                        Image.asset(
+                          widget.assetPath,
+                          fit: BoxFit.fill,
+                          filterQuality: FilterQuality.medium,
+                        ),
+
+                        // 2. Speaker Grill Slit (very top of bezel)
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: AppScale.h(3.5)),
+                            child: Container(
+                              width: AppScale.w(36),
+                              height: AppScale.h(2.5),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF1B1C24),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // 3. Realistic Dynamic Island Notch
+                        Align(
+                          alignment: Alignment.topCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: AppScale.h(8)),
+                            child: Container(
+                              width: AppScale.w(58),
+                              height: AppScale.h(14),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.6),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 1),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  // Camera lens reflection dot
+                                  Container(
+                                    width: AppScale.w(6),
+                                    height: AppScale.h(6),
+                                    margin: EdgeInsets.only(
+                                      right: AppScale.w(6),
+                                    ),
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      gradient: RadialGradient(
+                                        colors: [
+                                          Color(0xFF1E293B),
+                                          Color(0xFF0F172A),
+                                          Colors.black,
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // 4. Diagonal Glass Reflection Sheen
+                        Positioned.fill(
+                          child: IgnorePointer(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.white.withValues(alpha: 0.07),
+                                    Colors.white.withValues(alpha: 0.02),
+                                    Colors.transparent,
+                                    Colors.white.withValues(alpha: 0.015),
+                                  ],
+                                  stops: const [0.0, 0.25, 0.5, 1.0],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // 5. iOS Home Indicator Bar at Bottom
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: AppScale.h(6)),
+                            child: Container(
+                              width: AppScale.w(44),
+                              height: AppScale.h(3.5),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.4),
+                                borderRadius: BorderRadius.circular(3),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.3),
+                                    blurRadius: 2,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // 6. Subtle Hover Zoom Badge
+                        if (_isHovered)
+                          Positioned(
+                            bottom: AppScale.h(16),
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: AnimatedOpacity(
+                                duration: const Duration(milliseconds: 150),
+                                opacity: _isHovered ? 1.0 : 0.0,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: AppScale.w(10),
+                                    vertical: AppScale.h(4),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withValues(alpha: 0.75),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: AppColors.accent.withValues(
+                                        alpha: 0.4,
+                                      ),
+                                      width: 1,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.4,
+                                        ),
+                                        blurRadius: 8,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.zoom_in,
+                                        color: AppColors.accent,
+                                        size: AppScale.icon(12),
+                                      ),
+                                      SizedBox(width: AppScale.w(4)),
+                                      Text(
+                                        'View Full',
+                                        style: AppTextStyles.mono12.copyWith(
+                                          color: Colors.white,
+                                          fontSize: AppScale.font(10),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),

@@ -133,7 +133,7 @@ class _AboutSectionState extends State<AboutSection> with AutomaticKeepAliveClie
               children: [
                 SizedBox(
                   width: cardWidth.clamp(140.0, double.infinity),
-                  child: const _AboutStatCard(value: '2+', label: 'YEARS EXP'),
+                  child: const _AboutStatCard(value: '2.5+', label: 'YEARS EXP'),
                 ),
                 SizedBox(
                   width: cardWidth.clamp(140.0, double.infinity),
