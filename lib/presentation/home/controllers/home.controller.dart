@@ -79,24 +79,33 @@ class HomeController extends GetxController {
 
     isSubmitting.value = true;
     try {
-      final success = await PortfolioService.submitContactForm(
+      final result = await PortfolioService.submitContactForm(
         name: nameController.text.trim(),
         email: emailController.text.trim(),
         message: messageController.text.trim(),
       );
-      if (success) {
+
+      if (result.isSuccess) {
         AppUtils.snackbar(
           'Success',
-          'Message sent successfully!',
+          'Message sent successfully! I will get back to you shortly.',
           SnackBarType.success,
         );
         nameController.clear();
         emailController.clear();
         messageController.clear();
+      } else if (result.needsActivation) {
+        AppUtils.snackbar(
+          'Activation Required',
+          'FormSubmit sent an activation email to sauravsevenjune@gmail.com. Please click "Activate Form" in your email inbox to enable submissions.',
+          SnackBarType.warning,
+        );
       } else {
         AppUtils.snackbar(
           'Failed',
-          'Could not send message.',
+          result.message.isNotEmpty
+              ? result.message
+              : 'Could not send message. Please reach out directly at sauravsevenjune@gmail.com',
           SnackBarType.error,
         );
       }
@@ -121,8 +130,23 @@ class HomeController extends GetxController {
       );
       return;
     }
-    if (await canLaunchUrlString(url)) {
-      await launchUrlString(url, mode: LaunchMode.externalApplication);
+    try {
+      if (url.startsWith('mailto:')) {
+        await launchUrlString(url);
+        return;
+      }
+      if (await canLaunchUrlString(url)) {
+        await launchUrlString(url, mode: LaunchMode.externalApplication);
+      } else {
+        await launchUrlString(url);
+      }
+    } catch (e) {
+      log.e('openExternalLink failed: $e');
+      AppUtils.snackbar(
+        'Could not open link',
+        'Unable to open $url',
+        SnackBarType.error,
+      );
     }
   }
 

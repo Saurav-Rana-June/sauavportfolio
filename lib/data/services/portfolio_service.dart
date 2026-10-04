@@ -1,7 +1,20 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:saurav_portfolio/data/models/portfolio/experience.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/profile.model.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
+
+class ContactSubmissionResult {
+  final bool isSuccess;
+  final String message;
+  final bool needsActivation;
+
+  const ContactSubmissionResult({
+    required this.isSuccess,
+    required this.message,
+    this.needsActivation = false,
+  });
+}
 
 class PortfolioService {
   PortfolioService._();
@@ -13,6 +26,8 @@ class PortfolioService {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'Referer': 'https://saurav-rana-june.github.io/',
+        'Origin': 'https://saurav-rana-june.github.io',
       },
     ),
   );
@@ -61,7 +76,7 @@ class PortfolioService {
     }
   }
 
-  static Future<bool> submitContactForm({
+  static Future<ContactSubmissionResult> submitContactForm({
     required String name,
     required String email,
     required String message,
@@ -80,12 +95,65 @@ class PortfolioService {
         },
       );
 
-      if (response.statusCode == 200) {
-        return true;
+      dynamic data = response.data;
+      if (data is String) {
+        try {
+          data = jsonDecode(data);
+        } catch (_) {}
       }
-      return false;
-    } catch (_) {
-      return false;
+
+      if (data is Map) {
+        final successVal = data['success'];
+        final isSuccess = successVal == true ||
+            successVal == 'true' ||
+            successVal == 1 ||
+            successVal == '1';
+        final msg = data['message']?.toString() ?? '';
+
+        if (isSuccess) {
+          return ContactSubmissionResult(
+            isSuccess: true,
+            message: msg.isNotEmpty ? msg : 'Message sent successfully!',
+          );
+        } else {
+          final isActivation = msg.toLowerCase().contains('activation') ||
+              msg.toLowerCase().contains('activate');
+          return ContactSubmissionResult(
+            isSuccess: false,
+            message: msg.isNotEmpty ? msg : 'Could not send message.',
+            needsActivation: isActivation,
+          );
+        }
+      }
+
+      if (response.statusCode == 200) {
+        return const ContactSubmissionResult(
+          isSuccess: true,
+          message: 'Message sent successfully!',
+        );
+      }
+
+      return ContactSubmissionResult(
+        isSuccess: false,
+        message: 'Submission failed (status: ${response.statusCode})',
+      );
+    } on DioException catch (dioError) {
+      String errorMsg = 'Network error: please check your connection.';
+      final respData = dioError.response?.data;
+      if (respData is Map && respData['message'] != null) {
+        errorMsg = respData['message'].toString();
+      } else if (dioError.message != null && dioError.message!.isNotEmpty) {
+        errorMsg = dioError.message!;
+      }
+      return ContactSubmissionResult(
+        isSuccess: false,
+        message: errorMsg,
+      );
+    } catch (e) {
+      return ContactSubmissionResult(
+        isSuccess: false,
+        message: 'An unexpected error occurred: $e',
+      );
     }
   }
 
@@ -196,6 +264,58 @@ class PortfolioService {
     ),
     ProjectModel(
       id: '3',
+      title: 'Mentora CMS',
+      description:
+          'Mentora CMS – Administrative Control Center & Content Management Suite for the Mentora Ecosystem. '
+          'A modern, high-performance, and fully responsive administrative web platform built with Flutter to manage all platform operations, mental health content, audio streaming libraries, and practitioner registries. '
+          'Features comprehensive real-time dashboard analytics, guided meditation session curation with audio duration and category tagging, customizable sleep soundscapes and ambient audio track manager, interactive breathwork pattern editor (cycle timings: inhale/hold/exhale), dynamic daily mindfulness journaling prompt scheduler, platform diagnostics, dual Light/Dark theme support, and enterprise role-based access control (RBAC).',
+      techStack:
+          'Flutter Web, Dart, GetX, Clean Architecture, REST API Gateway, Responsive Web Design, Audio Asset Management, Role-Based Access Control (RBAC), Theme Switching (Light/Dark)',
+      tags: const [
+        'Flutter Web',
+        'GetX',
+        'Clean Architecture',
+        'REST API',
+        'Responsive UI',
+        'Admin CMS',
+        'Audio Management',
+        'Light/Dark Theme',
+      ],
+      imageUrl: 'assets/images/mentora_cms/app_logo.png',
+      liveUrl: 'https://saurav-rana-june.github.io/mentora/',
+      githubUrl: '#',
+      showCode: false,
+      bannerAsset: 'assets/images/mentora_cms/feature graphic.png',
+      playStoreUrl: '#',
+      appStoreUrl: '#',
+      screenshots: const [
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214632.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214750.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214836.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214855.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214911.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214922.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214938.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 214955.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 215005.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 215023.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 215034.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 215044.png',
+        'assets/images/mentora_cms/Screenshot 2026-10-04 215054.png',
+      ],
+      features: const [
+        '⚡ Responsive Admin Console: Fully responsive layout adapting effortlessly across widescreen desktop monitors, laptops, and tablets.',
+        '📊 Real-Time Dashboard Overview: Instant operational visibility into active users, audio libraries, verified therapy doctors, and module health.',
+        '🧘 Guided Meditations Management: Publish, categorize, and organize mindfulness audio tracks, duration meters, and featured meditation playlists.',
+        '🌙 Sleep & Ambient Soundscapes: Centralized catalog for nature audio, soothing sleep music, and bedtime story narrations.',
+        '🫁 Breathwork Technique Editor: Fine-tune inhale, hold, and exhale durations with real-time cycle calculation for Box Breathing, 4-7-8, and custom patterns.',
+        '📝 Daily Journaling Prompt Scheduler: Manage and publish reflective daily journaling prompts presented to users in their mindfulness log.',
+        '🌓 Seamless Theme Switcher: Built-in instant switching between dark and light themes with custom curated color palettes.',
+        '🔐 Secure Role-Based Access & Diagnostics: 256-bit encrypted authentication, REST API status monitor, environment switching, and super admin privileges.',
+      ],
+    ),
+    ProjectModel(
+      id: '4',
       title: 'Pub Meme',
       description:
           'Welcome to Pub Meme, the ultimate social hub for meme creators, humor enthusiasts, and trendsetters! '

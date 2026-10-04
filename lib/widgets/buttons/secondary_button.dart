@@ -23,11 +23,10 @@ class SecondaryButton extends StatefulWidget {
 
 class _SecondaryButtonState extends State<SecondaryButton>
     with TickerProviderStateMixin {
-  bool _isHovered = false;
   bool _isPressed = false;
   late final AnimationController _hoverController;
   late final AnimationController _iconController;
-  
+
   late final Animation<double> _scaleAnimation;
   late final Animation<double> _glowAnimation;
   late final Animation<double> _iconTranslateXAnimation;
@@ -57,12 +56,10 @@ class _SecondaryButtonState extends State<SecondaryButton>
     _iconTranslateXAnimation = Tween<double>(begin: 0.0, end: 3.0).animate(
       CurvedAnimation(parent: _iconController, curve: Curves.easeOutBack),
     );
-    _iconTranslateYAnimation = Tween<double>(
-      begin: 0.0,
-      end: isExternal ? -3.0 : 0.0,
-    ).animate(
-      CurvedAnimation(parent: _iconController, curve: Curves.easeOutBack),
-    );
+    _iconTranslateYAnimation =
+        Tween<double>(begin: 0.0, end: isExternal ? -3.0 : 0.0).animate(
+          CurvedAnimation(parent: _iconController, curve: Curves.easeOutBack),
+        );
   }
 
   @override
@@ -73,7 +70,6 @@ class _SecondaryButtonState extends State<SecondaryButton>
   }
 
   void _handleHover(bool isHovered) {
-    setState(() => _isHovered = isHovered);
     if (isHovered) {
       _hoverController.forward();
       _iconController.forward();
@@ -121,9 +117,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: CustomPaint(
-                    painter: _SecondaryButtonPainter(
-                      hoverProgress: hoverVal,
-                    ),
+                    painter: _SecondaryButtonPainter(hoverProgress: hoverVal),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 20,
@@ -176,9 +170,7 @@ class _SecondaryButtonState extends State<SecondaryButton>
 }
 
 class _SecondaryButtonPainter extends CustomPainter {
-  _SecondaryButtonPainter({
-    required this.hoverProgress,
-  });
+  _SecondaryButtonPainter({required this.hoverProgress});
 
   final double hoverProgress;
 

@@ -416,9 +416,19 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
   Widget _buildScreenshotsSection(ProjectModel project) {
     if (project.screenshots.isEmpty) return const SizedBox.shrink();
-    final double galleryHeight = AppScale.isMobile
-        ? AppScale.h(380)
-        : AppScale.h(480);
+    final isDesktopScreenshots =
+        project.tags.any(
+          (t) =>
+              t.toLowerCase().contains('web') ||
+              t.toLowerCase().contains('admin') ||
+              t.toLowerCase().contains('cms') ||
+              t.toLowerCase().contains('desktop'),
+        ) ||
+        project.title.toLowerCase().contains('cms');
+
+    final double galleryHeight = isDesktopScreenshots
+        ? (AppScale.isMobile ? AppScale.h(240) : AppScale.h(320))
+        : (AppScale.isMobile ? AppScale.h(380) : AppScale.h(480));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -485,7 +495,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                 },
                 child: Padding(
                   padding: EdgeInsets.only(right: AppScale.w(18)),
-                  child: _DeviceMockup(assetPath: screenshot),
+                  child: _DeviceMockup(
+                    assetPath: screenshot,
+                    isDesktop: isDesktopScreenshots,
+                  ),
                 ),
               );
             },
@@ -718,31 +731,14 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     if (showGithub && showLive) SizedBox(width: AppScale.w(12)),
                     if (showLive)
                       Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () =>
+                        child: _FuturisticDownloadButton(
+                          title: 'Launch Live Demo',
+                          subtitle: 'Live Web App',
+                          icon: AppIcons.arrowExternal,
+                          trailingIcon: AppIcons.arrowExternal,
+                          accentColor: themeColor,
+                          onTap: () =>
                               controller.openExternalLink(project.liveUrl),
-                          icon: Icon(
-                            AppIcons.arrowExternal,
-                            size: AppScale.icon(14),
-                          ),
-                          label: Text(
-                            'Live Demo',
-                            style: AppTextStyles.r14.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: AppScale.font(13),
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: themeColor,
-                            foregroundColor: AppColors.scaffoldDark,
-                            elevation: 0,
-                            padding: EdgeInsets.symmetric(
-                              vertical: AppScale.h(14),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
                         ),
                       ),
                   ],
@@ -905,8 +901,9 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
 class _DeviceMockup extends StatefulWidget {
   final String assetPath;
+  final bool isDesktop;
 
-  const _DeviceMockup({required this.assetPath});
+  const _DeviceMockup({required this.assetPath, this.isDesktop = false});
 
   @override
   State<_DeviceMockup> createState() => _DeviceMockupState();
@@ -917,6 +914,215 @@ class _DeviceMockupState extends State<_DeviceMockup> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isDesktop) {
+      return _buildDesktopMockup();
+    }
+    return _buildPhoneMockup();
+  }
+
+  Widget _buildDesktopMockup() {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+        transform: Matrix4.translationValues(0.0, _isHovered ? -6.0 : 0.0, 0.0),
+        child: AspectRatio(
+          aspectRatio: 16 / 10,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF353849),
+                  Color(0xFF20222D),
+                  Color(0xFF14151D),
+                  Color(0xFF2B2D3C),
+                ],
+                stops: [0.0, 0.3, 0.7, 1.0],
+              ),
+              border: Border.all(
+                color: _isHovered
+                    ? AppColors.accent.withValues(alpha: 0.6)
+                    : const Color(0xFF3A3D50),
+                width: 1.5,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.55),
+                  blurRadius: _isHovered ? 24 : 16,
+                  spreadRadius: _isHovered ? 2 : 0,
+                  offset: Offset(0, _isHovered ? 12 : 8),
+                ),
+                if (_isHovered)
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.25),
+                    blurRadius: 28,
+                    spreadRadius: 1,
+                    offset: const Offset(0, 6),
+                  ),
+              ],
+            ),
+            child: Column(
+              children: [
+                // macOS Style Window Header Bar
+                Container(
+                  height: AppScale.h(28),
+                  padding: EdgeInsets.symmetric(horizontal: AppScale.w(12)),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF171922),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 9,
+                        height: 9,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFF5F56),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        width: 9,
+                        height: 9,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFFBD2E),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Container(
+                        width: 9,
+                        height: 9,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF27C93F),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      const Spacer(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 2.5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.08),
+                            width: 0.8,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.lock_outline,
+                              size: AppScale.icon(10),
+                              color: AppColors.accent.withValues(alpha: 0.9),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'admin.mentora.app',
+                              style: AppTextStyles.mono12.copyWith(
+                                color: AppColors.textSecondary,
+                                fontSize: AppScale.font(9),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
+                ),
+                // Screenshot Viewport
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      bottom: Radius.circular(12),
+                    ),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          widget.assetPath,
+                          fit: BoxFit.cover,
+                          filterQuality: FilterQuality.medium,
+                        ),
+                        if (_isHovered)
+                          Positioned(
+                            bottom: AppScale.h(12),
+                            right: AppScale.w(12),
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 150),
+                              opacity: _isHovered ? 1.0 : 0.0,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppScale.w(10),
+                                  vertical: AppScale.h(4),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.75),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: AppColors.accent.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                    width: 1,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.4,
+                                      ),
+                                      blurRadius: 8,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.zoom_in,
+                                      color: AppColors.accent,
+                                      size: AppScale.icon(12),
+                                    ),
+                                    SizedBox(width: AppScale.w(4)),
+                                    Text(
+                                      'View Full',
+                                      style: AppTextStyles.mono12.copyWith(
+                                        color: Colors.white,
+                                        fontSize: AppScale.font(10),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneMockup() {
     final double bezelWidth = AppScale.w(5.5);
     final double outerRadius = AppScale.r(26);
     final double innerRadius = AppScale.r(20);
@@ -1228,6 +1434,7 @@ class _FuturisticDownloadButton extends StatefulWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+  final IconData? trailingIcon;
   final VoidCallback onTap;
   final Color accentColor;
 
@@ -1235,6 +1442,7 @@ class _FuturisticDownloadButton extends StatefulWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
+    this.trailingIcon,
     required this.onTap,
     this.accentColor = AppColors.accent,
   });
@@ -1388,7 +1596,7 @@ class __FuturisticDownloadButtonState extends State<_FuturisticDownloadButton> {
                   ),
                 ),
                 child: Icon(
-                  AppIcons.download,
+                  widget.trailingIcon ?? AppIcons.download,
                   color: _isHovered
                       ? widget.accentColor
                       : AppColors.textSecondary,

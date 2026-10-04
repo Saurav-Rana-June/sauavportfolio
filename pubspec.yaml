@@ -35,6 +35,7 @@ flutter:
     - assets/images/pubmeme/
     - assets/images/schoolbox/
     - assets/images/mentora/
+    - assets/images/mentora_cms/
     - assets/cv/
     - assets/data/
   fonts:

@@ -25,7 +25,6 @@ class PrimaryButton extends StatefulWidget {
 
 class _PrimaryButtonState extends State<PrimaryButton>
     with TickerProviderStateMixin {
-  bool _isHovered = false;
   bool _isPressed = false;
   late final AnimationController _hoverController;
   late final AnimationController _iconController;
@@ -72,7 +71,6 @@ class _PrimaryButtonState extends State<PrimaryButton>
   }
 
   void _handleHover(bool isHovered) {
-    setState(() => _isHovered = isHovered);
     if (isHovered) {
       _hoverController.forward();
       _iconController.forward();
