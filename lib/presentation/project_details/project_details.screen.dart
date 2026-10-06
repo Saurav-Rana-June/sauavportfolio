@@ -372,6 +372,66 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (project.isInDevelopment) ...[
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppScale.w(12),
+              vertical: AppScale.h(6),
+            ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFFF59E0B).withValues(alpha: 0.18),
+                  const Color(0xFFD97706).withValues(alpha: 0.08),
+                  AppColors.surfaceDark.withValues(alpha: 0.6),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: const Color(0xFFF59E0B).withValues(alpha: 0.45),
+                width: 1.2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
+                  blurRadius: 10,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: AppScale.w(7),
+                  height: AppScale.h(7),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF59E0B),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFF59E0B).withValues(alpha: 0.8),
+                        blurRadius: 6,
+                        spreadRadius: 1,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: AppScale.w(8)),
+                Text(
+                  'Currently in development',
+                  style: AppTextStyles.mono12.copyWith(
+                    color: const Color(0xFFFDE68A),
+                    fontSize: AppScale.font(11),
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: AppScale.h(14)),
+        ],
         Row(
           children: [
             Container(

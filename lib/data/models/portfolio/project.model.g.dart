@@ -29,6 +29,7 @@ ProjectModel _$ProjectModelFromJson(Map<String, dynamic> json) => ProjectModel(
   playStoreUrl: json['playStoreUrl'] as String?,
   appStoreUrl: json['appStoreUrl'] as String?,
   showCode: json['showCode'] as bool? ?? true,
+  isInDevelopment: json['isInDevelopment'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
@@ -47,4 +48,5 @@ Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
       'playStoreUrl': instance.playStoreUrl,
       'appStoreUrl': instance.appStoreUrl,
       'showCode': instance.showCode,
+      'isInDevelopment': instance.isInDevelopment,
     };

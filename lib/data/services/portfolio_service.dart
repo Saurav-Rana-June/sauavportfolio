@@ -232,6 +232,7 @@ class PortfolioService {
       bannerAsset: 'assets/images/mentora/feature graphic.png',
       playStoreUrl: '#',
       appStoreUrl: '#',
+      isInDevelopment: true,
       screenshots: const [
         'assets/images/mentora/ss_1.png',
         'assets/images/mentora/ss_2.png',
@@ -288,6 +289,7 @@ class PortfolioService {
       bannerAsset: 'assets/images/mentora_cms/feature graphic.png',
       playStoreUrl: '#',
       appStoreUrl: '#',
+      isInDevelopment: true,
       screenshots: const [
         'assets/images/mentora_cms/Screenshot 2026-10-04 214632.png',
         'assets/images/mentora_cms/Screenshot 2026-10-04 214750.png',
@@ -336,6 +338,7 @@ class PortfolioService {
       playStoreUrl:
           'https://drive.google.com/file/d/1J3bX0hr6vcCzpXOwSl5fderBbMR5cU3H/view?usp=drive_link',
       appStoreUrl: '#',
+      isInDevelopment: true,
       screenshots: const [
         'assets/images/pubmeme/ss_1.png',
         'assets/images/pubmeme/ss_2.png',

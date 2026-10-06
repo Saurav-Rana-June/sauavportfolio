@@ -18,6 +18,7 @@ class ProjectModel {
   final String? playStoreUrl;
   final String? appStoreUrl;
   final bool showCode;
+  final bool isInDevelopment;
 
   ProjectModel({
     required this.id,
@@ -34,6 +35,7 @@ class ProjectModel {
     this.playStoreUrl,
     this.appStoreUrl,
     this.showCode = true,
+    this.isInDevelopment = false,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) =>
@@ -55,6 +57,7 @@ class ProjectModel {
     String? playStoreUrl,
     String? appStoreUrl,
     bool? showCode,
+    bool? isInDevelopment,
   }) {
     return ProjectModel(
       id: id,
@@ -71,6 +74,7 @@ class ProjectModel {
       playStoreUrl: playStoreUrl ?? this.playStoreUrl,
       appStoreUrl: appStoreUrl ?? this.appStoreUrl,
       showCode: showCode ?? this.showCode,
+      isInDevelopment: isInDevelopment ?? this.isInDevelopment,
     );
   }
 }
