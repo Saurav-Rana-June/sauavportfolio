@@ -8,6 +8,7 @@ import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
 import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
+import 'package:saurav_portfolio/widgets/portfolio/in_development_badge.dart';
 
 class ProjectCard extends StatefulWidget {
   final ProjectModel project;
@@ -211,6 +212,10 @@ class _ProjectCardState extends State<ProjectCard>
                                 Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    if (project.isInDevelopment) ...[
+                                      const InDevelopmentBadge(compact: true),
+                                      Spacing.s8.gapW,
+                                    ],
                                     if (hasPlayStore) ...[
                                       _ActionIconButton(
                                         icon: isPlayStoreLink
@@ -262,69 +267,7 @@ class _ProjectCardState extends State<ProjectCard>
                                 ),
                               ],
                             ),
-                            if (project.isInDevelopment) ...[
-                              AppScale.h(12).gapH,
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: AppScale.w(8),
-                                  vertical: AppScale.h(3),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFFF59E0B,
-                                  ).withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(
-                                    color: const Color(
-                                      0xFFF59E0B,
-                                    ).withValues(alpha: 0.35),
-                                    width: 1.0,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xFFF59E0B,
-                                      ).withValues(alpha: 0.1),
-                                      blurRadius: 6,
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: AppScale.w(5.5),
-                                      height: AppScale.h(5.5),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFFF59E0B),
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: const Color(
-                                              0xFFF59E0B,
-                                            ).withValues(alpha: 0.8),
-                                            blurRadius: 4,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(width: AppScale.w(6)),
-                                    Text(
-                                      'Currently in development',
-                                      style: AppTextStyles.mono12.copyWith(
-                                        color: const Color(0xFFFDE68A),
-                                        fontSize: AppScale.font(9.5),
-                                        fontWeight: FontWeight.w600,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              AppScale.h(8).gapH,
-                            ] else ...[
-                              AppScale.h(20).gapH,
-                            ],
+                            AppScale.h(20).gapH,
                             Text(
                               project.title,
                               maxLines: 1,

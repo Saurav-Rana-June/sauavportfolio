@@ -7,6 +7,7 @@ import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
+import 'package:saurav_portfolio/widgets/portfolio/in_development_badge.dart';
 
 class ProjectDetailsDialog extends StatelessWidget {
   final ProjectModel project;
@@ -71,7 +72,9 @@ class ProjectDetailsDialog extends StatelessWidget {
                             Text(
                               project.description,
                               style: AppTextStyles.r16.copyWith(
-                                color: AppColors.textPrimary.withValues(alpha: 0.9),
+                                color: AppColors.textPrimary.withValues(
+                                  alpha: 0.9,
+                                ),
                                 height: 1.6,
                                 fontSize: AppScale.font(14),
                               ),
@@ -96,14 +99,17 @@ class ProjectDetailsDialog extends StatelessWidget {
                                   itemCount: project.screenshots.length,
                                   padding: EdgeInsets.zero,
                                   itemBuilder: (context, index) {
-                                    final screenshot = project.screenshots[index];
+                                    final screenshot =
+                                        project.screenshots[index];
                                     return GestureDetector(
                                       onTap: () {
                                         Get.dialog(
                                           GestureDetector(
                                             onTap: () => Get.back(),
                                             child: Container(
-                                              color: Colors.black.withValues(alpha: 0.85),
+                                              color: Colors.black.withValues(
+                                                alpha: 0.85,
+                                              ),
                                               child: Stack(
                                                 alignment: Alignment.center,
                                                 children: [
@@ -123,7 +129,8 @@ class ProjectDetailsDialog extends StatelessWidget {
                                                           Icons.close,
                                                           color: Colors.white,
                                                         ),
-                                                        onPressed: () => Get.back(),
+                                                        onPressed: () =>
+                                                            Get.back(),
                                                         iconSize: 30,
                                                       ),
                                                     ),
@@ -139,11 +146,14 @@ class ProjectDetailsDialog extends StatelessWidget {
                                           right: AppScale.w(12),
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           child: Container(
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                color: AppColors.border.withValues(alpha: 0.6),
+                                                color: AppColors.border
+                                                    .withValues(alpha: 0.6),
                                                 width: 1.0,
                                               ),
                                             ),
@@ -196,10 +206,14 @@ class ProjectDetailsDialog extends StatelessWidget {
                                     vertical: AppScale.h(6),
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primary.withValues(alpha: 0.08),
+                                    color: AppColors.primary.withValues(
+                                      alpha: 0.08,
+                                    ),
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
-                                      color: AppColors.primary.withValues(alpha: 0.25),
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.25,
+                                      ),
                                       width: 1.0,
                                     ),
                                   ),
@@ -247,10 +261,7 @@ class ProjectDetailsDialog extends StatelessWidget {
           ),
         ),
         gradient: LinearGradient(
-          colors: [
-            themeColor.withValues(alpha: 0.05),
-            Colors.transparent,
-          ],
+          colors: [themeColor.withValues(alpha: 0.05), Colors.transparent],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -263,9 +274,7 @@ class ProjectDetailsDialog extends StatelessWidget {
             decoration: BoxDecoration(
               color: themeColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: themeColor.withValues(alpha: 0.3),
-              ),
+              border: Border.all(color: themeColor.withValues(alpha: 0.3)),
             ),
             child: Icon(
               AppIcons.folder,
@@ -275,12 +284,21 @@ class ProjectDetailsDialog extends StatelessWidget {
           ),
           SizedBox(width: AppScale.w(16)),
           Expanded(
-            child: Text(
-              project.title,
-              style: AppTextStyles.sb24.copyWith(
-                fontSize: AppScale.font(20),
-                fontWeight: FontWeight.w800,
-              ),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: AppScale.w(10),
+              runSpacing: AppScale.h(4),
+              children: [
+                Text(
+                  project.title,
+                  style: AppTextStyles.sb24.copyWith(
+                    fontSize: AppScale.font(20),
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                if (project.isInDevelopment)
+                  const InDevelopmentBadge(compact: true),
+              ],
             ),
           ),
           IconButton(
@@ -330,12 +348,7 @@ class ProjectDetailsDialog extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child: Text(
-              emoji,
-              style: TextStyle(
-                fontSize: AppScale.font(13),
-              ),
-            ),
+            child: Text(emoji, style: TextStyle(fontSize: AppScale.font(13))),
           ),
           SizedBox(width: AppScale.w(12)),
           Expanded(
@@ -421,10 +434,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 final controller = Get.find<HomeController>();
                 controller.openExternalLink(project.playStoreUrl);
               },
-              icon: Icon(
-                AppIcons.googlePlay,
-                size: AppScale.icon(14),
-              ),
+              icon: Icon(AppIcons.googlePlay, size: AppScale.icon(14)),
               label: Text(
                 'Play Store',
                 style: AppTextStyles.r14.copyWith(
@@ -442,9 +452,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: const BorderSide(
-                    color: AppColors.border,
-                  ),
+                  side: const BorderSide(color: AppColors.border),
                 ),
               ),
             ),
@@ -456,10 +464,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 final controller = Get.find<HomeController>();
                 controller.openExternalLink(project.appStoreUrl);
               },
-              icon: Icon(
-                AppIcons.ios,
-                size: AppScale.icon(14),
-              ),
+              icon: Icon(AppIcons.ios, size: AppScale.icon(14)),
               label: Text(
                 'App Store',
                 style: AppTextStyles.r14.copyWith(
@@ -477,9 +482,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: const BorderSide(
-                    color: AppColors.border,
-                  ),
+                  side: const BorderSide(color: AppColors.border),
                 ),
               ),
             ),
@@ -491,10 +494,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 final controller = Get.find<HomeController>();
                 controller.openExternalLink(project.githubUrl);
               },
-              icon: Icon(
-                AppIcons.github,
-                size: AppScale.icon(14),
-              ),
+              icon: Icon(AppIcons.github, size: AppScale.icon(14)),
               label: Text(
                 'GitHub',
                 style: AppTextStyles.r14.copyWith(
@@ -512,9 +512,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
-                  side: const BorderSide(
-                    color: AppColors.border,
-                  ),
+                  side: const BorderSide(color: AppColors.border),
                 ),
               ),
             ),
@@ -526,10 +524,7 @@ class ProjectDetailsDialog extends StatelessWidget {
                 final controller = Get.find<HomeController>();
                 controller.openExternalLink(project.liveUrl);
               },
-              icon: Icon(
-                AppIcons.arrowExternal,
-                size: AppScale.icon(14),
-              ),
+              icon: Icon(AppIcons.arrowExternal, size: AppScale.icon(14)),
               label: Text(
                 'Live Demo',
                 style: AppTextStyles.r14.copyWith(

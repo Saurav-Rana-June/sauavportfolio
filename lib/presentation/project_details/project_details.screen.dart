@@ -8,6 +8,7 @@ import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/presentation/project_details/controllers/project_details.controller.dart';
 import 'package:saurav_portfolio/widgets/loaders/loading_spinner.dart';
+import 'package:saurav_portfolio/widgets/portfolio/in_development_badge.dart';
 
 class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   const ProjectDetailsScreen({super.key});
@@ -369,106 +370,51 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   }
 
   Widget _buildTitleHeader(ProjectModel project, Color themeColor) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (project.isInDevelopment) ...[
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppScale.w(12),
-              vertical: AppScale.h(6),
-            ),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFFF59E0B).withValues(alpha: 0.18),
-                  const Color(0xFFD97706).withValues(alpha: 0.08),
-                  AppColors.surfaceDark.withValues(alpha: 0.6),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: const Color(0xFFF59E0B).withValues(alpha: 0.45),
-                width: 1.2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFF59E0B).withValues(alpha: 0.15),
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: AppScale.w(7),
-                  height: AppScale.h(7),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF59E0B),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFF59E0B).withValues(alpha: 0.8),
-                        blurRadius: 6,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(width: AppScale.w(8)),
-                Text(
-                  'Currently in development',
-                  style: AppTextStyles.mono12.copyWith(
-                    color: const Color(0xFFFDE68A),
-                    fontSize: AppScale.font(11),
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
+        Container(
+          width: AppScale.icon(42),
+          height: AppScale.icon(42),
+          decoration: BoxDecoration(
+            color: themeColor.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: project.imageUrl != null
+                  ? AppColors.border
+                  : themeColor.withValues(alpha: 0.3),
+              width: 1.5,
             ),
           ),
-          SizedBox(height: AppScale.h(14)),
-        ],
-        Row(
-          children: [
-            Container(
-              width: AppScale.icon(42),
-              height: AppScale.icon(42),
-              decoration: BoxDecoration(
-                color: themeColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: project.imageUrl != null
-                      ? AppColors.border
-                      : themeColor.withValues(alpha: 0.3),
-                  width: 1.5,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(9),
-                child: project.imageUrl != null
-                    ? Image.asset(project.imageUrl!, fit: BoxFit.cover)
-                    : Icon(
-                        AppIcons.folder,
-                        color: themeColor,
-                        size: AppScale.icon(18),
-                      ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(9),
+            child: project.imageUrl != null
+                ? Image.asset(project.imageUrl!, fit: BoxFit.cover)
+                : Icon(
+                    AppIcons.folder,
+                    color: themeColor,
+                    size: AppScale.icon(18),
+                  ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: AppScale.w(12),
+            runSpacing: AppScale.h(8),
+            children: [
+              Text(
                 project.title,
                 style: AppTextStyles.sb24.copyWith(
                   fontSize: AppScale.font(24),
                   fontWeight: FontWeight.w800,
                 ),
               ),
-            ),
-          ],
+              if (project.isInDevelopment)
+                const InDevelopmentBadge(compact: false),
+            ],
+          ),
         ),
       ],
     );
