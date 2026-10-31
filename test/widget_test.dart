@@ -48,4 +48,42 @@ void main() {
     expect(find.text('ABOUT ME'), findsOneWidget);
     expect(find.text('Saurav Rana'), findsWidgets);
   });
+
+  testWidgets('Hero transition executes smoothly on initial data load', (
+    tester,
+  ) async {
+    final controller = Get.find<HomeController>();
+    controller.isLoading.value = true;
+    controller.isHeroLogoDocked.value = false;
+
+    tester.view.physicalSize = const Size(1440, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(
+      ScreenUtilInit(
+        designSize: const Size(1440, 900),
+        builder: (_, __) => const GetMaterialApp(home: HomeScreen()),
+      ),
+    );
+    await tester.pump();
+
+    // Verify initial loader is rendered
+    expect(find.byKey(const ValueKey('active_loader')), findsOneWidget);
+
+    // Simulate data finished loading
+    controller.isLoading.value = false;
+    await tester.pump(); // Triggers postFrameCallback
+    await tester.pump(const Duration(milliseconds: 100)); // Start flight
+
+    // Advance animation to completion
+    await tester.pump(const Duration(milliseconds: 900));
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(controller.isHeroLogoDocked.value, isTrue);
+    expect(find.text('Saurav Rana'), findsWidgets);
+  });
 }

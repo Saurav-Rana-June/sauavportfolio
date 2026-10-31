@@ -13,6 +13,8 @@ class LoadingSpinner extends StatefulWidget {
   final String? text;
   final bool showText;
   final bool compact;
+  final Key? logoKey;
+  final bool hideCenterLogo;
 
   const LoadingSpinner({
     super.key,
@@ -20,6 +22,8 @@ class LoadingSpinner extends StatefulWidget {
     this.text,
     this.showText = true,
     this.compact = false,
+    this.logoKey,
+    this.hideCenterLogo = false,
   });
 
   @override
@@ -87,42 +91,67 @@ class _LoadingSpinnerState extends State<LoadingSpinner>
                       ),
 
                       // 2. Center Glassmorphic Pod with Portfolio Logo
-                      Transform.scale(
-                        scale: logoScale,
-                        child: Container(
-                          width: logoSize,
-                          height: logoSize,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.surfaceDark.withValues(
-                              alpha: 0.82,
-                            ),
-                            border: Border.all(
-                              color: Color.lerp(
-                                AppColors.primary,
-                                AppColors.accent,
-                                pulse,
-                              )!.withValues(alpha: 0.5 + (pulse * 0.3)),
-                              width: 1.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.lerp(
-                                  AppColors.primary,
-                                  AppColors.accent,
-                                  pulse,
-                                )!.withValues(alpha: 0.25 + (pulse * 0.2)),
-                                blurRadius: 18 + (pulse * 6),
-                                spreadRadius: 1 + (pulse * 2),
+                      SizedBox(
+                        key: widget.logoKey,
+                        width: logoSize,
+                        height: logoSize,
+                        child: Opacity(
+                          opacity: widget.hideCenterLogo ? 0.0 : 1.0,
+                          child: Transform.scale(
+                            scale: logoScale,
+                            child: Container(
+                              width: logoSize,
+                              height: logoSize,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: AppColors.surfaceDark.withValues(
+                                  alpha: 0.85,
+                                ),
+                                border: Border.all(
+                                  color: Color.lerp(
+                                    AppColors.primary,
+                                    AppColors.accent,
+                                    pulse,
+                                  )!.withValues(alpha: 0.5 + (pulse * 0.3)),
+                                  width: 1.5,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color.lerp(
+                                      AppColors.primary,
+                                      AppColors.accent,
+                                      pulse,
+                                    )!.withValues(alpha: 0.25 + (pulse * 0.2)),
+                                    blurRadius: 18 + (pulse * 6),
+                                    spreadRadius: 1 + (pulse * 2),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: ClipOval(
-                            child: Padding(
-                              padding: EdgeInsets.all(logoSize * 0.22),
-                              child: SvgPicture.asset(
-                                'assets/images/logo.svg',
-                                fit: BoxFit.contain,
+                              child: Center(
+                                child: Container(
+                                  width: logoSize * 0.75,
+                                  height: logoSize * 0.75,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.scaffoldDark.withValues(
+                                      alpha: 0.95,
+                                    ),
+                                    border: Border.all(
+                                      color: AppColors.border.withValues(
+                                        alpha: 0.6,
+                                      ),
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      'assets/images/logo.svg',
+                                      width: logoSize * 0.44,
+                                      height: logoSize * 0.44,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),

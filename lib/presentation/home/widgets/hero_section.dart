@@ -501,10 +501,14 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
     );
     _pulseController.repeat(reverse: true);
 
+    try {
+      _homeController = Get.isRegistered<HomeController>() ? Get.find<HomeController>() : null;
+    } catch (_) {}
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       try {
-        _homeController = Get.find<HomeController>();
+        _homeController ??= Get.isRegistered<HomeController>() ? Get.find<HomeController>() : null;
         _homeController?.scrollController.addListener(_onScroll);
         _onScroll(); // initial check
       } catch (_) {}
@@ -673,63 +677,78 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
               final pulse = _pulseAnimation.value;
               final scale = 0.96 + (pulse * 0.08);
 
-              return Transform.scale(
-                scale: scale,
-                child: Container(
-                  width: boxSize * 0.32,
-                  height: boxSize * 0.32,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.surfaceDark.withValues(alpha: 0.85),
-                    border: Border.all(
-                      color: Color.lerp(
-                        AppColors.primary,
-                        AppColors.accent,
-                        pulse,
-                      )!.withValues(alpha: 0.5 + (pulse * 0.3)),
-                      width: 2.0,
+              final Widget podWidget = SizedBox(
+                key: _homeController?.heroCentralLogoKey,
+                width: boxSize * 0.32,
+                height: boxSize * 0.32,
+                child: Transform.scale(
+                  scale: scale,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.surfaceDark.withValues(alpha: 0.85),
+                      border: Border.all(
+                        color: Color.lerp(
+                          AppColors.primary,
+                          AppColors.accent,
+                          pulse,
+                        )!.withValues(alpha: 0.5 + (pulse * 0.3)),
+                        width: 2.0,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(
+                            alpha: 0.28 + (pulse * 0.25),
+                          ),
+                          blurRadius: 18 + (pulse * 12),
+                          spreadRadius: 2,
+                        ),
+                        BoxShadow(
+                          color: AppColors.accent.withValues(
+                            alpha: 0.22 + (pulse * 0.2),
+                          ),
+                          blurRadius: 30,
+                          spreadRadius: 1,
+                        ),
+                      ],
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withValues(
-                          alpha: 0.28 + (pulse * 0.25),
+                    child: Center(
+                      child: Container(
+                        width: boxSize * 0.24,
+                        height: boxSize * 0.24,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.scaffoldDark.withValues(alpha: 0.95),
+                          border: Border.all(
+                            color: AppColors.border.withValues(alpha: 0.6),
+                            width: 1.0,
+                          ),
                         ),
-                        blurRadius: 18 + (pulse * 12),
-                        spreadRadius: 2,
-                      ),
-                      BoxShadow(
-                        color: AppColors.accent.withValues(
-                          alpha: 0.22 + (pulse * 0.2),
-                        ),
-                        blurRadius: 30,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Container(
-                      width: boxSize * 0.24,
-                      height: boxSize * 0.24,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.scaffoldDark.withValues(alpha: 0.95),
-                        border: Border.all(
-                          color: AppColors.border.withValues(alpha: 0.6),
-                          width: 1.0,
-                        ),
-                      ),
-                      child: Center(
-                        child: SvgPicture.asset(
-                          'assets/images/logo.svg',
-                          width: boxSize * 0.14,
-                          height: boxSize * 0.14,
-                          fit: BoxFit.contain,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            'assets/images/logo.svg',
+                            width: boxSize * 0.14,
+                            height: boxSize * 0.14,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               );
+
+              if (_homeController != null) {
+                return Obx(() {
+                  final isDocked = _homeController!.isHeroLogoDocked.value;
+                  return Opacity(
+                    opacity: isDocked ? 1.0 : 0.0,
+                    child: podWidget,
+                  );
+                });
+              }
+
+              return podWidget;
             },
           ),
         ],

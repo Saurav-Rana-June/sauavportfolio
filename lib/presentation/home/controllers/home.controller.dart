@@ -18,12 +18,15 @@ class HomeController extends GetxController {
   final globalController = Get.find<GlobalController>();
 
   RxBool isLoading = true.obs;
+  RxBool isHeroLogoDocked = false.obs;
   RxBool isSubmitting = false.obs;
   RxList<ProjectModel> projects = <ProjectModel>[].obs;
   RxList<ExperienceModel> experiences = <ExperienceModel>[].obs;
   Rx<PortfolioNavSection> activeNavSection = PortfolioNavSection.home.obs;
 
   final ScrollController scrollController = ScrollController();
+  final GlobalKey heroCentralLogoKey = GlobalKey();
+  final GlobalKey spinnerCentralLogoKey = GlobalKey();
   final GlobalKey aboutSectionKey = GlobalKey();
   final GlobalKey experienceSectionKey = GlobalKey();
   final GlobalKey skillsSectionKey = GlobalKey();

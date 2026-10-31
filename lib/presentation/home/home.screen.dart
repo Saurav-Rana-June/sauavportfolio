@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
@@ -14,23 +15,284 @@ import 'package:saurav_portfolio/widgets/layout/portfolio_nav_section.dart';
 import 'package:saurav_portfolio/widgets/loaders/loading_spinner.dart';
 
 /// The entry screen of the personal portfolio website.
-/// Performs lazy loading and handles composition of technical page sections.
-class HomeScreen extends GetView<HomeController> {
+/// Performs lazy loading and coordinates a seamless Hero flight transition connecting
+/// the central logo in LoadingSpinner directly to the FuturisticIllustration logo in HeroSection.
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late final HomeController controller;
+  late final AnimationController _flightController;
+  late final Animation<double> _flightAnimation;
+  late final Animation<double> _hudFadeOutAnimation;
+  late final Animation<double> _contentFadeInAnimation;
+
+  bool _isFlightRunning = false;
+  bool _flightCompleted = false;
+  Rect? _startRect;
+  Rect? _targetRect;
+
+  Worker? _loadingWorker;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<HomeController>();
+
+    _flightController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 850),
+    );
+
+    _flightAnimation = CurvedAnimation(
+      parent: _flightController,
+      curve: Curves.easeInOutCubicEmphasized,
+    );
+
+    _hudFadeOutAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+      CurvedAnimation(
+        parent: _flightController,
+        curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+      ),
+    );
+
+    _contentFadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _flightController,
+        curve: const Interval(0.15, 0.85, curve: Curves.easeIn),
+      ),
+    );
+
+    if (!controller.isLoading.value) {
+      _flightCompleted = true;
+      controller.isHeroLogoDocked.value = true;
+    } else {
+      _loadingWorker = ever<bool>(controller.isLoading, (isLoading) {
+        if (!isLoading && !_flightCompleted && !_isFlightRunning) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _startHeroFlight();
+          });
+        }
+      });
+    }
+  }
+
+  void _startHeroFlight() {
+    if (!mounted || _isFlightRunning || _flightCompleted) return;
+
+    final startBox = controller.spinnerCentralLogoKey.currentContext?.findRenderObject() as RenderBox?;
+    final targetBox = controller.heroCentralLogoKey.currentContext?.findRenderObject() as RenderBox?;
+    final screenSize = MediaQuery.sizeOf(context);
+
+    final Rect start;
+    if (startBox != null && startBox.hasSize) {
+      start = startBox.localToGlobal(Offset.zero) & startBox.size;
+    } else {
+      const defaultSpinnerLogoSize = 65.0;
+      start = Rect.fromCenter(
+        center: Offset(screenSize.width / 2, screenSize.height / 2),
+        width: defaultSpinnerLogoSize,
+        height: defaultSpinnerLogoSize,
+      );
+    }
+
+    final Rect? target;
+    if (targetBox != null && targetBox.hasSize) {
+      target = targetBox.localToGlobal(Offset.zero) & targetBox.size;
+    } else {
+      target = null;
+    }
+
+    if (target != null) {
+      setState(() {
+        _startRect = start;
+        _targetRect = target;
+        _isFlightRunning = true;
+      });
+
+      _flightController.forward().then((_) {
+        if (!mounted) return;
+        controller.isHeroLogoDocked.value = true;
+        setState(() {
+          _isFlightRunning = false;
+          _flightCompleted = true;
+        });
+      });
+    } else {
+      // Retry once on next frame in case layout is still settling
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _flightCompleted) return;
+        final retryTargetBox = controller.heroCentralLogoKey.currentContext?.findRenderObject() as RenderBox?;
+        if (retryTargetBox != null && retryTargetBox.hasSize) {
+          _startHeroFlight();
+        } else {
+          controller.isHeroLogoDocked.value = true;
+          setState(() {
+            _flightCompleted = true;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _loadingWorker?.dispose();
+    _flightController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Register dependency on MediaQuery to trigger rebuilds on window resize
-    MediaQuery.of(context);
+    MediaQuery.sizeOf(context);
+
+    if (_flightCompleted) {
+      return const Scaffold(
+        backgroundColor: AppColors.scaffoldDark,
+        body: HomeContent(),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldDark,
       body: Obx(() {
-        if (controller.isLoading.value) {
-          return const LoadingSpinner();
+        final isLoading = controller.isLoading.value;
+
+        if (isLoading && !_isFlightRunning) {
+          return LoadingSpinner(
+            key: const ValueKey('active_loader'),
+            logoKey: controller.spinnerCentralLogoKey,
+          );
         }
-        return HomeContent();
+
+        return Stack(
+          children: [
+            // 1. Home content fading in
+            AnimatedBuilder(
+              animation: _contentFadeInAnimation,
+              builder: (context, child) => Opacity(
+                opacity: _isFlightRunning ? _contentFadeInAnimation.value : 0.0,
+                child: child,
+              ),
+              child: const HomeContent(),
+            ),
+
+            // 2. Loading spinner HUD rings/particles fading out
+            if (!_flightCompleted)
+              AnimatedBuilder(
+                animation: _hudFadeOutAnimation,
+                builder: (context, child) => Opacity(
+                  opacity: _isFlightRunning ? _hudFadeOutAnimation.value : 1.0,
+                  child: child,
+                ),
+                child: LoadingSpinner(
+                  key: const ValueKey('fading_loader'),
+                  logoKey: controller.spinnerCentralLogoKey,
+                  hideCenterLogo: _isFlightRunning,
+                  showText: false,
+                ),
+              ),
+
+            // 3. Flying Hero Central Logo Pod
+            if (_isFlightRunning && _startRect != null && _targetRect != null)
+              AnimatedBuilder(
+                animation: _flightAnimation,
+                builder: (context, child) {
+                  final t = _flightAnimation.value;
+                  final currentRect = Rect.lerp(_startRect, _targetRect, t)!;
+
+                  return Positioned.fromRect(
+                    rect: currentRect,
+                    child: RepaintBoundary(
+                      child: _HeroFloatingLogoPod(
+                        size: currentRect.width,
+                        progress: t,
+                      ),
+                    ),
+                  );
+                },
+              ),
+          ],
+        );
       }),
+    );
+  }
+}
+
+/// Floating glassmorphic cyber pod that smoothly flies from the spinner center to the hero section.
+class _HeroFloatingLogoPod extends StatelessWidget {
+  final double size;
+  final double progress;
+
+  const _HeroFloatingLogoPod({
+    required this.size,
+    required this.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final borderColor = Color.lerp(
+      AppColors.primary,
+      AppColors.accent,
+      progress,
+    )!;
+
+    return Center(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.surfaceDark.withValues(alpha: 0.88),
+          border: Border.all(
+            color: borderColor.withValues(alpha: 0.6 + (progress * 0.2)),
+            width: 1.5 + (progress * 0.5),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withValues(
+                alpha: 0.35 + (progress * 0.1),
+              ),
+              blurRadius: 18 + (progress * 8),
+              spreadRadius: 1 + (progress * 1.5),
+            ),
+            BoxShadow(
+              color: AppColors.accent.withValues(
+                alpha: 0.2 + (progress * 0.1),
+              ),
+              blurRadius: 28,
+              spreadRadius: 1,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Container(
+            width: size * 0.75,
+            height: size * 0.75,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.scaffoldDark.withValues(alpha: 0.95),
+              border: Border.all(
+                color: AppColors.border.withValues(alpha: 0.6),
+                width: 1.0,
+              ),
+            ),
+            child: Center(
+              child: SvgPicture.asset(
+                'assets/images/logo.svg',
+                width: size * 0.44,
+                height: size * 0.44,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -46,6 +308,11 @@ class HomeContent extends GetView<HomeController> {
       children: [
         CustomScrollView(
           controller: controller.scrollController,
+          physics: controller.isHeroLogoDocked.value
+              ? const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                )
+              : const NeverScrollableScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
               child: SizedBox(height: AppScale.navTopSpacer()),
