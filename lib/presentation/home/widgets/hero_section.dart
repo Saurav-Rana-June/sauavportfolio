@@ -558,165 +558,117 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // HUD Background and orbiting nodes
+          // 1. HUD Background, Cyber Sweeps & Orbiting Tech Nodes
           AnimatedBuilder(
-            animation: _rotationController,
+            animation: Listenable.merge([
+              _rotationController,
+              _pulseController,
+            ]),
             builder: (context, child) {
+              final double rot = _rotationController.value;
+              final double pulse = _pulseController.value;
               final double centerCoord = boxSize / 2;
               final double r1 = boxSize * 0.38;
-              final double r2 = boxSize * 0.28;
-              final double nodeSize = 32.0;
+              final double r2 = boxSize * 0.27;
+              final double nodeSize = AppScale.isMobile ? 36.0 : 42.0;
 
-              // Outer Orbit (Flutter & Figma, offset by pi)
-              final double angle1 = _rotationController.value * 2 * math.pi;
-              final double node1X =
-                  centerCoord + r1 * math.cos(angle1) - (nodeSize / 2);
-              final double node1Y =
-                  centerCoord + r1 * math.sin(angle1) - (nodeSize / 2);
+              // Outer Orbit: Flutter & Figma (clockwise, offset by pi)
+              final double angleFlutter = rot * 2 * math.pi;
+              final double nodeFlutterX =
+                  centerCoord + r1 * math.cos(angleFlutter) - (nodeSize / 2);
+              final double nodeFlutterY =
+                  centerCoord + r1 * math.sin(angleFlutter) - (nodeSize / 2);
 
-              final double angle3 = angle1 + math.pi;
-              final double node3X =
-                  centerCoord + r1 * math.cos(angle3) - (nodeSize / 2);
-              final double node3Y =
-                  centerCoord + r1 * math.sin(angle3) - (nodeSize / 2);
+              final double angleFigma = angleFlutter + math.pi;
+              final double nodeFigmaX =
+                  centerCoord + r1 * math.cos(angleFigma) - (nodeSize / 2);
+              final double nodeFigmaY =
+                  centerCoord + r1 * math.sin(angleFigma) - (nodeSize / 2);
 
-              // Inner Orbit (Dart & FastAPI, offset by pi)
-              final double angle2 =
-                  -_rotationController.value * 2 * math.pi + (math.pi / 2);
-              final double node2X =
-                  centerCoord + r2 * math.cos(angle2) - (nodeSize / 2);
-              final double node2Y =
-                  centerCoord + r2 * math.sin(angle2) - (nodeSize / 2);
+              // Inner Orbit: Dart & FastAPI (counter-clockwise, offset by pi)
+              final double angleDart =
+                  -(rot * 2 * math.pi * 1.3) + (math.pi / 2);
+              final double nodeDartX =
+                  centerCoord + r2 * math.cos(angleDart) - (nodeSize / 2);
+              final double nodeDartY =
+                  centerCoord + r2 * math.sin(angleDart) - (nodeSize / 2);
 
-              final double angle4 = angle2 + math.pi;
-              final double node4X =
-                  centerCoord + r2 * math.cos(angle4) - (nodeSize / 2);
-              final double node4Y =
-                  centerCoord + r2 * math.sin(angle4) - (nodeSize / 2);
+              final double angleFastApi = angleDart + math.pi;
+              final double nodeFastApiX =
+                  centerCoord + r2 * math.cos(angleFastApi) - (nodeSize / 2);
+              final double nodeFastApiY =
+                  centerCoord + r2 * math.sin(angleFastApi) - (nodeSize / 2);
 
               return Stack(
                 children: [
+                  // Cyber HUD Canvas: trails and head beacons terminate exactly at avatar coordinates
                   Positioned.fill(
                     child: CustomPaint(
                       painter: _IllustrationHudPainter(
-                        rotationValue: _rotationController.value,
+                        angleFlutter: angleFlutter,
+                        angleFigma: angleFigma,
+                        angleDart: angleDart,
+                        angleFastApi: angleFastApi,
+                        rotationValue: rot,
+                        pulseValue: pulse,
                       ),
                     ),
                   ),
-                  // Orbiting Flutter node (Outer)
-                  Positioned(
-                    left: node1X,
-                    top: node1Y,
-                    child: Container(
-                      width: nodeSize,
-                      height: nodeSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
-                        border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.5),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.4),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: const Center(child: FlutterLogo(size: 16.0)),
-                    ),
+
+                  // Tech Avatar Node: Flutter (Directly on top of Outer Orbit Head 1)
+                  _buildOrbitNode(
+                    x: nodeFlutterX,
+                    y: nodeFlutterY,
+                    size: nodeSize,
+                    pulse: pulse,
+                    color: const Color(0xFF02569B),
+                    accentColor: const Color(0xFF00C4FF),
+                    child: FlutterLogo(size: nodeSize * 0.52),
                   ),
-                  // Orbiting Figma node (Outer - opposite to Flutter)
-                  Positioned(
-                    left: node3X,
-                    top: node3Y,
-                    child: Container(
-                      width: nodeSize,
-                      height: nodeSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
-                        border: Border.all(
-                          color: const Color(0xFFF24E1E).withValues(alpha: 0.5),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFFA259FF,
-                            ).withValues(alpha: 0.4),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: const Center(child: FigmaVectorLogo(size: 15.0)),
-                    ),
+
+                  // Tech Avatar Node: Figma (Directly on top of Outer Orbit Head 2)
+                  _buildOrbitNode(
+                    x: nodeFigmaX,
+                    y: nodeFigmaY,
+                    size: nodeSize,
+                    pulse: pulse,
+                    color: const Color(0xFFF24E1E),
+                    accentColor: const Color(0xFFA259FF),
+                    child: FigmaVectorLogo(size: nodeSize * 0.50),
                   ),
-                  // Orbiting Dart node (Inner)
-                  Positioned(
-                    left: node2X,
-                    top: node2Y,
-                    child: Container(
-                      width: nodeSize,
-                      height: nodeSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
-                        border: Border.all(
-                          color: AppColors.accent.withValues(alpha: 0.5),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.accent.withValues(alpha: 0.4),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: const Center(child: DartVectorLogo(size: 14.0)),
-                    ),
+
+                  // Tech Avatar Node: Dart (Directly on top of Inner Orbit Head 1)
+                  _buildOrbitNode(
+                    x: nodeDartX,
+                    y: nodeDartY,
+                    size: nodeSize,
+                    pulse: pulse,
+                    color: const Color(0xFF007ACC),
+                    accentColor: const Color(0xFF00C4FF),
+                    child: DartVectorLogo(size: nodeSize * 0.48),
                   ),
-                  // Orbiting FastAPI node (Inner - opposite to Dart)
-                  Positioned(
-                    left: node4X,
-                    top: node4Y,
-                    child: Container(
-                      width: nodeSize,
-                      height: nodeSize,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.surfaceDark.withValues(alpha: 0.9),
-                        border: Border.all(
-                          color: const Color(0xFF009485).withValues(alpha: 0.5),
-                          width: 1.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFF05D3B4,
-                            ).withValues(alpha: 0.4),
-                            blurRadius: 10,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                      child: const Center(child: FastApiVectorLogo(size: 14.0)),
-                    ),
+
+                  // Tech Avatar Node: FastAPI (Directly on top of Inner Orbit Head 2)
+                  _buildOrbitNode(
+                    x: nodeFastApiX,
+                    y: nodeFastApiY,
+                    size: nodeSize,
+                    pulse: pulse,
+                    color: const Color(0xFF009485),
+                    accentColor: const Color(0xFF05D3B4),
+                    child: FastApiVectorLogo(size: nodeSize * 0.48),
                   ),
                 ],
               );
             },
           ),
-          // Central Pulsing core
+
+          // 2. Central Glassmorphic Futuristic Core with Portfolio Logo
           AnimatedBuilder(
             animation: _pulseController,
             builder: (context, child) {
-              final scale = 1.0 + (_pulseController.value * 0.08);
-              final glow = _pulseController.value;
+              final pulse = _pulseController.value;
+              final scale = 0.96 + (pulse * 0.08);
 
               return Transform.scale(
                 scale: scale,
@@ -725,24 +677,28 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                   height: boxSize * 0.32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    gradient: const LinearGradient(
-                      colors: [AppColors.primary, AppColors.accent],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
+                    color: AppColors.surfaceDark.withValues(alpha: 0.85),
+                    border: Border.all(
+                      color: Color.lerp(
+                        AppColors.primary,
+                        AppColors.accent,
+                        pulse,
+                      )!.withValues(alpha: 0.5 + (pulse * 0.3)),
+                      width: 2.0,
                     ),
                     boxShadow: [
                       BoxShadow(
                         color: AppColors.primary.withValues(
-                          alpha: 0.3 + (glow * 0.3),
+                          alpha: 0.28 + (pulse * 0.25),
                         ),
-                        blurRadius: 15 + (glow * 15),
+                        blurRadius: 18 + (pulse * 12),
                         spreadRadius: 2,
                       ),
                       BoxShadow(
                         color: AppColors.accent.withValues(
-                          alpha: 0.2 + (glow * 0.2),
+                          alpha: 0.22 + (pulse * 0.2),
                         ),
-                        blurRadius: 25,
+                        blurRadius: 30,
                         spreadRadius: 1,
                       ),
                     ],
@@ -751,9 +707,13 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                     child: Container(
                       width: boxSize * 0.24,
                       height: boxSize * 0.24,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.scaffoldDark,
+                        color: AppColors.scaffoldDark.withValues(alpha: 0.95),
+                        border: Border.all(
+                          color: AppColors.border.withValues(alpha: 0.6),
+                          width: 1.0,
+                        ),
                       ),
                       child: Center(
                         child: SvgPicture.asset(
@@ -773,25 +733,100 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
       ),
     );
   }
+
+  Widget _buildOrbitNode({
+    required double x,
+    required double y,
+    required double size,
+    required double pulse,
+    required Color color,
+    required Color accentColor,
+    required Widget child,
+  }) {
+    final double nodeScale = 0.96 + (pulse * 0.06);
+
+    return Positioned(
+      left: x,
+      top: y,
+      child: Transform.scale(
+        scale: nodeScale,
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.surfaceDark.withValues(alpha: 0.92),
+            border: Border.all(
+              color: Color.lerp(
+                color,
+                accentColor,
+                pulse,
+              )!.withValues(alpha: 0.6 + (pulse * 0.25)),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.35 + (pulse * 0.2)),
+                blurRadius: 10 + (pulse * 4),
+                spreadRadius: 1,
+              ),
+              BoxShadow(
+                color: accentColor.withValues(alpha: 0.18),
+                blurRadius: 18,
+              ),
+            ],
+          ),
+          child: Center(child: child),
+        ),
+      ),
+    );
+  }
 }
 
+/// Advanced Futuristic HUD Painter with orbiting sweep gradients that
+/// stream directly behind the 4 tech avatar heads.
 class _IllustrationHudPainter extends CustomPainter {
-  _IllustrationHudPainter({required this.rotationValue});
+  _IllustrationHudPainter({
+    required this.angleFlutter,
+    required this.angleFigma,
+    required this.angleDart,
+    required this.angleFastApi,
+    required this.rotationValue,
+    required this.pulseValue,
+  });
 
+  final double angleFlutter;
+  final double angleFigma;
+  final double angleDart;
+  final double angleFastApi;
   final double rotationValue;
+  final double pulseValue;
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
+    final maxRadius = size.width / 2;
 
-    // 1. Draw outer corner HUD brackets
+    // 1. Ambient Background Halo Bloom
+    final haloPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          AppColors.accent.withValues(alpha: 0.12 + (pulseValue * 0.08)),
+          AppColors.primary.withValues(alpha: 0.06 + (pulseValue * 0.05)),
+          Colors.transparent,
+        ],
+        stops: const [0.0, 0.55, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: maxRadius * 0.9));
+    canvas.drawCircle(center, maxRadius * 0.9, haloPaint);
+
+    // 2. Corner HUD Brackets
     final bracketPaint = Paint()
-      ..color = AppColors.accent.withValues(alpha: 0.3)
+      ..color = AppColors.accent.withValues(alpha: 0.3 + (pulseValue * 0.2))
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
     final double pad = 12.0;
-    final double len = 16.0;
+    final double len = 18.0;
 
     // Top-Left bracket
     canvas.drawPath(
@@ -826,41 +861,251 @@ class _IllustrationHudPainter extends CustomPainter {
       bracketPaint,
     );
 
-    // 2. Draw crosshair guidelines
+    // 3. Segmented Crosshair Guidelines with Center Core Clearance
     final guidePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.05)
+      ..color = Colors.white.withValues(alpha: 0.06)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
+    final double coreClearance = size.width * 0.18;
+
+    // Vertical guides
     canvas.drawLine(
-      Offset(size.width / 2, 20),
-      Offset(size.width / 2, size.height - 20),
+      Offset(center.dx, pad + len),
+      Offset(center.dx, center.dy - coreClearance),
       guidePaint,
     );
     canvas.drawLine(
-      Offset(20, size.height / 2),
-      Offset(size.width - 20, size.height / 2),
+      Offset(center.dx, center.dy + coreClearance),
+      Offset(center.dx, size.height - pad - len),
+      guidePaint,
+    );
+    // Horizontal guides
+    canvas.drawLine(
+      Offset(pad + len, center.dy),
+      Offset(center.dx - coreClearance, center.dy),
+      guidePaint,
+    );
+    canvas.drawLine(
+      Offset(center.dx + coreClearance, center.dy),
+      Offset(size.width - pad - len, center.dy),
       guidePaint,
     );
 
-    // 3. Draw orbit rings
-    // Ring 1 (Outer)
+    // 4. Outer Peripheral Compass Tech Ticks (24 ticks)
+    final tickRadius = size.width * 0.44;
+    final tickPaint = Paint()
+      ..color = AppColors.border.withValues(alpha: 0.5)
+      ..strokeWidth = 1.0;
+    final majorTickPaint = Paint()
+      ..color = AppColors.accent.withValues(alpha: 0.6)
+      ..strokeWidth = 1.5;
+
+    for (int i = 0; i < 24; i++) {
+      final double angle = i * (2 * math.pi / 24);
+      final bool isCardinal = i % 6 == 0;
+      final double tickLength = isCardinal ? 6.0 : 3.5;
+      final p1 = Offset(
+        center.dx + (tickRadius - tickLength) * math.cos(angle),
+        center.dy + (tickRadius - tickLength) * math.sin(angle),
+      );
+      final p2 = Offset(
+        center.dx + tickRadius * math.cos(angle),
+        center.dy + tickRadius * math.sin(angle),
+      );
+      canvas.drawLine(p1, p2, isCardinal ? majorTickPaint : tickPaint);
+    }
+
+    // 5. Outer Orbit Track & Trails (r1 = size.width * 0.38, moving clockwise)
+    final double r1 = size.width * 0.38;
     final ringPaint1 = Paint()
-      ..color = AppColors.primary.withValues(alpha: 0.15)
+      ..color = AppColors.border.withValues(alpha: 0.35)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
-    canvas.drawCircle(center, size.width * 0.38, ringPaint1);
+    canvas.drawCircle(center, r1, ringPaint1);
 
-    // Ring 2 (Inner)
+    const double trailOuter = math.pi * 0.55; // ~100 degrees trail length
+
+    // 5a. Flutter Arc Trail (Terminating right at Flutter Avatar Head)
+    final flutterArcPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.4
+      ..strokeCap = StrokeCap.round
+      ..shader = SweepGradient(
+        startAngle: 0.0,
+        endAngle: trailOuter,
+        transform: GradientRotation(angleFlutter - trailOuter),
+        colors: [
+          Colors.transparent,
+          const Color(0xFF00C4FF).withValues(alpha: 0.3),
+          const Color(0xFF00C4FF),
+        ],
+        stops: const [0.0, 0.45, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: r1));
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: r1),
+      angleFlutter - trailOuter,
+      trailOuter,
+      false,
+      flutterArcPaint,
+    );
+
+    // Glowing head beacon directly under Flutter Avatar
+    final pFlutterX = center.dx + r1 * math.cos(angleFlutter);
+    final pFlutterY = center.dy + r1 * math.sin(angleFlutter);
+    canvas.drawCircle(
+      Offset(pFlutterX, pFlutterY),
+      8.0 + (pulseValue * 3.0),
+      Paint()
+        ..color = const Color(0xFF00C4FF).withValues(alpha: 0.6)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+    );
+
+    // 5b. Figma Arc Trail (Terminating right at Figma Avatar Head)
+    final figmaArcPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.4
+      ..strokeCap = StrokeCap.round
+      ..shader = SweepGradient(
+        startAngle: 0.0,
+        endAngle: trailOuter,
+        transform: GradientRotation(angleFigma - trailOuter),
+        colors: [
+          Colors.transparent,
+          const Color(0xFFA259FF).withValues(alpha: 0.3),
+          const Color(0xFFF24E1E),
+        ],
+        stops: const [0.0, 0.45, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: r1));
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: r1),
+      angleFigma - trailOuter,
+      trailOuter,
+      false,
+      figmaArcPaint,
+    );
+
+    // Glowing head beacon directly under Figma Avatar
+    final pFigmaX = center.dx + r1 * math.cos(angleFigma);
+    final pFigmaY = center.dy + r1 * math.sin(angleFigma);
+    canvas.drawCircle(
+      Offset(pFigmaX, pFigmaY),
+      8.0 + (pulseValue * 3.0),
+      Paint()
+        ..color = const Color(0xFFF24E1E).withValues(alpha: 0.6)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+    );
+
+    // 6. Inner Orbit Track & Trails (r2 = size.width * 0.27, counter-clockwise)
+    final double r2 = size.width * 0.27;
     final ringPaint2 = Paint()
-      ..color = AppColors.accent.withValues(alpha: 0.2)
+      ..color = AppColors.border.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.2;
-    canvas.drawCircle(center, size.width * 0.28, ringPaint2);
+    canvas.drawCircle(center, r2, ringPaint2);
+
+    const double trailInner = math.pi * 0.48; // ~86 degrees trail length
+
+    // 6a. Dart Arc Trail (Streaming behind Dart Avatar Head)
+    final dartArcPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round
+      ..shader = SweepGradient(
+        startAngle: 0.0,
+        endAngle: trailInner,
+        transform: GradientRotation(angleDart),
+        colors: [
+          const Color(0xFF00C4FF),
+          const Color(0xFF00C4FF).withValues(alpha: 0.3),
+          Colors.transparent,
+        ],
+        stops: const [0.0, 0.55, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: r2));
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: r2),
+      angleDart,
+      trailInner,
+      false,
+      dartArcPaint,
+    );
+
+    // Glowing head beacon directly under Dart Avatar
+    final pDartX = center.dx + r2 * math.cos(angleDart);
+    final pDartY = center.dy + r2 * math.sin(angleDart);
+    canvas.drawCircle(
+      Offset(pDartX, pDartY),
+      7.0 + (pulseValue * 2.5),
+      Paint()
+        ..color = const Color(0xFF00C4FF).withValues(alpha: 0.6)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+    );
+
+    // 6b. FastAPI Arc Trail (Streaming behind FastAPI Avatar Head)
+    final fastApiArcPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round
+      ..shader = SweepGradient(
+        startAngle: 0.0,
+        endAngle: trailInner,
+        transform: GradientRotation(angleFastApi),
+        colors: [
+          const Color(0xFF05D3B4),
+          const Color(0xFF009485).withValues(alpha: 0.3),
+          Colors.transparent,
+        ],
+        stops: const [0.0, 0.55, 1.0],
+      ).createShader(Rect.fromCircle(center: center, radius: r2));
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: r2),
+      angleFastApi,
+      trailInner,
+      false,
+      fastApiArcPaint,
+    );
+
+    // Glowing head beacon directly under FastAPI Avatar
+    final pFastApiX = center.dx + r2 * math.cos(angleFastApi);
+    final pFastApiY = center.dy + r2 * math.sin(angleFastApi);
+    canvas.drawCircle(
+      Offset(pFastApiX, pFastApiY),
+      7.0 + (pulseValue * 2.5),
+      Paint()
+        ..color = const Color(0xFF05D3B4).withValues(alpha: 0.6)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+    );
+
+    // 7. Intermediate Rotating Cyber Dashed Ring (r = size.width * 0.19)
+    final double rCyber = size.width * 0.19;
+    final cyberDashPaint = Paint()
+      ..color = AppColors.accent.withValues(alpha: 0.3 + (pulseValue * 0.2))
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2;
+
+    const int dashCount = 16;
+    final double dashAngle = 2 * math.pi / dashCount;
+    final double dashRot = rotationValue * 2 * math.pi * 0.8;
+    for (int i = 0; i < dashCount; i++) {
+      final double start = dashRot + (i * dashAngle);
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: rCyber),
+        start,
+        dashAngle * 0.45,
+        false,
+        cyberDashPaint,
+      );
+    }
   }
 
   @override
   bool shouldRepaint(covariant _IllustrationHudPainter oldDelegate) {
-    return oldDelegate.rotationValue != rotationValue;
+    return oldDelegate.angleFlutter != angleFlutter ||
+        oldDelegate.rotationValue != rotationValue ||
+        oldDelegate.pulseValue != pulseValue;
   }
 }
 
