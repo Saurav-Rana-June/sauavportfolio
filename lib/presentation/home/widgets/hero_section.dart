@@ -479,6 +479,7 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
     with TickerProviderStateMixin {
   late final AnimationController _rotationController;
   late final AnimationController _pulseController;
+  late final Animation<double> _pulseAnimation;
   HomeController? _homeController;
 
   @override
@@ -486,13 +487,17 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
     super.initState();
     _rotationController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 12),
+      duration: const Duration(seconds: 16),
     );
     _rotationController.repeat();
 
     _pulseController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 2400),
+    );
+    _pulseAnimation = CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOutSine,
     );
     _pulseController.repeat(reverse: true);
 
@@ -560,19 +565,17 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
         children: [
           // 1. HUD Background, Cyber Sweeps & Orbiting Tech Nodes
           AnimatedBuilder(
-            animation: Listenable.merge([
-              _rotationController,
-              _pulseController,
-            ]),
+            animation: Listenable.merge([_rotationController, _pulseAnimation]),
             builder: (context, child) {
               final double rot = _rotationController.value;
-              final double pulse = _pulseController.value;
+              final double pulse = _pulseAnimation.value;
               final double centerCoord = boxSize / 2;
               final double r1 = boxSize * 0.38;
               final double r2 = boxSize * 0.27;
               final double nodeSize = AppScale.isMobile ? 36.0 : 42.0;
 
               // Outer Orbit: Flutter & Figma (clockwise, offset by pi)
+              // Seamless 1 full revolution (2*pi) per cycle
               final double angleFlutter = rot * 2 * math.pi;
               final double nodeFlutterX =
                   centerCoord + r1 * math.cos(angleFlutter) - (nodeSize / 2);
@@ -586,8 +589,8 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
                   centerCoord + r1 * math.sin(angleFigma) - (nodeSize / 2);
 
               // Inner Orbit: Dart & FastAPI (counter-clockwise, offset by pi)
-              final double angleDart =
-                  -(rot * 2 * math.pi * 1.3) + (math.pi / 2);
+              // Seamless 1 full revolution (-2*pi) per cycle without jump
+              final double angleDart = -(rot * 2 * math.pi) + (math.pi / 2);
               final double nodeDartX =
                   centerCoord + r2 * math.cos(angleDart) - (nodeSize / 2);
               final double nodeDartY =
@@ -665,9 +668,9 @@ class _FuturisticIllustrationState extends State<FuturisticIllustration>
 
           // 2. Central Glassmorphic Futuristic Core with Portfolio Logo
           AnimatedBuilder(
-            animation: _pulseController,
+            animation: _pulseAnimation,
             builder: (context, child) {
-              final pulse = _pulseController.value;
+              final pulse = _pulseAnimation.value;
               final scale = 0.96 + (pulse * 0.08);
 
               return Transform.scale(
@@ -1088,7 +1091,8 @@ class _IllustrationHudPainter extends CustomPainter {
 
     const int dashCount = 16;
     final double dashAngle = 2 * math.pi / dashCount;
-    final double dashRot = rotationValue * 2 * math.pi * 0.8;
+    // Exactly 1 full cycle per rotation cycle for seamless looping
+    final double dashRot = rotationValue * 2 * math.pi;
     for (int i = 0; i < dashCount; i++) {
       final double start = dashRot + (i * dashAngle);
       canvas.drawArc(
