@@ -9,6 +9,7 @@ import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/presentation/project_details/controllers/project_details.controller.dart';
 import 'package:saurav_portfolio/widgets/loaders/loading_spinner.dart';
+import 'package:saurav_portfolio/widgets/portfolio/fullscreen_screenshot_viewer.dart';
 import 'package:saurav_portfolio/widgets/portfolio/in_development_badge.dart';
 
 class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
@@ -477,41 +478,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               final screenshot = project.screenshots[index];
               return GestureDetector(
                 onTap: () {
-                  Get.dialog(
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Container(
-                        color: Colors.black.withValues(alpha: 0.92),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            InteractiveViewer(
-                              maxScale: 4.0,
-                              child: Image.asset(
-                                screenshot,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            Positioned(
-                              top: 24,
-                              right: 24,
-                              child: Material(
-                                color: Colors.transparent,
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () => Get.back(),
-                                  iconSize: AppScale.icon(24),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    barrierColor: Colors.black.withValues(alpha: 0.92),
+                  FullScreenScreenshotViewer.show(
+                    context: context,
+                    screenshots: project.screenshots,
+                    initialIndex: index,
                   );
                 },
                 child: Padding(

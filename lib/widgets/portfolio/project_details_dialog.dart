@@ -7,6 +7,7 @@ import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
+import 'package:saurav_portfolio/widgets/portfolio/fullscreen_screenshot_viewer.dart';
 import 'package:saurav_portfolio/widgets/portfolio/in_development_badge.dart';
 
 class ProjectDetailsDialog extends StatelessWidget {
@@ -103,42 +104,10 @@ class ProjectDetailsDialog extends StatelessWidget {
                                         project.screenshots[index];
                                     return GestureDetector(
                                       onTap: () {
-                                        Get.dialog(
-                                          GestureDetector(
-                                            onTap: () => Get.back(),
-                                            child: Container(
-                                              color: Colors.black.withValues(
-                                                alpha: 0.85,
-                                              ),
-                                              child: Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  InteractiveViewer(
-                                                    child: Image.asset(
-                                                      screenshot,
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    top: 24,
-                                                    right: 24,
-                                                    child: Material(
-                                                      color: Colors.transparent,
-                                                      child: IconButton(
-                                                        icon: const Icon(
-                                                          Icons.close,
-                                                          color: Colors.white,
-                                                        ),
-                                                        onPressed: () =>
-                                                            Get.back(),
-                                                        iconSize: 30,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
+                                        FullScreenScreenshotViewer.show(
+                                          context: context,
+                                          screenshots: project.screenshots,
+                                          initialIndex: index,
                                         );
                                       },
                                       child: Padding(
