@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
@@ -104,11 +105,17 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(
-                  project.bannerAsset!,
-                  fit: BoxFit.cover,
-                  opacity: const AlwaysStoppedAnimation(0.35),
-                ),
+                if (project.bannerAsset!.endsWith('.svg'))
+                  SvgPicture.asset(
+                    project.bannerAsset!,
+                    fit: BoxFit.cover,
+                  )
+                else
+                  Image.asset(
+                    project.bannerAsset!,
+                    fit: BoxFit.cover,
+                    opacity: const AlwaysStoppedAnimation(0.35),
+                  ),
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -389,7 +396,15 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(9),
             child: project.imageUrl != null
-                ? Image.asset(project.imageUrl!, fit: BoxFit.cover)
+                ? (project.imageUrl!.endsWith('.svg')
+                    ? Padding(
+                        padding: EdgeInsets.all(AppScale.w(6)),
+                        child: SvgPicture.asset(
+                          project.imageUrl!,
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : Image.asset(project.imageUrl!, fit: BoxFit.cover))
                 : Icon(
                     AppIcons.folder,
                     color: themeColor,

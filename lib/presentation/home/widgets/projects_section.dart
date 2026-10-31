@@ -85,8 +85,16 @@ class _ProjectsSectionState extends State<ProjectsSection>
                         index: 0,
                         child: ProjectCard(
                           project: widget.projects.first,
-                          onTap: () =>
-                              controller.openProject(widget.projects.first),
+                          onTap: () {
+                            if (widget.projects.first.scrollToTopOnClick ||
+                                widget.projects.first.title.toLowerCase() ==
+                                    'my portfolio' ||
+                                widget.projects.first.id == '5') {
+                              controller.scrollToTop();
+                            } else {
+                              controller.openProject(widget.projects.first);
+                            }
+                          },
                         ),
                       ),
                     ),
@@ -112,7 +120,15 @@ class _ProjectsSectionState extends State<ProjectsSection>
                       index: index,
                       child: ProjectCard(
                         project: project,
-                        onTap: () => controller.openProject(project),
+                        onTap: () {
+                          if (project.scrollToTopOnClick ||
+                              project.title.toLowerCase() == 'my portfolio' ||
+                              project.id == '5') {
+                            controller.scrollToTop();
+                          } else {
+                            controller.openProject(project);
+                          }
+                        },
                       ),
                     );
                   },

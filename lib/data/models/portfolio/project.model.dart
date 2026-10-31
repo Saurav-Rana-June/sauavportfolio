@@ -19,6 +19,7 @@ class ProjectModel {
   final String? appStoreUrl;
   final bool showCode;
   final bool isInDevelopment;
+  final bool scrollToTopOnClick;
 
   ProjectModel({
     required this.id,
@@ -36,6 +37,7 @@ class ProjectModel {
     this.appStoreUrl,
     this.showCode = true,
     this.isInDevelopment = false,
+    this.scrollToTopOnClick = false,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) =>
@@ -58,6 +60,7 @@ class ProjectModel {
     String? appStoreUrl,
     bool? showCode,
     bool? isInDevelopment,
+    bool? scrollToTopOnClick,
   }) {
     return ProjectModel(
       id: id,
@@ -75,6 +78,7 @@ class ProjectModel {
       appStoreUrl: appStoreUrl ?? this.appStoreUrl,
       showCode: showCode ?? this.showCode,
       isInDevelopment: isInDevelopment ?? this.isInDevelopment,
+      scrollToTopOnClick: scrollToTopOnClick ?? this.scrollToTopOnClick,
     );
   }
 }

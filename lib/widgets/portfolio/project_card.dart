@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
@@ -169,10 +171,20 @@ class _ProjectCardState extends State<ProjectCard>
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(9),
                                     child: project.imageUrl != null
-                                        ? Image.asset(
-                                            project.imageUrl!,
-                                            fit: BoxFit.cover,
-                                          )
+                                        ? (project.imageUrl!.endsWith('.svg')
+                                            ? Padding(
+                                                padding: EdgeInsets.all(
+                                                  AppScale.w(6),
+                                                ),
+                                                child: SvgPicture.asset(
+                                                  project.imageUrl!,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )
+                                            : Image.asset(
+                                                project.imageUrl!,
+                                                fit: BoxFit.cover,
+                                              ))
                                         : Stack(
                                             alignment: Alignment.center,
                                             children: [
@@ -261,6 +273,14 @@ class _ProjectCardState extends State<ProjectCard>
                                         icon: AppIcons.arrowExternal,
                                         onTap: () => homeController
                                             .openExternalLink(project.liveUrl),
+                                        accentColor: themeColor,
+                                      ),
+                                    if (project.scrollToTopOnClick)
+                                      _ActionIconButton(
+                                        icon: AppIcons.solid(
+                                          FontAwesomeIcons.arrowUp,
+                                        ),
+                                        onTap: widget.onTap,
                                         accentColor: themeColor,
                                       ),
                                   ],

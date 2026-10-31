@@ -30,6 +30,7 @@ ProjectModel _$ProjectModelFromJson(Map<String, dynamic> json) => ProjectModel(
   appStoreUrl: json['appStoreUrl'] as String?,
   showCode: json['showCode'] as bool? ?? true,
   isInDevelopment: json['isInDevelopment'] as bool? ?? false,
+  scrollToTopOnClick: json['scrollToTopOnClick'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
@@ -49,4 +50,5 @@ Map<String, dynamic> _$ProjectModelToJson(ProjectModel instance) =>
       'appStoreUrl': instance.appStoreUrl,
       'showCode': instance.showCode,
       'isInDevelopment': instance.isInDevelopment,
+      'scrollToTopOnClick': instance.scrollToTopOnClick,
     };

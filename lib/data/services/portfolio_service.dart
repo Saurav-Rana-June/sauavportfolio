@@ -104,7 +104,8 @@ class PortfolioService {
 
       if (data is Map) {
         final successVal = data['success'];
-        final isSuccess = successVal == true ||
+        final isSuccess =
+            successVal == true ||
             successVal == 'true' ||
             successVal == 1 ||
             successVal == '1';
@@ -116,7 +117,8 @@ class PortfolioService {
             message: msg.isNotEmpty ? msg : 'Message sent successfully!',
           );
         } else {
-          final isActivation = msg.toLowerCase().contains('activation') ||
+          final isActivation =
+              msg.toLowerCase().contains('activation') ||
               msg.toLowerCase().contains('activate');
           return ContactSubmissionResult(
             isSuccess: false,
@@ -145,10 +147,7 @@ class PortfolioService {
       } else if (dioError.message != null && dioError.message!.isNotEmpty) {
         errorMsg = dioError.message!;
       }
-      return ContactSubmissionResult(
-        isSuccess: false,
-        message: errorMsg,
-      );
+      return ContactSubmissionResult(isSuccess: false, message: errorMsg);
     } catch (e) {
       return ContactSubmissionResult(
         isSuccess: false,
@@ -357,6 +356,37 @@ class PortfolioService {
         'Safe, Secure & Built for You: Secure auth, optimized ImageKit rendering, and full user control over account and data privacy.',
       ],
     ),
+    ProjectModel(
+      id: '5',
+      title: 'My Portfolio',
+      description:
+          'A modern, high-performance personal portfolio website built with Flutter Web and Clean Architecture. '
+          'Features responsive design across mobile, tablet, and desktop, smooth animations, interactive UI components, '
+          'dark futuristic theme, and direct contact integration.',
+      techStack: 'Flutter Web, Dart, GetX, Clean Architecture, Responsive UI',
+      tags: const [
+        'Flutter Web',
+        'Dart',
+        'GetX',
+        'Clean Architecture',
+        'Responsive UI',
+      ],
+      imageUrl: 'assets/images/logo.svg',
+      liveUrl: '#',
+      githubUrl: 'https://github.com/Saurav-Rana-June/sauavportfolio.git',
+      showCode: true,
+      bannerAsset: 'assets/images/logo.svg',
+      playStoreUrl: '#',
+      appStoreUrl: '#',
+      isInDevelopment: false,
+      scrollToTopOnClick: true,
+      features: const [
+        '⚡ Responsive & Adaptive Design: Pixel-perfect, fluid layouts optimized for Desktop, Tablet, and Mobile devices.',
+        '🎨 Modern Dark Glassmorphism UI: Custom cyberpunk/futuristic aesthetic with animated glowing border flows and micro-interactions.',
+        '🏗️ Clean Architecture & Modular State Management: Well-structured separation using GetX controllers, bindings, and services.',
+        '📬 Direct Contact Integration: FormSubmit API integration with instant feedback and active status alerts.',
+      ],
+    ),
   ];
 
   static Future<List<ExperienceModel>> fetchExperiences() async {
@@ -381,7 +411,7 @@ class PortfolioService {
       id: '2',
       role: 'Junior Flutter Developer',
       company: 'Qwetzal Technologies Pvt. Ltd.',
-      period: 'Nov 2024 — Mar 2025',
+      period: 'Mar 2024 — Mar 2025',
       location: 'Raipur, Uttarakhand, India',
       description:
           'Worked as a Junior Flutter Developer on Travel & Hospitality products. '
@@ -395,36 +425,6 @@ class PortfolioService {
         'Git',
         'Agile',
       ],
-    ),
-    ExperienceModel(
-      id: '3',
-      role: 'Flutter Intern',
-      company: 'Qwetzal Technologies Pvt. Ltd.',
-      period: 'Aug 2024 — Nov 2024',
-      location: 'Dehradun, Uttarakhand, India',
-      description:
-          'Completed a 3-month Flutter internship, originally planned for 6 months. '
-          'Focused on training in state management, cross-device compatibility, and code modularization.',
-      isRemote: false,
-      skills: const [
-        'Flutter',
-        'Dart',
-        'Clean Architecture',
-        'API Integration',
-        'UI/UX',
-      ],
-    ),
-    ExperienceModel(
-      id: '4',
-      role: 'Flutter Trainee',
-      company: 'Qwetzal Technologies Pvt. Ltd.',
-      period: 'Jun 2024 — Aug 2024',
-      location: 'Raipur, Uttarakhand, India',
-      description:
-          'Gained hands-on experience developing Flutter applications using Dart. '
-          'Mastered basic widgets, routing, and collaborated with senior developers.',
-      isRemote: false,
-      skills: const ['Flutter', 'Teamwork', 'Dart', 'Git', 'OOP'],
     ),
   ];
 }

@@ -118,6 +118,12 @@ class HomeController extends GetxController {
   }
 
   Future<void> openProject(ProjectModel project) async {
+    if (project.scrollToTopOnClick ||
+        project.title.toLowerCase() == 'my portfolio' ||
+        project.id == '5') {
+      scrollToTop();
+      return;
+    }
     Get.toNamed('/project/${project.id}', arguments: project);
   }
 
