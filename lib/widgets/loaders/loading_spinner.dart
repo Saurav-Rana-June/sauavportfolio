@@ -94,7 +94,9 @@ class _LoadingSpinnerState extends State<LoadingSpinner>
                           height: logoSize,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.surfaceDark.withValues(alpha: 0.82),
+                            color: AppColors.surfaceDark.withValues(
+                              alpha: 0.82,
+                            ),
                             border: Border.all(
                               color: Color.lerp(
                                 AppColors.primary,
@@ -134,7 +136,7 @@ class _LoadingSpinnerState extends State<LoadingSpinner>
                 if (!isCompact && widget.showText) ...[
                   SizedBox(height: AppScale.h(22)),
                   _FuturisticStatusText(
-                    text: widget.text ?? 'INITIALIZING SYSTEM',
+                    text: widget.text ?? 'INITIALIZING PORTFOLIO',
                     pulse: pulse,
                     progress: value,
                   ),

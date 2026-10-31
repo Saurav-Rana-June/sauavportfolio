@@ -168,7 +168,7 @@ class _HeroSectionState extends State<HeroSection>
             const PulsingStatusDot(color: AppColors.success),
             AppScale.w(6).gapW,
             Text(
-              'AVAILABLE FOR OPPORTUNITIES',
+              'AVAILABLE ',
               style: AppTextStyles.mono12.copyWith(
                 color: AppColors.success,
                 fontSize: AppScale.font(10),
