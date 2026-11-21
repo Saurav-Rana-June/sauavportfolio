@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
 import 'package:saurav_portfolio/infrastructure/theme/colors.dart';
+import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/presentation/home/widgets/about_section.dart';
 import 'package:saurav_portfolio/presentation/home/widgets/contact_section.dart';
@@ -85,8 +86,12 @@ class _HomeScreenState extends State<HomeScreen>
   void _startHeroFlight() {
     if (!mounted || _isFlightRunning || _flightCompleted) return;
 
-    final startBox = controller.spinnerCentralLogoKey.currentContext?.findRenderObject() as RenderBox?;
-    final targetBox = controller.heroCentralLogoKey.currentContext?.findRenderObject() as RenderBox?;
+    final startBox =
+        controller.spinnerCentralLogoKey.currentContext?.findRenderObject()
+            as RenderBox?;
+    final targetBox =
+        controller.heroCentralLogoKey.currentContext?.findRenderObject()
+            as RenderBox?;
     final screenSize = MediaQuery.sizeOf(context);
 
     final Rect start;
@@ -127,7 +132,9 @@ class _HomeScreenState extends State<HomeScreen>
       // Retry once on next frame in case layout is still settling
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted || _flightCompleted) return;
-        final retryTargetBox = controller.heroCentralLogoKey.currentContext?.findRenderObject() as RenderBox?;
+        final retryTargetBox =
+            controller.heroCentralLogoKey.currentContext?.findRenderObject()
+                as RenderBox?;
         if (retryTargetBox != null && retryTargetBox.hasSize) {
           _startHeroFlight();
         } else {
@@ -229,10 +236,7 @@ class _HeroFloatingLogoPod extends StatelessWidget {
   final double size;
   final double progress;
 
-  const _HeroFloatingLogoPod({
-    required this.size,
-    required this.progress,
-  });
+  const _HeroFloatingLogoPod({required this.size, required this.progress});
 
   @override
   Widget build(BuildContext context) {
@@ -262,9 +266,7 @@ class _HeroFloatingLogoPod extends StatelessWidget {
               spreadRadius: 1 + (progress * 1.5),
             ),
             BoxShadow(
-              color: AppColors.accent.withValues(
-                alpha: 0.2 + (progress * 0.1),
-              ),
+              color: AppColors.accent.withValues(alpha: 0.2 + (progress * 0.1)),
               blurRadius: 28,
               spreadRadius: 1,
             ),
@@ -347,6 +349,7 @@ class HomeContent extends GetView<HomeController> {
             SliverToBoxAdapter(
               child: SizedBox(height: AppScale.sectionPaddingVertical()),
             ),
+            const SliverToBoxAdapter(child: PortfolioFooter()),
           ],
         ),
         Positioned(
@@ -506,5 +509,77 @@ class _ScrollRevealState extends State<ScrollReveal>
     }
 
     return Opacity(opacity: 0.0, child: widget.child);
+  }
+}
+
+/// Minimalist futuristic footer displayed at the very bottom of the portfolio.
+class PortfolioFooter extends StatelessWidget {
+  const PortfolioFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: AppScale.pagePaddingHorizontal(),
+        vertical: AppScale.h(28),
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDark.withValues(alpha: 0.35),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.border.withValues(alpha: 0.6),
+            width: 1.0,
+          ),
+        ),
+      ),
+      child: Center(
+        child: Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 6,
+          runSpacing: 4,
+          children: [
+            Text(
+              'Designed & Crafted with Passion by',
+              style: AppTextStyles.r14.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: AppScale.font(13),
+              ),
+            ),
+            Text(
+              'Saurav Rana',
+              style: AppTextStyles.r14.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w600,
+                fontSize: AppScale.font(13),
+              ),
+            ),
+            Text(
+              '• Powered by',
+              style: AppTextStyles.r14.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: AppScale.font(13),
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const FlutterLogo(size: 14),
+                const SizedBox(width: 5),
+                Text(
+                  'Flutter',
+                  style: AppTextStyles.r14.copyWith(
+                    color: AppColors.accent,
+                    fontWeight: FontWeight.w600,
+                    fontSize: AppScale.font(13),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
