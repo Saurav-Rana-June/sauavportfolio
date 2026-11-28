@@ -129,8 +129,7 @@ class _ProjectCardState extends State<ProjectCard>
                       ),
                       if (hoverVal > 0)
                         BoxShadow(
-                          color:
-                              themeColor.withValues(alpha: hoverVal * 0.12),
+                          color: themeColor.withValues(alpha: hoverVal * 0.12),
                           blurRadius: 22,
                           offset: const Offset(0, 6),
                         ),
@@ -164,13 +163,17 @@ class _ProjectCardState extends State<ProjectCard>
                                             width: double.infinity,
                                             errorBuilder: (_, __, ___) =>
                                                 _buildFallbackBanner(
-                                                    themeColor),
+                                                  themeColor,
+                                                ),
                                           )
                                         : (isSvgBanner
-                                            ? _buildSvgOrCustomBanner(
-                                                project, themeColor)
-                                            : _buildFallbackBanner(
-                                                themeColor)),
+                                              ? _buildSvgOrCustomBanner(
+                                                  project,
+                                                  themeColor,
+                                                )
+                                              : _buildFallbackBanner(
+                                                  themeColor,
+                                                )),
                                   ),
                                 ),
 
@@ -184,8 +187,9 @@ class _ProjectCardState extends State<ProjectCard>
                                         colors: [
                                           Colors.black.withValues(alpha: 0.25),
                                           Colors.transparent,
-                                          AppColors.cardDark
-                                              .withValues(alpha: 0.85),
+                                          AppColors.cardDark.withValues(
+                                            alpha: 0.85,
+                                          ),
                                           AppColors.cardDark,
                                         ],
                                         stops: const [0.0, 0.4, 0.85, 1.0],
@@ -198,8 +202,7 @@ class _ProjectCardState extends State<ProjectCard>
                                 Positioned(
                                   top: 12,
                                   left: 12,
-                                  child:
-                                      _buildStatusBadge(project, isPubDev),
+                                  child: _buildStatusBadge(project, isPubDev),
                                 ),
 
                                 // Action Buttons (Top-Right)
@@ -212,13 +215,14 @@ class _ProjectCardState extends State<ProjectCard>
                                       vertical: 4,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppColors.scaffoldDark
-                                          .withValues(alpha: 0.75),
-                                      borderRadius:
-                                          BorderRadius.circular(20),
+                                      color: AppColors.scaffoldDark.withValues(
+                                        alpha: 0.75,
+                                      ),
+                                      borderRadius: BorderRadius.circular(20),
                                       border: Border.all(
-                                        color: Colors.white
-                                            .withValues(alpha: 0.12),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.12,
+                                        ),
                                       ),
                                     ),
                                     child: Row(
@@ -229,9 +233,10 @@ class _ProjectCardState extends State<ProjectCard>
                                             icon: isPlayStoreLink
                                                 ? AppIcons.googlePlay
                                                 : AppIcons.android,
-                                            onTap: () => homeController
-                                                .openExternalLink(
-                                                    project.playStoreUrl),
+                                            onTap: () =>
+                                                homeController.openExternalLink(
+                                                  project.playStoreUrl,
+                                                ),
                                             accentColor: themeColor,
                                             tooltip: 'Get on Play Store',
                                           ),
@@ -242,9 +247,10 @@ class _ProjectCardState extends State<ProjectCard>
                                             icon: isAppStoreLink
                                                 ? AppIcons.ios
                                                 : AppIcons.apple,
-                                            onTap: () => homeController
-                                                .openExternalLink(
-                                                    project.appStoreUrl),
+                                            onTap: () =>
+                                                homeController.openExternalLink(
+                                                  project.appStoreUrl,
+                                                ),
                                             accentColor: themeColor,
                                             tooltip: 'Get on App Store',
                                           ),
@@ -253,9 +259,10 @@ class _ProjectCardState extends State<ProjectCard>
                                         if (isPubDev) ...[
                                           _ActionIconButton(
                                             icon: AppIcons.download,
-                                            onTap: () => homeController
-                                                .openExternalLink(
-                                                    project.liveUrl),
+                                            onTap: () =>
+                                                homeController.openExternalLink(
+                                                  project.liveUrl,
+                                                ),
                                             accentColor: themeColor,
                                             tooltip: 'View on Pub.dev',
                                           ),
@@ -266,12 +273,12 @@ class _ProjectCardState extends State<ProjectCard>
                                             project.githubUrl != '#') ...[
                                           _ActionIconButton(
                                             icon: AppIcons.github,
-                                            onTap: () => homeController
-                                                .openExternalLink(
-                                                    project.githubUrl),
+                                            onTap: () =>
+                                                homeController.openExternalLink(
+                                                  project.githubUrl,
+                                                ),
                                             accentColor: themeColor,
-                                            tooltip:
-                                                'View GitHub Repository',
+                                            tooltip: 'View GitHub Repository',
                                           ),
                                           const SizedBox(width: 4),
                                         ],
@@ -280,9 +287,10 @@ class _ProjectCardState extends State<ProjectCard>
                                             !isPubDev)
                                           _ActionIconButton(
                                             icon: AppIcons.arrowExternal,
-                                            onTap: () => homeController
-                                                .openExternalLink(
-                                                    project.liveUrl),
+                                            onTap: () =>
+                                                homeController.openExternalLink(
+                                                  project.liveUrl,
+                                                ),
                                             accentColor: themeColor,
                                             tooltip: 'Launch Demo',
                                           ),
@@ -344,8 +352,9 @@ class _ProjectCardState extends State<ProjectCard>
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: AppTextStyles.r14.copyWith(
-                                    color: AppColors.textSecondary
-                                        .withValues(alpha: 0.9),
+                                    color: AppColors.textSecondary.withValues(
+                                      alpha: 0.9,
+                                    ),
                                     height: 1.45,
                                     fontSize: AppScale.font(13),
                                   ),
@@ -364,20 +373,22 @@ class _ProjectCardState extends State<ProjectCard>
                                           vertical: 3,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: themeColor
-                                              .withValues(alpha: 0.08),
-                                          borderRadius:
-                                              BorderRadius.circular(5),
+                                          color: themeColor.withValues(
+                                            alpha: 0.08,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
                                           border: Border.all(
-                                            color: themeColor
-                                                .withValues(alpha: 0.2),
+                                            color: themeColor.withValues(
+                                              alpha: 0.2,
+                                            ),
                                             width: 0.8,
                                           ),
                                         ),
                                         child: Text(
                                           tag,
-                                          style: AppTextStyles.mono12
-                                              .copyWith(
+                                          style: AppTextStyles.mono12.copyWith(
                                             color: themeColor,
                                             fontSize: AppScale.font(9.5),
                                             fontWeight: FontWeight.w600,
@@ -413,9 +424,7 @@ class _ProjectCardState extends State<ProjectCard>
         decoration: BoxDecoration(
           color: AppColors.scaffoldDark.withValues(alpha: 0.85),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppColors.accent.withValues(alpha: 0.5),
-          ),
+          border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -500,9 +509,7 @@ class _ProjectCardState extends State<ProjectCard>
       decoration: BoxDecoration(
         color: AppColors.surfaceDark,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: themeColor.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: themeColor.withValues(alpha: 0.3)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(7),
@@ -515,25 +522,22 @@ class _ProjectCardState extends State<ProjectCard>
                 ),
               )
             : (project.imageUrl != null
-                ? (project.imageUrl!.endsWith('.svg')
-                    ? Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: SvgPicture.asset(
-                          project.imageUrl!,
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    : Image.asset(
-                        project.imageUrl!,
-                        fit: BoxFit.cover,
-                      ))
-                : Center(
-                    child: AppFaIcon(
-                      AppIcons.folder,
-                      color: themeColor,
-                      size: 14,
-                    ),
-                  )),
+                  ? (project.imageUrl!.endsWith('.svg')
+                        ? Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: SvgPicture.asset(
+                              project.imageUrl!,
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                        : Image.asset(project.imageUrl!, fit: BoxFit.cover))
+                  : Center(
+                      child: AppFaIcon(
+                        AppIcons.folder,
+                        color: themeColor,
+                        size: 14,
+                      ),
+                    )),
       ),
     );
   }
@@ -604,8 +608,10 @@ class _ProjectCardState extends State<ProjectCard>
                 ),
                 const SizedBox(height: 3),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: themeColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
@@ -663,10 +669,7 @@ class _ProjectCardState extends State<ProjectCard>
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            AppColors.surfaceDark,
-            themeColor.withValues(alpha: 0.1),
-          ],
+          colors: [AppColors.surfaceDark, themeColor.withValues(alpha: 0.1)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
