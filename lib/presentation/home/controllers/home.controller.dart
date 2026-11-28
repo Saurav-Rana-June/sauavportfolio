@@ -121,6 +121,11 @@ class HomeController extends GetxController {
   }
 
   Future<void> openProject(ProjectModel project) async {
+    if (project.id == '6' ||
+        (project.liveUrl != null && project.liveUrl!.contains('pub.dev'))) {
+      openExternalLink(project.liveUrl);
+      return;
+    }
     if (project.scrollToTopOnClick ||
         project.title.toLowerCase() == 'my portfolio' ||
         project.id == '5') {

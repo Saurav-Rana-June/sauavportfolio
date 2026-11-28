@@ -8,7 +8,17 @@ import 'package:saurav_portfolio/infrastructure/theme/text_styles.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/widgets/portfolio/project_card.dart';
 
-/// Renders a responsive grid of portfolio project cards.
+enum ProjectCategoryFilter {
+  all('All'),
+  mobile('Mobile Apps'),
+  packages('Packages & Tools'),
+  web('Web & Platforms');
+
+  final String label;
+  const ProjectCategoryFilter(this.label);
+}
+
+/// Renders a responsive grid of portfolio project cards with filter tabs.
 /// Cache-optimized with AutomaticKeepAliveClientMixin.
 class ProjectsSection extends StatefulWidget {
   final List<ProjectModel> projects;
@@ -21,8 +31,50 @@ class ProjectsSection extends StatefulWidget {
 
 class _ProjectsSectionState extends State<ProjectsSection>
     with AutomaticKeepAliveClientMixin {
+  ProjectCategoryFilter _selectedFilter = ProjectCategoryFilter.all;
+
   @override
   bool get wantKeepAlive => true;
+
+  bool _matchesFilter(ProjectModel project, ProjectCategoryFilter filter) {
+    switch (filter) {
+      case ProjectCategoryFilter.all:
+        return true;
+      case ProjectCategoryFilter.mobile:
+        return project.id == '1' ||
+            project.id == '2' ||
+            project.id == '4' ||
+            project.tags.any((t) =>
+                t.toLowerCase().contains('mobile') ||
+                t.toLowerCase().contains('android') ||
+                t.toLowerCase().contains('ios') ||
+                t.toLowerCase().contains('playstore') ||
+                t.toLowerCase().contains('appstore'));
+      case ProjectCategoryFilter.packages:
+        return project.id == '6' ||
+            (project.liveUrl != null && project.liveUrl!.contains('pub.dev')) ||
+            project.tags.any((t) =>
+                t.toLowerCase().contains('package') ||
+                t.toLowerCase().contains('sdk') ||
+                t.toLowerCase().contains('toolkit') ||
+                t.toLowerCase().contains('open source') ||
+                t.toLowerCase().contains('library') ||
+                t.toLowerCase().contains('pub.dev'));
+      case ProjectCategoryFilter.web:
+        return project.id == '3' ||
+            project.id == '5' ||
+            project.tags.any((t) =>
+                t.toLowerCase().contains('web') ||
+                t.toLowerCase().contains('portal') ||
+                t.toLowerCase().contains('portfolio') ||
+                t.toLowerCase().contains('admin') ||
+                t.toLowerCase().contains('cms'));
+    }
+  }
+
+  int _countForFilter(ProjectCategoryFilter filter) {
+    return widget.projects.where((p) => _matchesFilter(p, filter)).length;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +83,12 @@ class _ProjectsSectionState extends State<ProjectsSection>
     final crossAxisCount = AppScale.isDesktop
         ? 3
         : AppScale.isTablet
-        ? 2
-        : 1;
+            ? 2
+            : 1;
+
+    final filteredProjects = widget.projects
+        .where((p) => _matchesFilter(p, _selectedFilter))
+        .toList();
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -64,14 +120,124 @@ class _ProjectsSectionState extends State<ProjectsSection>
               ),
               Spacing.s8.gapH,
               Text(
-                'A collection of mobile applications and tools I\'ve built',
+                'A collection of production mobile apps, open-source packages, and platforms I\'ve built',
+                textAlign: TextAlign.center,
                 style: AppTextStyles.r14.copyWith(
                   color: AppColors.textSecondary,
                   fontSize: AppScale.font(14),
                 ),
               ),
-              AppScale.h(48).gapH,
-              if (widget.projects.length == 1)
+              AppScale.h(28).gapH,
+
+              // Filter Category Tabs
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 10,
+                children: ProjectCategoryFilter.values.map((filter) {
+                  final isSelected = _selectedFilter == filter;
+                  final count = _countForFilter(filter);
+
+                  return Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        if (_selectedFilter != filter) {
+                          setState(() => _selectedFilter = filter);
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(24),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 220),
+                        curve: Curves.easeOutCubic,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.accent.withValues(alpha: 0.14)
+                              : AppColors.surfaceDark.withValues(alpha: 0.45),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.accent.withValues(alpha: 0.7)
+                                : AppColors.border.withValues(alpha: 0.45),
+                            width: isSelected ? 1.5 : 1.0,
+                          ),
+                          boxShadow: isSelected
+                              ? [
+                                  BoxShadow(
+                                    color: AppColors.accent
+                                        .withValues(alpha: 0.2),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              filter.label,
+                              style: AppTextStyles.mono12.copyWith(
+                                color: isSelected
+                                    ? AppColors.accent
+                                    : AppColors.textSecondary,
+                                fontWeight: isSelected
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                fontSize: AppScale.font(12),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppColors.accent.withValues(alpha: 0.25)
+                                    : Colors.white.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '$count',
+                                style: AppTextStyles.mono12.copyWith(
+                                  color: isSelected
+                                      ? AppColors.accent
+                                      : AppColors.textSecondary
+                                          .withValues(alpha: 0.7),
+                                  fontSize: AppScale.font(10),
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              AppScale.h(32).gapH,
+
+              if (filteredProjects.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 48),
+                  child: Center(
+                    child: Text(
+                      'No projects found in this category.',
+                      style: AppTextStyles.r14.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ),
+                )
+              else if (filteredProjects.length == 1)
                 Center(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
@@ -79,20 +245,25 @@ class _ProjectsSectionState extends State<ProjectsSection>
                     ),
                     child: AspectRatio(
                       aspectRatio: AppScale.isMobile
-                          ? 1.5
-                          : (AppScale.isTablet ? 1.3 : 1.1),
+                          ? 0.94
+                          : (AppScale.isTablet ? 0.95 : 0.96),
                       child: _AnimatedProjectCard(
+                        key: ValueKey(filteredProjects.first.id),
                         index: 0,
                         child: ProjectCard(
-                          project: widget.projects.first,
+                          project: filteredProjects.first,
                           onTap: () {
-                            if (widget.projects.first.scrollToTopOnClick ||
-                                widget.projects.first.title.toLowerCase() ==
-                                    'my portfolio' ||
-                                widget.projects.first.id == '5') {
+                            final p = filteredProjects.first;
+                            if (p.id == '6' ||
+                                (p.liveUrl != null &&
+                                    p.liveUrl!.contains('pub.dev'))) {
+                              controller.openExternalLink(p.liveUrl);
+                            } else if (p.scrollToTopOnClick ||
+                                p.title.toLowerCase() == 'my portfolio' ||
+                                p.id == '5') {
                               controller.scrollToTop();
                             } else {
-                              controller.openProject(widget.projects.first);
+                              controller.openProject(p);
                             }
                           },
                         ),
@@ -102,6 +273,7 @@ class _ProjectsSectionState extends State<ProjectsSection>
                 )
               else
                 GridView.builder(
+                  key: ValueKey(_selectedFilter),
                   padding: EdgeInsets.zero,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -110,18 +282,23 @@ class _ProjectsSectionState extends State<ProjectsSection>
                     crossAxisSpacing: AppScale.w(16),
                     mainAxisSpacing: AppScale.h(16),
                     childAspectRatio: AppScale.isMobile
-                        ? 1.5
-                        : (AppScale.isTablet ? 1.3 : 1.1),
+                        ? 0.94
+                        : (AppScale.isTablet ? 0.95 : 0.96),
                   ),
-                  itemCount: widget.projects.length,
+                  itemCount: filteredProjects.length,
                   itemBuilder: (context, index) {
-                    final project = widget.projects[index];
+                    final project = filteredProjects[index];
                     return _AnimatedProjectCard(
+                      key: ValueKey(project.id),
                       index: index,
                       child: ProjectCard(
                         project: project,
                         onTap: () {
-                          if (project.scrollToTopOnClick ||
+                          if (project.id == '6' ||
+                              (project.liveUrl != null &&
+                                  project.liveUrl!.contains('pub.dev'))) {
+                            controller.openExternalLink(project.liveUrl);
+                          } else if (project.scrollToTopOnClick ||
                               project.title.toLowerCase() == 'my portfolio' ||
                               project.id == '5') {
                             controller.scrollToTop();
@@ -145,13 +322,13 @@ class _AnimatedProjectCard extends StatelessWidget {
   final Widget child;
   final int index;
 
-  const _AnimatedProjectCard({required this.child, required this.index});
+  const _AnimatedProjectCard({super.key, required this.child, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 600 + (index * 150)),
+      duration: Duration(milliseconds: 500 + (index * 100)),
       curve: Curves.easeOutBack,
       builder: (context, value, child) {
         final double scale = 0.95 + (value * 0.05);
@@ -159,7 +336,7 @@ class _AnimatedProjectCard extends StatelessWidget {
         final translatedChild = Transform.scale(
           scale: scale,
           child: Transform.translate(
-            offset: Offset(0, 40 * (1.0 - opacity)),
+            offset: Offset(0, 30 * (1.0 - opacity)),
             child: child,
           ),
         );

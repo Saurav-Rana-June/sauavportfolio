@@ -357,6 +357,43 @@ class PortfolioService {
       ],
     ),
     ProjectModel(
+      id: '6',
+      title: 'ScenarioKit Flutter',
+      description:
+          'ScenarioKit Flutter (v0.2.5) is an open-source, debug-only developer toolkit for Flutter that unifies UI state previews and in-app functional testing. '
+          'Preview any UI state (loading, empty, error, offline) from a draggable floating overlay panel on your live app, execute declarative tap/type/assert test steps in-app, '
+          'capture screenshots, and export standalone JSON/HTML reports. Run identical test suites in CI using ScenarioTestHarness with zero mandatory dependencies.',
+      techStack:
+          'Flutter SDK, Dart, Pub.dev Package, In-App Overlay, Declarative Testing, CI/CD Test Harness, JSON/HTML Reports',
+      tags: const [
+        'Flutter',
+        'Dart',
+        'Pub.dev',
+        'Open Source',
+        'Widget Testing',
+        'DevTools',
+        'CI/CD',
+      ],
+      imageUrl: 'assets/images/logo.svg',
+      liveUrl: 'https://pub.dev/packages/scenario_kit_flutter',
+      githubUrl: '#',
+      showCode: false,
+      bannerAsset: 'assets/images/logo.svg',
+      playStoreUrl: '#',
+      appStoreUrl: '#',
+      isInDevelopment: false,
+      scrollToTopOnClick: false,
+      features: const [
+        '🎛️ UI State Scenarios: Register UI states once; switch seamlessly from a draggable floating panel with instant search, grouping, and live preview.',
+        '📱 Live Overlay on Production App: Inspect and interact with production screens while flipping states using state adapters for Bloc, Riverpod, and clean state architectures.',
+        '🧪 In-App Interactive Test Mode: Declarative tap, type, and assert steps running directly on the live UI with Run Selected and Run All controls.',
+        '📊 Standalone HTML & JSON Reports: Generates step execution traces, visual screenshot diffs, and exportable reports to share with QA and product teams.',
+        '⚡ Exact Same Tests in CI: Import testing.dart to run identical test suites with ScenarioTestHarness inside standard flutter test in CI pipelines.',
+        '📦 Pure Flutter SDK Architecture: Built with zero mandatory third-party dependencies; fully debug-only (kDebugMode default) for zero release footprint.',
+        '🚀 Complete Pub.dev Lifecycle: Engineered with strict semver discipline, multi-runtime API design (scenario_kit_flutter vs testing.dart), and production package layout.',
+      ],
+    ),
+    ProjectModel(
       id: '5',
       title: 'My Portfolio',
       description:

@@ -224,6 +224,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
         project.appStoreUrl != null && project.appStoreUrl != '#';
     final showGithub = project.githubUrl != null && project.githubUrl != '#';
     final showLive = project.liveUrl != null && project.liveUrl != '#';
+    final isPubDev =
+        project.liveUrl != null && project.liveUrl!.contains('pub.dev');
 
     return ClipRRect(
       child: BackdropFilter(
@@ -321,8 +323,12 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                       if (showGithub && showLive) const SizedBox(width: 10),
                       if (showLive)
                         _buildMiniNavbarAction(
-                          icon: AppIcons.arrowExternal,
-                          tooltip: 'Launch Live Demo',
+                          icon: isPubDev
+                              ? AppIcons.download
+                              : AppIcons.arrowExternal,
+                          tooltip: isPubDev
+                              ? 'View on Pub.dev (v0.2.5)'
+                              : 'Launch Live Demo',
                           isAccent: true,
                           onTap: () =>
                               controller.openExternalLink(project.liveUrl),
@@ -610,6 +616,8 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     final hasAppStore =
         project.appStoreUrl != null && project.appStoreUrl != '#';
 
+    final isPubDev =
+        project.liveUrl != null && project.liveUrl!.contains('pub.dev');
     final isPlayStoreLink =
         hasPlayStore &&
         project.playStoreUrl!.toLowerCase().contains('play.google.com');
@@ -723,9 +731,15 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     if (showLive)
                       Expanded(
                         child: _FuturisticDownloadButton(
-                          title: 'Launch Live Demo',
-                          subtitle: 'Live Web App',
-                          icon: AppIcons.arrowExternal,
+                          title: isPubDev
+                              ? 'View on Pub.dev'
+                              : 'Launch Live Demo',
+                          subtitle: isPubDev
+                              ? 'Published Package (v0.2.5)'
+                              : 'Live Web App',
+                          icon: isPubDev
+                              ? AppIcons.download
+                              : AppIcons.arrowExternal,
                           trailingIcon: AppIcons.arrowExternal,
                           accentColor: themeColor,
                           onTap: () =>

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:saurav_portfolio/data/extensions/spacing.dart';
 import 'package:saurav_portfolio/data/models/portfolio/project.model.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_icons.dart';
 import 'package:saurav_portfolio/infrastructure/theme/app_scale.dart';
@@ -69,7 +68,7 @@ class _ProjectCardState extends State<ProjectCard>
   Widget build(BuildContext context) {
     final project = widget.project;
     final homeController = Get.find<HomeController>();
-    final Color themeColor = AppColors.accent;
+    const Color themeColor = AppColors.accent;
 
     final hasPlayStore =
         project.playStoreUrl != null && project.playStoreUrl != '#';
@@ -83,6 +82,13 @@ class _ProjectCardState extends State<ProjectCard>
         (project.appStoreUrl!.toLowerCase().contains('apple.com') ||
             project.appStoreUrl!.toLowerCase().contains('apps.apple.com'));
 
+    final isPubDev =
+        project.liveUrl != null && project.liveUrl!.contains('pub.dev');
+    final isSvgBanner =
+        project.bannerAsset != null && project.bannerAsset!.endsWith('.svg');
+    final hasRasterBanner =
+        project.bannerAsset != null && !project.bannerAsset!.endsWith('.svg');
+
     return RepaintBoundary(
       child: MouseRegion(
         onEnter: (_) => _handleHover(true),
@@ -91,7 +97,7 @@ class _ProjectCardState extends State<ProjectCard>
           animation: Listenable.merge([_hoverAnimation, _borderController]),
           builder: (context, child) {
             final hoverVal = _hoverAnimation.value;
-            final double cardScale = 1.0 + (hoverVal * 0.02);
+            final double cardScale = 1.0 + (hoverVal * 0.015);
 
             return Transform.scale(
               scale: cardScale,
@@ -103,35 +109,27 @@ class _ProjectCardState extends State<ProjectCard>
                 ),
                 child: Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.surfaceDark.withValues(alpha: 0.3),
-                        Color.lerp(
-                          AppColors.surfaceDark.withValues(alpha: 0.3),
-                          themeColor.withValues(alpha: 0.05),
-                          hoverVal,
-                        )!,
-                        AppColors.surfaceDark.withValues(alpha: 0.3),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      stops: [0.0, 0.01 + (hoverVal * 0.98), 1.0],
-                    ),
+                    color: AppColors.cardDark,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: Color.lerp(
-                        AppColors.border.withValues(alpha: 0.5),
-                        themeColor.withValues(alpha: 0.4),
+                        AppColors.border.withValues(alpha: 0.6),
+                        themeColor.withValues(alpha: 0.5),
                         hoverVal,
                       )!,
                       width: 1.5,
                     ),
                     boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: 14,
+                        offset: const Offset(0, 4),
+                      ),
                       if (hoverVal > 0)
                         BoxShadow(
-                          color: themeColor.withValues(alpha: hoverVal * 0.05),
-                          blurRadius: 16,
-                          offset: const Offset(0, 4),
+                          color: themeColor.withValues(alpha: hoverVal * 0.12),
+                          blurRadius: 22,
+                          offset: const Offset(0, 6),
                         ),
                     ],
                   ),
@@ -141,229 +139,288 @@ class _ProjectCardState extends State<ProjectCard>
                       onTap: widget.onTap,
                       borderRadius: BorderRadius.circular(16),
                       hoverColor: Colors.transparent,
-                      splashColor: themeColor.withValues(alpha: 0.05),
-                      highlightColor: Colors.transparent,
-                      child: Padding(
-                        padding: EdgeInsets.all(AppScale.w(24)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      splashColor: themeColor.withValues(alpha: 0.08),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 1. Feature Graphic / Banner Header
+                          SizedBox(
+                            height: 165,
+                            width: double.infinity,
+                            child: Stack(
+                              fit: StackFit.expand,
                               children: [
-                                AnimatedContainer(
-                                  duration: const Duration(milliseconds: 250),
-                                  width: AppScale.icon(42),
-                                  height: AppScale.icon(42),
-                                  decoration: BoxDecoration(
-                                    color: _isHovered
-                                        ? themeColor.withValues(alpha: 0.15)
-                                        : AppColors.primary.withValues(
-                                            alpha: 0.08,
-                                          ),
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: _isHovered
-                                          ? themeColor.withValues(alpha: 0.3)
-                                          : Colors.transparent,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(9),
-                                    child: project.imageUrl != null
-                                        ? (project.imageUrl!.endsWith('.svg')
-                                            ? Padding(
-                                                padding: EdgeInsets.all(
-                                                  AppScale.w(6),
-                                                ),
-                                                child: SvgPicture.asset(
-                                                  project.imageUrl!,
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              )
-                                            : Image.asset(
-                                                project.imageUrl!,
-                                                fit: BoxFit.cover,
-                                              ))
-                                        : Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              if (hoverVal > 0)
-                                                Container(
-                                                  width:
-                                                      AppScale.icon(28) +
-                                                      (hoverVal * 8),
-                                                  height:
-                                                      AppScale.icon(28) +
-                                                      (hoverVal * 8),
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                      color: themeColor
-                                                          .withValues(
-                                                            alpha:
-                                                                (1.0 -
-                                                                    hoverVal) *
-                                                                0.3,
-                                                          ),
-                                                      width: 1.0,
-                                                    ),
-                                                  ),
-                                                ),
-                                              AppFaIcon(
-                                                AppIcons.folder,
-                                                color: _isHovered
-                                                    ? themeColor
-                                                    : AppColors.textSecondary,
-                                                size: AppScale.icon(18),
-                                              ),
-                                            ],
-                                          ),
+                                // Banner media
+                                ClipRect(
+                                  child: Transform.scale(
+                                    scale: 1.0 + (hoverVal * 0.04),
+                                    child: hasRasterBanner
+                                        ? Image.asset(
+                                            project.bannerAsset!,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 165,
+                                            errorBuilder: (_, __, ___) =>
+                                                _buildFallbackBanner(
+                                                    themeColor),
+                                          )
+                                        : (isSvgBanner
+                                            ? _buildSvgOrCustomBanner(
+                                                project, themeColor)
+                                            : _buildFallbackBanner(themeColor)),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    if (project.isInDevelopment) ...[
-                                      const InDevelopmentBadge(compact: true),
-                                      Spacing.s8.gapW,
-                                    ],
-                                    if (hasPlayStore) ...[
-                                      _ActionIconButton(
-                                        icon: isPlayStoreLink
-                                            ? AppIcons.googlePlay
-                                            : AppIcons.android,
-                                        onTap: () =>
-                                            homeController.openExternalLink(
-                                              project.playStoreUrl,
+
+                                // Bottom shadow gradient overlay
+                                Positioned.fill(
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.black.withValues(alpha: 0.25),
+                                          Colors.transparent,
+                                          AppColors.cardDark
+                                              .withValues(alpha: 0.85),
+                                          AppColors.cardDark,
+                                        ],
+                                        stops: const [0.0, 0.4, 0.85, 1.0],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                // Status / Type Badge (Top-Left)
+                                Positioned(
+                                  top: 12,
+                                  left: 12,
+                                  child: _buildStatusBadge(project, isPubDev),
+                                ),
+
+                                // Action Buttons (Top-Right)
+                                Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.scaffoldDark
+                                          .withValues(alpha: 0.75),
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        color: Colors.white
+                                            .withValues(alpha: 0.12),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (hasPlayStore) ...[
+                                          _ActionIconButton(
+                                            icon: isPlayStoreLink
+                                                ? AppIcons.googlePlay
+                                                : AppIcons.android,
+                                            onTap: () => homeController
+                                                .openExternalLink(
+                                                    project.playStoreUrl),
+                                            accentColor: themeColor,
+                                            tooltip: 'Get on Play Store',
+                                          ),
+                                          const SizedBox(width: 4),
+                                        ],
+                                        if (hasAppStore) ...[
+                                          _ActionIconButton(
+                                            icon: isAppStoreLink
+                                                ? AppIcons.ios
+                                                : AppIcons.apple,
+                                            onTap: () => homeController
+                                                .openExternalLink(
+                                                    project.appStoreUrl),
+                                            accentColor: themeColor,
+                                            tooltip: 'Get on App Store',
+                                          ),
+                                          const SizedBox(width: 4),
+                                        ],
+                                        if (isPubDev) ...[
+                                          _ActionIconButton(
+                                            icon: AppIcons.download,
+                                            onTap: () => homeController
+                                                .openExternalLink(
+                                                    project.liveUrl),
+                                            accentColor: themeColor,
+                                            tooltip: 'View on Pub.dev',
+                                          ),
+                                          const SizedBox(width: 4),
+                                        ],
+                                        if (project.showCode &&
+                                            project.githubUrl != null &&
+                                            project.githubUrl != '#') ...[
+                                          _ActionIconButton(
+                                            icon: AppIcons.github,
+                                            onTap: () => homeController
+                                                .openExternalLink(
+                                                    project.githubUrl),
+                                            accentColor: themeColor,
+                                            tooltip: 'View GitHub Repository',
+                                          ),
+                                          const SizedBox(width: 4),
+                                        ],
+                                        if (project.liveUrl != null &&
+                                            project.liveUrl != '#' &&
+                                            !isPubDev)
+                                          _ActionIconButton(
+                                            icon: AppIcons.arrowExternal,
+                                            onTap: () => homeController
+                                                .openExternalLink(
+                                                    project.liveUrl),
+                                            accentColor: themeColor,
+                                            tooltip: 'Launch Demo',
+                                          ),
+                                        if (project.scrollToTopOnClick)
+                                          _ActionIconButton(
+                                            icon: AppIcons.solid(
+                                              FontAwesomeIcons.arrowUp,
                                             ),
-                                        accentColor: themeColor,
-                                      ),
-                                      Spacing.s8.gapW,
-                                    ],
-                                    if (hasAppStore) ...[
-                                      _ActionIconButton(
-                                        icon: isAppStoreLink
-                                            ? AppIcons.ios
-                                            : AppIcons.apple,
-                                        onTap: () =>
-                                            homeController.openExternalLink(
-                                              project.appStoreUrl,
-                                            ),
-                                        accentColor: themeColor,
-                                      ),
-                                      Spacing.s8.gapW,
-                                    ],
-                                    if (project.showCode &&
-                                        project.githubUrl != null &&
-                                        project.githubUrl != '#') ...[
-                                      _ActionIconButton(
-                                        icon: AppIcons.github,
-                                        onTap: () =>
-                                            homeController.openExternalLink(
-                                              project.githubUrl,
-                                            ),
-                                        accentColor: themeColor,
-                                      ),
-                                      Spacing.s8.gapW,
-                                    ],
-                                    if (project.liveUrl != null &&
-                                        project.liveUrl != '#')
-                                      _ActionIconButton(
-                                        icon: AppIcons.arrowExternal,
-                                        onTap: () => homeController
-                                            .openExternalLink(project.liveUrl),
-                                        accentColor: themeColor,
-                                      ),
-                                    if (project.scrollToTopOnClick)
-                                      _ActionIconButton(
-                                        icon: AppIcons.solid(
-                                          FontAwesomeIcons.arrowUp,
-                                        ),
-                                        onTap: widget.onTap,
-                                        accentColor: themeColor,
-                                      ),
-                                  ],
+                                            onTap: widget.onTap,
+                                            accentColor: themeColor,
+                                            tooltip: 'Back to Top',
+                                          ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            AppScale.h(20).gapH,
-                            Text(
-                              project.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.sb18.copyWith(
-                                color: _isHovered
-                                    ? themeColor
-                                    : AppColors.textPrimary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: AppScale.font(16),
+                          ),
+
+                          // 2. Card Content Body
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                AppScale.w(18),
+                                AppScale.h(10),
+                                AppScale.w(18),
+                                AppScale.h(16),
                               ),
-                            ),
-                            AppScale.h(Spacing.s8).gapH,
-                            Expanded(
-                              child: Text(
-                                project.description,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.r14.copyWith(
-                                  color: AppColors.textSecondary.withValues(
-                                    alpha: 0.9,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // App Icon & Title
+                                  Row(
+                                    children: [
+                                      _buildAppIcon(project, themeColor),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Text(
+                                          project.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppTextStyles.sb18.copyWith(
+                                            color: _isHovered
+                                                ? themeColor
+                                                : AppColors.textPrimary,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: AppScale.font(16.5),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  height: 1.5,
-                                  fontSize: AppScale.font(13),
-                                ),
+                                  const SizedBox(height: 8),
+
+                                  // Description
+                                  Expanded(
+                                    child: Text(
+                                      project.description,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: AppTextStyles.r14.copyWith(
+                                        color: AppColors.textSecondary
+                                            .withValues(alpha: 0.9),
+                                        height: 1.45,
+                                        fontSize: AppScale.font(13),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+
+                                  // Tags
+                                  if (project.tags.isNotEmpty)
+                                    Wrap(
+                                      spacing: 6,
+                                      runSpacing: 4,
+                                      children: project.tags.take(3).map((tag) {
+                                        return Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 7,
+                                            vertical: 3,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: themeColor
+                                                .withValues(alpha: 0.08),
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                            border: Border.all(
+                                              color: themeColor
+                                                  .withValues(alpha: 0.2),
+                                              width: 0.8,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            tag,
+                                            style: AppTextStyles.mono12
+                                                .copyWith(
+                                              color: themeColor,
+                                              fontSize: AppScale.font(9.5),
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+
+                                  const SizedBox(height: 12),
+
+                                  // Footer CTA row: "Case Study & Details ->"
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        isPubDev
+                                            ? 'Open on Pub.dev'
+                                            : 'Case Study & Details',
+                                        style: AppTextStyles.mono12.copyWith(
+                                          color: _isHovered
+                                              ? AppColors.textPrimary
+                                              : AppColors.textSecondary,
+                                          fontSize: AppScale.font(11),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Transform.translate(
+                                        offset: Offset(hoverVal * 4.0, 0),
+                                        child: AppFaIcon(
+                                          isPubDev
+                                              ? AppIcons.arrowExternal
+                                              : AppIcons.arrowForward,
+                                          color: _isHovered
+                                              ? themeColor
+                                              : AppColors.textSecondary,
+                                          size: AppScale.icon(12),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                            AppScale.h(Spacing.s16).gapH,
-                            if (project.tags.isNotEmpty)
-                              Wrap(
-                                spacing: AppScale.w(6),
-                                runSpacing: AppScale.h(6),
-                                children: project.tags.take(3).map((tag) {
-                                  return Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: AppScale.w(8),
-                                      vertical: AppScale.h(3),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: themeColor.withValues(alpha: 0.03),
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
-                                        color: themeColor.withValues(
-                                          alpha: 0.15,
-                                        ),
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      tag,
-                                      style: AppTextStyles.mono12.copyWith(
-                                        color: Color.lerp(
-                                          AppColors.textSecondary,
-                                          themeColor,
-                                          0.7,
-                                        ),
-                                        fontSize: AppScale.font(9),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            else
-                              Text(
-                                project.techStack,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.mono12.copyWith(
-                                  color: themeColor.withValues(alpha: 0.8),
-                                  fontSize: AppScale.font(10),
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -375,17 +432,298 @@ class _ProjectCardState extends State<ProjectCard>
       ),
     );
   }
+
+  Widget _buildStatusBadge(ProjectModel project, bool isPubDev) {
+    if (project.isInDevelopment) {
+      return const InDevelopmentBadge(compact: true);
+    }
+
+    if (isPubDev) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: AppColors.scaffoldDark.withValues(alpha: 0.85),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: AppColors.accent.withValues(alpha: 0.5),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 6,
+              height: 6,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.accent,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.accent,
+                    blurRadius: 4,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              'PUB.DEV PACKAGE',
+              style: AppTextStyles.mono12.copyWith(
+                color: AppColors.accent,
+                fontSize: AppScale.font(8.5),
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    final isLive =
+        (project.playStoreUrl != null && project.playStoreUrl != '#') ||
+        (project.appStoreUrl != null && project.appStoreUrl != '#');
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.scaffoldDark.withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isLive
+              ? AppColors.success.withValues(alpha: 0.4)
+              : AppColors.accent.withValues(alpha: 0.4),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: isLive ? AppColors.success : AppColors.accent,
+            ),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            isLive ? 'LIVE ON STORE' : 'WEB PLATFORM',
+            style: AppTextStyles.mono12.copyWith(
+              color: isLive ? AppColors.success : AppColors.accent,
+              fontSize: AppScale.font(8.5),
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppIcon(ProjectModel project, Color themeColor) {
+    final isScenarioKit = project.title.toLowerCase().contains('scenariokit');
+
+    return Container(
+      width: 34,
+      height: 34,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceDark,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: themeColor.withValues(alpha: 0.3),
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(7),
+        child: isScenarioKit
+            ? Center(
+                child: AppFaIcon(
+                  AppIcons.solid(FontAwesomeIcons.cubes),
+                  color: themeColor,
+                  size: 15,
+                ),
+              )
+            : (project.imageUrl != null
+                ? (project.imageUrl!.endsWith('.svg')
+                    ? Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: SvgPicture.asset(
+                          project.imageUrl!,
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : Image.asset(
+                        project.imageUrl!,
+                        fit: BoxFit.cover,
+                      ))
+                : Center(
+                    child: AppFaIcon(
+                      AppIcons.folder,
+                      color: themeColor,
+                      size: 14,
+                    ),
+                  )),
+      ),
+    );
+  }
+
+  Widget _buildSvgOrCustomBanner(ProjectModel project, Color themeColor) {
+    if (project.title.toLowerCase().contains('scenariokit')) {
+      // Custom Cyber DevTools Package Banner
+      return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.surfaceDark,
+              const Color(0xFF131522),
+              themeColor.withValues(alpha: 0.12),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              right: -15,
+              top: -15,
+              child: Opacity(
+                opacity: 0.08,
+                child: AppFaIcon(
+                  AppIcons.solid(FontAwesomeIcons.cubes),
+                  color: themeColor,
+                  size: 110,
+                ),
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.scaffoldDark.withValues(alpha: 0.8),
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: themeColor.withValues(alpha: 0.4),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: themeColor.withValues(alpha: 0.25),
+                        blurRadius: 16,
+                      ),
+                    ],
+                  ),
+                  child: AppFaIcon(
+                    AppIcons.solid(FontAwesomeIcons.cubes),
+                    color: themeColor,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'ScenarioKit Flutter',
+                  style: AppTextStyles.sb18.copyWith(
+                    color: Colors.white,
+                    fontSize: AppScale.font(15),
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: themeColor.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: themeColor.withValues(alpha: 0.25),
+                    ),
+                  ),
+                  child: Text(
+                    'v0.2.5 • Developer Toolkit',
+                    style: AppTextStyles.mono12.copyWith(
+                      color: themeColor,
+                      fontSize: AppScale.font(9),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      color: AppColors.surfaceDark,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.center,
+                  radius: 0.8,
+                  colors: [
+                    themeColor.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SvgPicture.asset(
+            project.bannerAsset!,
+            width: 70,
+            height: 70,
+            fit: BoxFit.contain,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFallbackBanner(Color themeColor) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.surfaceDark,
+            themeColor.withValues(alpha: 0.1),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: AppFaIcon(
+          AppIcons.folder,
+          color: themeColor.withValues(alpha: 0.4),
+          size: 40,
+        ),
+      ),
+    );
+  }
 }
 
 class _ActionIconButton extends StatefulWidget {
   final IconData icon;
   final VoidCallback onTap;
   final Color accentColor;
+  final String? tooltip;
 
   const _ActionIconButton({
     required this.icon,
     required this.onTap,
     required this.accentColor,
+    this.tooltip,
   });
 
   @override
@@ -397,36 +735,37 @@ class _ActionIconButtonState extends State<_ActionIconButton> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
+    final button = MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          width: AppScale.icon(32),
-          height: AppScale.icon(32),
-          decoration: BoxDecoration(
-            color: _isHovered
-                ? widget.accentColor.withValues(alpha: 0.1)
-                : Colors.transparent,
-            shape: BoxShape.circle,
-            border: Border.all(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
               color: _isHovered
-                  ? widget.accentColor.withValues(alpha: 0.3)
+                  ? widget.accentColor.withValues(alpha: 0.25)
                   : Colors.transparent,
+              borderRadius: BorderRadius.circular(14),
             ),
-          ),
-          child: Center(
             child: AppFaIcon(
               widget.icon,
-              color: _isHovered ? widget.accentColor : AppColors.textSecondary,
-              size: AppScale.icon(14),
+              color: _isHovered ? Colors.white : AppColors.textSecondary,
+              size: AppScale.icon(13),
             ),
           ),
         ),
       ),
     );
+
+    if (widget.tooltip != null) {
+      return Tooltip(message: widget.tooltip!, child: button);
+    }
+    return button;
   }
 }
 
@@ -445,60 +784,26 @@ class _BorderFlowPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (hoverProgress == 0) return;
 
-    final path = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-          const Radius.circular(16),
-        ),
-      );
+    final rect = Offset.zero & size;
+    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(16));
 
-    final pathMetrics = path.computeMetrics();
-    if (pathMetrics.isEmpty) return;
-
-    final pathMetric = pathMetrics.first;
-    final double totalLength = pathMetric.length;
-
-    // Laser segment length is 20% of perimeter
-    final double segmentLength = totalLength * 0.20;
-    final double start = totalLength * flowProgress;
-    final double end = start + segmentLength;
-
-    Path subPath;
-    if (end <= totalLength) {
-      subPath = pathMetric.extractPath(start, end);
-    } else {
-      subPath = pathMetric.extractPath(start, totalLength);
-      subPath.addPath(
-        pathMetric.extractPath(0, end - totalLength),
-        Offset.zero,
-      );
-    }
-
-    final Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final shader = LinearGradient(
-      colors: [AppColors.accent, AppColors.primary],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    ).createShader(rect);
-
-    // Outer glow stroke with Gaussian Blur Filter
-    final glowPaint = Paint()
-      ..shader = shader
+    final paint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 10.0
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 6.0 * hoverProgress)
-      ..color = Colors.white.withValues(alpha: hoverProgress * 0.35);
+      ..strokeWidth = 1.5
+      ..shader = SweepGradient(
+        center: Alignment.center,
+        startAngle: 0.0,
+        endAngle: 3.14159 * 2,
+        transform: GradientRotation(flowProgress * 3.14159 * 2),
+        colors: [
+          color.withValues(alpha: 0.0),
+          color.withValues(alpha: hoverProgress * 0.9),
+          color.withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(rect);
 
-    // Core laser stroke
-    final corePaint = Paint()
-      ..shader = shader
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0
-      ..color = Colors.white.withValues(alpha: hoverProgress * 0.90);
-
-    canvas.drawPath(subPath, glowPaint);
-    canvas.drawPath(subPath, corePaint);
+    canvas.drawRRect(rrect, paint);
   }
 
   @override
