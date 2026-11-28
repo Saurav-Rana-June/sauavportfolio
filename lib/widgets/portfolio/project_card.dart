@@ -11,6 +11,8 @@ import 'package:saurav_portfolio/presentation/home/controllers/home.controller.d
 import 'package:saurav_portfolio/widgets/icons/app_fa_icon.dart';
 import 'package:saurav_portfolio/widgets/portfolio/in_development_badge.dart';
 
+/// Renders an individual project card with cyber aesthetics, glowing hover
+/// effects, proportional banner scaling, and content-driven vertical layout.
 class ProjectCard extends StatefulWidget {
   final ProjectModel project;
   final VoidCallback onTap;
@@ -23,10 +25,10 @@ class ProjectCard extends StatefulWidget {
 
 class _ProjectCardState extends State<ProjectCard>
     with TickerProviderStateMixin {
+  bool _isHovered = false;
   late final AnimationController _hoverController;
   late final AnimationController _borderController;
   late final Animation<double> _hoverAnimation;
-  bool _isHovered = false;
 
   @override
   void initState() {
@@ -35,13 +37,13 @@ class _ProjectCardState extends State<ProjectCard>
       vsync: this,
       duration: const Duration(milliseconds: 250),
     );
+    _borderController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2400),
+    );
     _hoverAnimation = CurvedAnimation(
       parent: _hoverController,
       curve: Curves.easeOutCubic,
-    );
-    _borderController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
     );
   }
 
@@ -127,7 +129,8 @@ class _ProjectCardState extends State<ProjectCard>
                       ),
                       if (hoverVal > 0)
                         BoxShadow(
-                          color: themeColor.withValues(alpha: hoverVal * 0.12),
+                          color:
+                              themeColor.withValues(alpha: hoverVal * 0.12),
                           blurRadius: 22,
                           offset: const Offset(0, 6),
                         ),
@@ -141,12 +144,12 @@ class _ProjectCardState extends State<ProjectCard>
                       hoverColor: Colors.transparent,
                       splashColor: themeColor.withValues(alpha: 0.08),
                       child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 1. Feature Graphic / Banner Header
-                          SizedBox(
-                            height: 165,
-                            width: double.infinity,
+                          // 1. Feature Graphic / Banner Header (proportional 2.05:1 ratio matching 1024x500 standard)
+                          AspectRatio(
+                            aspectRatio: 2.05,
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
@@ -159,7 +162,6 @@ class _ProjectCardState extends State<ProjectCard>
                                             project.bannerAsset!,
                                             fit: BoxFit.cover,
                                             width: double.infinity,
-                                            height: 165,
                                             errorBuilder: (_, __, ___) =>
                                                 _buildFallbackBanner(
                                                     themeColor),
@@ -167,7 +169,8 @@ class _ProjectCardState extends State<ProjectCard>
                                         : (isSvgBanner
                                             ? _buildSvgOrCustomBanner(
                                                 project, themeColor)
-                                            : _buildFallbackBanner(themeColor)),
+                                            : _buildFallbackBanner(
+                                                themeColor)),
                                   ),
                                 ),
 
@@ -195,7 +198,8 @@ class _ProjectCardState extends State<ProjectCard>
                                 Positioned(
                                   top: 12,
                                   left: 12,
-                                  child: _buildStatusBadge(project, isPubDev),
+                                  child:
+                                      _buildStatusBadge(project, isPubDev),
                                 ),
 
                                 // Action Buttons (Top-Right)
@@ -210,7 +214,8 @@ class _ProjectCardState extends State<ProjectCard>
                                     decoration: BoxDecoration(
                                       color: AppColors.scaffoldDark
                                           .withValues(alpha: 0.75),
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius:
+                                          BorderRadius.circular(20),
                                       border: Border.all(
                                         color: Colors.white
                                             .withValues(alpha: 0.12),
@@ -265,7 +270,8 @@ class _ProjectCardState extends State<ProjectCard>
                                                 .openExternalLink(
                                                     project.githubUrl),
                                             accentColor: themeColor,
-                                            tooltip: 'View GitHub Repository',
+                                            tooltip:
+                                                'View GitHub Repository',
                                           ),
                                           const SizedBox(width: 4),
                                         ],
@@ -297,127 +303,90 @@ class _ProjectCardState extends State<ProjectCard>
                             ),
                           ),
 
-                          // 2. Card Content Body
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                AppScale.w(18),
-                                AppScale.h(10),
-                                AppScale.w(18),
-                                AppScale.h(16),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // App Icon & Title
-                                  Row(
-                                    children: [
-                                      _buildAppIcon(project, themeColor),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: Text(
-                                          project.title,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: AppTextStyles.sb18.copyWith(
-                                            color: _isHovered
-                                                ? themeColor
-                                                : AppColors.textPrimary,
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: AppScale.font(16.5),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-
-                                  // Description
-                                  Expanded(
-                                    child: Text(
-                                      project.description,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppTextStyles.r14.copyWith(
-                                        color: AppColors.textSecondary
-                                            .withValues(alpha: 0.9),
-                                        height: 1.45,
-                                        fontSize: AppScale.font(13),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-
-                                  // Tags
-                                  if (project.tags.isNotEmpty)
-                                    Wrap(
-                                      spacing: 6,
-                                      runSpacing: 4,
-                                      children: project.tags.take(3).map((tag) {
-                                        return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 7,
-                                            vertical: 3,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: themeColor
-                                                .withValues(alpha: 0.08),
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            border: Border.all(
-                                              color: themeColor
-                                                  .withValues(alpha: 0.2),
-                                              width: 0.8,
-                                            ),
-                                          ),
-                                          child: Text(
-                                            tag,
-                                            style: AppTextStyles.mono12
-                                                .copyWith(
-                                              color: themeColor,
-                                              fontSize: AppScale.font(9.5),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-
-                                  const SizedBox(height: 12),
-
-                                  // Footer CTA row: "Case Study & Details ->"
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        isPubDev
-                                            ? 'Open on Pub.dev'
-                                            : 'Case Study & Details',
-                                        style: AppTextStyles.mono12.copyWith(
-                                          color: _isHovered
-                                              ? AppColors.textPrimary
-                                              : AppColors.textSecondary,
-                                          fontSize: AppScale.font(11),
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Transform.translate(
-                                        offset: Offset(hoverVal * 4.0, 0),
-                                        child: AppFaIcon(
-                                          isPubDev
-                                              ? AppIcons.arrowExternal
-                                              : AppIcons.arrowForward,
+                          // 2. Card Content Body (Content-driven natural height, zero empty gap, zero text clipping)
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                              AppScale.w(18),
+                              AppScale.h(14),
+                              AppScale.w(18),
+                              AppScale.h(18),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // App Icon & Title
+                                Row(
+                                  children: [
+                                    _buildAppIcon(project, themeColor),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        project.title,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppTextStyles.sb18.copyWith(
                                           color: _isHovered
                                               ? themeColor
-                                              : AppColors.textSecondary,
-                                          size: AppScale.icon(12),
+                                              : AppColors.textPrimary,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: AppScale.font(16.5),
                                         ),
                                       ),
-                                    ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: AppScale.h(8)),
+
+                                // Description (maxLines: 3, line-height: 1.45 for crisp readability)
+                                Text(
+                                  project.description,
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.r14.copyWith(
+                                    color: AppColors.textSecondary
+                                        .withValues(alpha: 0.9),
+                                    height: 1.45,
+                                    fontSize: AppScale.font(13),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(height: AppScale.h(18)),
+
+                                // Tags / Labels
+                                if (project.tags.isNotEmpty)
+                                  Wrap(
+                                    spacing: 6,
+                                    runSpacing: 4,
+                                    children: project.tags.take(3).map((tag) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 7,
+                                          vertical: 3,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: themeColor
+                                              .withValues(alpha: 0.08),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          border: Border.all(
+                                            color: themeColor
+                                                .withValues(alpha: 0.2),
+                                            width: 0.8,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          tag,
+                                          style: AppTextStyles.mono12
+                                              .copyWith(
+                                            color: themeColor,
+                                            fontSize: AppScale.font(9.5),
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                              ],
                             ),
                           ),
                         ],

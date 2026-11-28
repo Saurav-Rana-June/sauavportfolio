@@ -4,8 +4,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:saurav_portfolio/controllers/global.controller.dart';
 import 'package:saurav_portfolio/data/models/portfolio/profile.model.dart';
+import 'package:saurav_portfolio/data/services/portfolio_service.dart';
 import 'package:saurav_portfolio/presentation/home/controllers/home.controller.dart';
 import 'package:saurav_portfolio/presentation/home/home.screen.dart';
+import 'package:saurav_portfolio/presentation/home/widgets/projects_section.dart';
 
 void main() {
   setUp(() {
@@ -86,4 +88,38 @@ void main() {
     expect(controller.isHeroLogoDocked.value, isTrue);
     expect(find.text('Saurav Rana'), findsWidgets);
   });
+
+  for (final width in [360.0, 600.0, 768.0, 1280.0]) {
+    testWidgets(
+      'Projects section renders without overflow at viewport width ${width.toInt()}px',
+      (tester) async {
+        final projects = await PortfolioService.fetchProjects();
+
+        tester.view.physicalSize = Size(width, 2400);
+        tester.view.devicePixelRatio = 1.0;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+        });
+
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(1440, 900),
+            builder: (_, __) => GetMaterialApp(
+              home: Scaffold(
+                body: SingleChildScrollView(
+                  child: ProjectsSection(projects: projects),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 600));
+
+        expect(find.text('My Work'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
 }

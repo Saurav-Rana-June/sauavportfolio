@@ -18,7 +18,8 @@ enum ProjectCategoryFilter {
   const ProjectCategoryFilter(this.label);
 }
 
-/// Renders a responsive grid of portfolio project cards with filter tabs.
+/// Renders a responsive, content-driven grid of portfolio project cards with
+/// filter tabs using width-based fluid Wrap layout.
 /// Cache-optimized with AutomaticKeepAliveClientMixin.
 class ProjectsSection extends StatefulWidget {
   final List<ProjectModel> projects;
@@ -76,15 +77,23 @@ class _ProjectsSectionState extends State<ProjectsSection>
     return widget.projects.where((p) => _matchesFilter(p, filter)).length;
   }
 
+  void _handleProjectTap(ProjectModel project, HomeController controller) {
+    if (project.id == '6' ||
+        (project.liveUrl != null && project.liveUrl!.contains('pub.dev'))) {
+      controller.openExternalLink(project.liveUrl);
+    } else if (project.scrollToTopOnClick ||
+        project.title.toLowerCase() == 'my portfolio' ||
+        project.id == '5') {
+      controller.scrollToTop();
+    } else {
+      controller.openProject(project);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final controller = Get.find<HomeController>();
-    final crossAxisCount = AppScale.isDesktop
-        ? 3
-        : AppScale.isTablet
-            ? 2
-            : 1;
 
     final filteredProjects = widget.projects
         .where((p) => _matchesFilter(p, _selectedFilter))
@@ -225,6 +234,7 @@ class _ProjectsSectionState extends State<ProjectsSection>
 
               AppScale.h(32).gapH,
 
+              // Content-driven project layout
               if (filteredProjects.isEmpty)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 48),
@@ -243,70 +253,50 @@ class _ProjectsSectionState extends State<ProjectsSection>
                     constraints: BoxConstraints(
                       maxWidth: AppScale.isMobile ? double.infinity : 400,
                     ),
-                    child: AspectRatio(
-                      aspectRatio: AppScale.isMobile
-                          ? 0.94
-                          : (AppScale.isTablet ? 0.95 : 0.96),
-                      child: _AnimatedProjectCard(
-                        key: ValueKey(filteredProjects.first.id),
-                        index: 0,
-                        child: ProjectCard(
-                          project: filteredProjects.first,
-                          onTap: () {
-                            final p = filteredProjects.first;
-                            if (p.id == '6' ||
-                                (p.liveUrl != null &&
-                                    p.liveUrl!.contains('pub.dev'))) {
-                              controller.openExternalLink(p.liveUrl);
-                            } else if (p.scrollToTopOnClick ||
-                                p.title.toLowerCase() == 'my portfolio' ||
-                                p.id == '5') {
-                              controller.scrollToTop();
-                            } else {
-                              controller.openProject(p);
-                            }
-                          },
+                    child: _AnimatedProjectCard(
+                      key: ValueKey(filteredProjects.first.id),
+                      index: 0,
+                      child: ProjectCard(
+                        project: filteredProjects.first,
+                        onTap: () => _handleProjectTap(
+                          filteredProjects.first,
+                          controller,
                         ),
                       ),
                     ),
                   ),
                 )
               else
-                GridView.builder(
+                LayoutBuilder(
                   key: ValueKey(_selectedFilter),
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: AppScale.w(16),
-                    mainAxisSpacing: AppScale.h(16),
-                    childAspectRatio: AppScale.isMobile
-                        ? 0.94
-                        : (AppScale.isTablet ? 0.95 : 0.96),
-                  ),
-                  itemCount: filteredProjects.length,
-                  itemBuilder: (context, index) {
-                    final project = filteredProjects[index];
-                    return _AnimatedProjectCard(
-                      key: ValueKey(project.id),
-                      index: index,
-                      child: ProjectCard(
-                        project: project,
-                        onTap: () {
-                          if (project.id == '6' ||
-                              (project.liveUrl != null &&
-                                  project.liveUrl!.contains('pub.dev'))) {
-                            controller.openExternalLink(project.liveUrl);
-                          } else if (project.scrollToTopOnClick ||
-                              project.title.toLowerCase() == 'my portfolio' ||
-                              project.id == '5') {
-                            controller.scrollToTop();
-                          } else {
-                            controller.openProject(project);
-                          }
-                        },
-                      ),
+                  builder: (context, constraints) {
+                    final availableWidth = constraints.maxWidth;
+                    final int columns = AppScale.isDesktop
+                        ? 3
+                        : (AppScale.isTablet ? 2 : 1);
+                    final double gap = AppScale.w(16);
+                    final double itemWidth =
+                        (availableWidth - (gap * (columns - 1))) / columns;
+
+                    return Wrap(
+                      spacing: gap,
+                      runSpacing: AppScale.h(16),
+                      children: filteredProjects.asMap().entries.map((entry) {
+                        final index = entry.key;
+                        final project = entry.value;
+                        return SizedBox(
+                          width: itemWidth,
+                          child: _AnimatedProjectCard(
+                            key: ValueKey(project.id),
+                            index: index,
+                            child: ProjectCard(
+                              project: project,
+                              onTap: () =>
+                                  _handleProjectTap(project, controller),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     );
                   },
                 ),
@@ -322,13 +312,17 @@ class _AnimatedProjectCard extends StatelessWidget {
   final Widget child;
   final int index;
 
-  const _AnimatedProjectCard({super.key, required this.child, required this.index});
+  const _AnimatedProjectCard({
+    super.key,
+    required this.child,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 500 + (index * 100)),
+      duration: Duration(milliseconds: 400 + (index * 80)),
       curve: Curves.easeOutBack,
       builder: (context, value, child) {
         final double scale = 0.95 + (value * 0.05);
@@ -336,7 +330,7 @@ class _AnimatedProjectCard extends StatelessWidget {
         final translatedChild = Transform.scale(
           scale: scale,
           child: Transform.translate(
-            offset: Offset(0, 30 * (1.0 - opacity)),
+            offset: Offset(0, 24 * (1.0 - opacity)),
             child: child,
           ),
         );

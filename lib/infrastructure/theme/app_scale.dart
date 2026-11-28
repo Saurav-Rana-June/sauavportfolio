@@ -125,4 +125,14 @@ abstract final class AppScale {
     if (isMobile) return 92;
     return 96;
   }
+
+  /// Reference aspect ratio for project cards (superseded in ProjectsSection
+  /// by the intrinsic content-driven row layout to eliminate clipping & dead space).
+  static double projectCardAspectRatio() {
+    if (isMobile) return 0.94;
+    if (isTablet) {
+      return _width < 720 ? 0.82 : 0.90;
+    }
+    return 0.95;
+  }
 }

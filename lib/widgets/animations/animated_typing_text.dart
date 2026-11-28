@@ -107,7 +107,7 @@ class _AnimatedTypingTextState extends State<AnimatedTypingText> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(_currentDisplayedText, style: widget.style),
+        Flexible(child: Text(_currentDisplayedText, style: widget.style)),
         AnimatedOpacity(
           opacity: _showCursor ? 1.0 : 0.0,
           duration: const Duration(milliseconds: 100),

@@ -177,33 +177,32 @@ showRow
 
 ---
 
-### Pattern C: Adaptive Responsive Grids
-Projects and card grids dynamically adjust both column count and aspect ratio per breakpoint.
+### Pattern C: Content-Driven Fluid Responsive Grids
+Projects and card grids use a content-driven fluid `Wrap` architecture instead of fixed `childAspectRatio` grids. This eliminates both dead vertical gaps (on tall cells/mobile) and glyph clipping (on narrow tablet columns) without triggering speculative intrinsic dimension exceptions.
 
 ```dart
-final int crossAxisCount = AppScale.isDesktop
-    ? 3
-    : AppScale.isTablet
-        ? 2
-        : 1;
+LayoutBuilder(
+  builder: (context, constraints) {
+    final availableWidth = constraints.maxWidth;
+    final int columns = AppScale.isDesktop
+        ? 3
+        : (AppScale.isTablet ? 2 : 1);
+    final double gap = AppScale.w(16);
+    final double itemWidth =
+        (availableWidth - (gap * (columns - 1))) / columns;
 
-final double aspectRatio = AppScale.isMobile
-    ? 1.5
-    : AppScale.isTablet
-        ? 1.3
-        : 1.1;
-
-GridView.builder(
-  shrinkWrap: true,
-  physics: const NeverScrollableScrollPhysics(),
-  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    crossAxisCount: crossAxisCount,
-    crossAxisSpacing: AppScale.w(16),
-    mainAxisSpacing: AppScale.h(16),
-    childAspectRatio: aspectRatio,
-  ),
-  itemCount: items.length,
-  itemBuilder: (context, index) => ProjectCard(project: items[index]),
+    return Wrap(
+      spacing: gap,
+      runSpacing: AppScale.h(16),
+      children: items.asMap().entries.map((entry) {
+        final project = entry.value;
+        return SizedBox(
+          width: itemWidth,
+          child: ProjectCard(project: project),
+        );
+      }).toList(),
+    );
+  },
 );
 ```
 
